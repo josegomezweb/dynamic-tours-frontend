@@ -59,7 +59,7 @@ export default function AIAssistant({ onAddBooking, agencyName, agentName }: AIA
   ];
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setInterval>;
     if (isLoading) {
       timer = setInterval(() => {
         setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);

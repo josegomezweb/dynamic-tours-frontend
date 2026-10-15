@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { assetUrl } from "../utils/assets";
 import { 
   ArrowLeft, 
   Clock, 
@@ -230,7 +231,7 @@ export default function MaravillasDetail({ onBack, onEnterB2B }: MaravillasDetai
       {/* Hero Header Section */}
       <div className="relative h-[480px] w-full overflow-hidden">
         <img 
-          src="/joyas nilo 2.png" 
+          src={assetUrl("joyas nilo 2.png")} 
           alt="Maravillas del Nilo Egipto"
           className="w-full h-full object-cover object-center"
           referrerPolicy="no-referrer"
@@ -417,7 +418,7 @@ export default function MaravillasDetail({ onBack, onEnterB2B }: MaravillasDetai
                     <div key={exc.id} className="border border-slate-100 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between bg-white">
                       <div>
                         <div className="h-40 relative">
-                          <img src={exc.image} alt={exc.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                          <img src={assetUrl(exc.image)} alt={exc.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                           <span className="absolute top-3 left-3 bg-[#0A0F1D]/90 text-[#1F82D2] text-[9px] font-black tracking-widest px-2.5 py-1 rounded">
                             {exc.category}
                           </span>
@@ -599,7 +600,7 @@ export default function MaravillasDetail({ onBack, onEnterB2B }: MaravillasDetai
               return (
                 <>
                   <div className="h-56 relative">
-                    <img src={exc.image} alt={exc.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    <img src={assetUrl(exc.image)} alt={exc.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
                     <button 
                       onClick={() => setViewingExcursionId(null)}

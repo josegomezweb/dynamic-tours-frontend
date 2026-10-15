@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { assetUrl } from "../utils/assets";
 import { 
   ArrowLeft, 
   Clock, 
@@ -206,7 +207,7 @@ export default function LeyendasDetail({ onBack, onEnterB2B }: LeyendasDetailPro
       {/* Hero Header Section */}
       <div className="relative h-[480px] w-full overflow-hidden">
         <img 
-          src="/dia_5_guiza.jpg" 
+          src={assetUrl("dia_5_guiza.jpg")} 
           alt="Pirámides de Guiza Egipto"
           className="w-full h-full object-cover object-center"
           referrerPolicy="no-referrer"
@@ -882,7 +883,7 @@ export default function LeyendasDetail({ onBack, onEnterB2B }: LeyendasDetailPro
                 {item.image && (
                   <div className="w-full h-48 sm:h-56 overflow-hidden rounded-xl shadow-md border border-slate-100">
                     <img 
-                      src={item.image} 
+                      src={assetUrl(item.image)} 
                       alt={item.title} 
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                       referrerPolicy="no-referrer"

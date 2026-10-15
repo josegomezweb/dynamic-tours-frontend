@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Logo from "./Logo";
+import { assetUrl } from "../utils/assets";
 import {
   Search,
   Calendar,
@@ -1224,7 +1225,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
   
   // Auto-advance featured hero cards every 5 seconds with subtle fade transition
   const [isCardFading, setIsCardFading] = useState<boolean>(false);
-  const cardFadeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const cardFadeTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const changeFeaturedCard = React.useCallback((nextIndex: number) => {
     setIsCardFading(true);
@@ -1279,7 +1280,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
   const dragStartXRef = React.useRef<number>(0);
   const dragStartAngleRef = React.useRef<number>(0);
   const hasDraggedRef = React.useRef<boolean>(false);
-  const resumeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const resumeTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const resetInactivityTimer = () => {
     if (resumeTimeoutRef.current) {
@@ -1896,7 +1897,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                           : "hover:scale-105"
                       }`}>
                         <img 
-                          src={region.image} 
+                          src={assetUrl(region.image)} 
                           alt={region.name} 
                           className="w-full h-full object-cover" 
                         />
@@ -1933,7 +1934,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                     href={country.url}
                     onClick={(e) => {
                       if (country.destKey) {
-                        setFinderDest(country.destKey);
+                        setSelectedDest(country.destKey);
                         setIsDestDropdownOpen(false);
                         const el = document.getElementById("ofertas");
                         if (el) {
@@ -1989,7 +1990,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
         <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950">
           <video
             ref={videoRef}
-            src="/home_dynamic_hero_optimized.mp4"
+            src={assetUrl("home_dynamic_hero_optimized.mp4")}
             autoPlay
             loop
             muted
@@ -1997,8 +1998,8 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
             preload="auto"
             className="w-full h-full object-cover scale-100"
           >
-            <source src="/home_dynamic_hero_optimized.mp4" type="video/mp4" />
-            <source src="/home_dynamic_hero_720p.mp4" type="video/mp4" />
+            <source src={assetUrl("home_dynamic_hero_optimized.mp4")} type="video/mp4" />
+            <source src={assetUrl("home_dynamic_hero_720p.mp4")} type="video/mp4" />
           </video>
           {/* Natural cinematic overlay for readability while keeping video luminous */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent"></div>
@@ -2043,7 +2044,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
               {/* Card Image */}
               <div className={`relative w-full aspect-[2/1] overflow-hidden rounded-t-[20px] transition-opacity duration-300 ease-in-out ${isCardFading ? "opacity-30" : "opacity-100"}`}>
                 <img 
-                  src={featuredCards[featuredCardIndex].image} 
+                  src={assetUrl(featuredCards[featuredCardIndex].image)} 
                   alt={featuredCards[featuredCardIndex].country} 
                   className="w-full h-full object-cover rounded-t-[20px]"
                 />
@@ -2098,7 +2099,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                       if (card.id === "egipto" && onSelectLeyendas) {
                         onSelectLeyendas();
                       } else {
-                        setFinderDest(card.destKey);
+                        setSelectedDest(card.destKey);
                         const el = document.getElementById("ofertas");
                         if (el) el.scrollIntoView({ behavior: "smooth" });
                       }
@@ -2788,7 +2789,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                       {/* Imagen superior */}
                       <div className="relative w-full h-[210px] overflow-hidden bg-slate-100">
                         <img 
-                          src={trip.image} 
+                          src={assetUrl(trip.image)} 
                           alt={trip.title} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                           loading="lazy"
@@ -2931,7 +2932,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                 {/* 1. ÁREA SUPERIOR: Fotografía encuadrada respecto al área visible superior */}
                 <div className="relative w-full flex-1 overflow-hidden bg-slate-100">
                   <img 
-                    src={offer.image} 
+                    src={assetUrl(offer.image)} 
                     alt={offer.title} 
                     className={`w-full h-full object-cover ${offer.imagePos || "object-center"} group-hover:scale-104 transition-transform duration-700 ease-out`}
                     loading="eager"
@@ -2957,7 +2958,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                   {/* Capa independiente de la misma imagen detrás del panel para producir el esmerilado */}
                   <div className="absolute inset-0 pointer-events-none overflow-hidden">
                     <img 
-                      src={offer.image} 
+                      src={assetUrl(offer.image)} 
                       alt="" 
                       aria-hidden="true"
                       className={`w-full h-full object-cover filter blur-[20px] scale-110 ${offer.bottomImagePos || offer.imagePos || "object-center"}`}
@@ -3219,7 +3220,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                 >
                   {/* Fotografía de fondo con zoom suave al hover */}
                   <img
-                    src={region.image}
+                    src={assetUrl(region.image)}
                     alt={region.name}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     style={{ objectPosition: region.objectPosition }}

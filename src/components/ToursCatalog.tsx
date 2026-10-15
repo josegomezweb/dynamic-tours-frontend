@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Tour, Booking } from "../types";
 import { SAMPLE_TOURS } from "../data";
+import { assetUrl } from "../utils/assets";
 import { 
   Globe, 
   Clock, 
@@ -214,7 +215,7 @@ export default function ToursCatalog({ onAddBooking, agencyName, agentName }: To
               {/* Tour Image & Badges */}
               <div className="h-56 relative overflow-hidden">
                 <img
-                  src={tour.image}
+                  src={assetUrl(tour.image)}
                   alt={tour.title}
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -334,7 +335,7 @@ export default function ToursCatalog({ onAddBooking, agencyName, agentName }: To
             {/* Header image & Close Button */}
             <div className="h-64 md:h-80 relative">
               <img
-                src={selectedTour.image}
+                src={assetUrl(selectedTour.image)}
                 alt={selectedTour.title}
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"

@@ -1,134 +1,396 @@
-import { useState, useEffect } from 'react'
-import { PassportReader } from './components/PassportReader'
-import { Lock, ShieldCheck, KeyRound, LogOut } from 'lucide-react'
+import React, { useState, useEffect } from "react";
+import Navbar from "./components/Navbar";
+import ToursCatalog from "./components/ToursCatalog";
+import BookingsDashboard from "./components/BookingsDashboard";
+import AIAssistant from "./components/AIAssistant";
+import Home from "./components/Home";
+import PublicWeb from "./components/PublicWeb";
+import Logo from "./components/Logo";
+import AgencyPortal from "./components/AgencyPortal";
+import LeyendasDetail from "./components/LeyendasDetail";
+import MaravillasDetail from "./components/MaravillasDetail";
+import { PassportReader } from "./components/PassportReader";
+import { Booking } from "./types";
+import { 
+  ShieldCheck, 
+  Sparkles, 
+  Sliders, 
+  HelpCircle, 
+  CheckCircle, 
+  User, 
+  ArrowRight,
+  TrendingUp,
+  Globe,
+  Building2,
+  Users,
+  ExternalLink
+} from "lucide-react";
 
-const VALID_PASSCODES = [
-  'kip2026',
-  'kip-demo-2026',
-  'kip-pass-sec-884f1a0e9b627d31'
-]
+export default function App() {
+  const [viewMode, setViewMode] = useState<"public" | "b2b" | "leyendas-detail" | "maravillas-detail">("public");
+  const [activeTab, setActiveTab] = useState<string>("home");
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-export function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
-  const [passcode, setPasscode] = useState('')
-  const [authError, setAuthError] = useState<string | null>(null)
+  // Authorized Travel Agent credentials (simulated B2B profile)
+  const [agencyName, setAgencyName] = useState<string>(() => {
+    return localStorage.getItem("dt_agency_name") || "Agencia Colaboradora";
+  });
+  const [agentName, setAgentName] = useState<string>(() => {
+    return localStorage.getItem("dt_agent_name") || "Agente Profesional";
+  });
 
+  const handleEnterB2B = (agent: string, agency: string) => {
+    const finalAgent = agent.trim() || "Agente Profesional";
+    const finalAgency = agency.trim() || "Agencia Colaboradora";
+    setAgentName(finalAgent);
+    setAgencyName(finalAgency);
+    localStorage.setItem("dt_agent_name", finalAgent);
+    localStorage.setItem("dt_agency_name", finalAgency);
+    setViewMode("b2b");
+  };
+
+  const DEFAULT_BOOKINGS: Booking[] = [
+    {
+      id: "BK-9482",
+      clientName: "Familia Gómez Rivas",
+      agencyName: "Viajes El Corte Inglés - Goya",
+      agentName: "Laura Martínez",
+      destination: "Japón Imperial & Maldivas",
+      startDate: "2026-10-15",
+      endDate: "2026-10-27",
+      paxCount: 4,
+      totalPriceNet: 14450,
+      totalPriceRetail: 16990,
+      commissionPercent: 15,
+      status: "Confirmado",
+      createdAt: "2026-09-02"
+    },
+    {
+      id: "BK-7381",
+      clientName: "Pareja Mendoza Luna",
+      agencyName: "Halcón Viajes - Valencia Centro",
+      agentName: "Carlos Ruiz",
+      destination: "Safari Kenia & Zanzíbar Lujo",
+      startDate: "2026-11-05",
+      endDate: "2026-11-17",
+      paxCount: 2,
+      totalPriceNet: 11200,
+      totalPriceRetail: 13170,
+      commissionPercent: 15,
+      status: "Pendiente Pago",
+      createdAt: "2026-09-04"
+    },
+    {
+      id: "BK-4291",
+      clientName: "Grupo Amigos Senderismo",
+      agencyName: "Nautalia Viajes - Sevilla",
+      agentName: "Sofía Navarro",
+      destination: "Auroras Boreales en Islandia",
+      startDate: "2026-12-10",
+      endDate: "2026-12-16",
+      paxCount: 6,
+      totalPriceNet: 14500,
+      totalPriceRetail: 17050,
+      commissionPercent: 15,
+      status: "Confirmado",
+      createdAt: "2026-09-05"
+    }
+  ];
+
+  // Fetch initial bookings
   useEffect(() => {
-    const saved = sessionStorage.getItem('kip_passport_demo_auth')
-    if (saved && VALID_PASSCODES.includes(saved.trim())) {
-      setIsAuthenticated(true)
+    async function fetchBookings() {
+      try {
+        const res = await fetch("/api/bookings");
+        if (res.ok) {
+          const data = await res.json();
+          setBookings(data);
+          return;
+        }
+      } catch (err) {
+        console.warn("Using offline bookings fallback:", err);
+      }
+      const local = localStorage.getItem("dt_bookings");
+      if (local) {
+        try {
+          setBookings(JSON.parse(local));
+          return;
+        } catch {}
+      }
+      setBookings(DEFAULT_BOOKINGS);
+      setIsLoading(false);
     }
-  }, [])
+    fetchBookings();
+  }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    const clean = passcode.trim()
-    if (VALID_PASSCODES.includes(clean)) {
-      sessionStorage.setItem('kip_passport_demo_auth', clean)
-      setIsAuthenticated(true)
-      setAuthError(null)
-    } else {
-      setAuthError('Clave de acceso incorrecta. Contacta con el equipo técnico de KIP.')
+  // Sync to localStorage when state changes to preserve state across reloads
+  useEffect(() => {
+    if (bookings.length > 0) {
+      localStorage.setItem("dt_bookings", JSON.stringify(bookings));
     }
+  }, [bookings]);
+
+  // Handle adding a new booking
+  const handleAddBooking = async (newBookingData: Omit<Booking, "id" | "createdAt">) => {
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newBookingData)
+      });
+      if (res.ok) {
+        const createdBooking = await res.json();
+        setBookings((prev) => [createdBooking, ...prev]);
+      } else {
+        throw new Error("Server rejected booking creation");
+      }
+    } catch (err) {
+      console.error(err);
+      // Fallback local adding
+      const offlineBooking: Booking = {
+        id: `BK-${Math.floor(1000 + Math.random() * 9000)}`,
+        ...newBookingData,
+        createdAt: new Date().toISOString().split('T')[0]
+      };
+      setBookings((prev) => [offlineBooking, ...prev]);
+    }
+  };
+
+  // Handle updating status
+  const handleUpdateBookingStatus = async (id: string, status: Booking["status"]) => {
+    try {
+      const res = await fetch(`/api/bookings/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setBookings((prev) => prev.map((b) => (b.id === id ? updated : b)));
+      } else {
+        throw new Error("Server rejected booking status update");
+      }
+    } catch (err) {
+      console.error(err);
+      // Fallback local update
+      setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
+    }
+  };
+
+  // Handle deleting a booking record
+  const handleDeleteBooking = (id: string) => {
+    setBookings((prev) => prev.filter((b) => b.id !== id));
+  };
+
+  // Render Leyendas Detail Page
+  if (viewMode === "leyendas-detail") {
+    return (
+      <LeyendasDetail 
+        onBack={() => setViewMode("public")} 
+        onEnterB2B={() => {
+          setViewMode("b2b");
+          setActiveTab("home");
+        }} 
+      />
+    );
   }
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('kip_passport_demo_auth')
-    setIsAuthenticated(false)
-    setPasscode('')
-    setAuthError(null)
+  // Render Maravillas Detail Page
+  if (viewMode === "maravillas-detail") {
+    return (
+      <MaravillasDetail 
+        onBack={() => setViewMode("public")} 
+        onEnterB2B={() => {
+          setViewMode("b2b");
+          setActiveTab("home");
+        }} 
+      />
+    );
   }
 
+  // Render Public Corporate Site
+  if (viewMode === "public") {
+    return (
+      <PublicWeb 
+        onEnterB2B={handleEnterB2B} 
+        onSelectLeyendas={() => setViewMode("leyendas-detail")} 
+        onSelectMaravillas={() => setViewMode("maravillas-detail")}
+      />
+    );
+  }
+
+  // Render Private B2B Agency Portal
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans antialiased">
-      {/* Cabecera Minimalista Solo Logo de KIP */}
-      <header className="bg-white border-b border-slate-200 py-3.5 px-6 sticky top-0 z-30 shadow-sm">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src="/images/logo-kip-viajes.png"
-              alt="KIP Viajes"
-              className="h-9 sm:h-10 w-auto object-contain"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-800 border border-amber-500/20 rounded-full text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-              <span>Pruebas KIP · Acceso Restringido</span>
-            </span>
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+      
+      {/* Navbar header */}
+      <Navbar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        agencyName={agencyName}
+        agentName={agentName}
+      />
 
-            {isAuthenticated && (
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-rose-600 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-rose-200 transition-colors ml-2"
-                title="Bloquear acceso"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Cerrar sesión</span>
-              </button>
-            )}
+      {/* Main Container */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Quick Back to Public Web controls for B2B Portal */}
+        <div className="mb-6 flex justify-between items-center bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Estás en la consola de agencias minoristas autorizadas</span>
           </div>
+          <button
+            onClick={() => setViewMode("public")}
+            className="text-xs font-bold text-[#0A0F1D] hover:text-[#1F82D2] flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 py-1.5 px-3.5 rounded-lg border border-slate-200 transition-all"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+            Volver a la Web Principal
+          </button>
         </div>
-      </header>
 
-      {/* Main: Gate si no está autenticado, o lector si está autenticado */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8">
-        {!isAuthenticated ? (
-          <div className="max-w-md mx-auto my-12 bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center animate-fadeIn">
-            <div className="w-14 h-14 mx-auto mb-4 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center">
-              <Lock className="w-7 h-7" />
+        {/* Welcome Section / Subheader only on primary tab */}
+        {activeTab === "catalog" && (
+          <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#0A0F1D] to-[#1F82D2] flex items-center justify-center text-white shadow-md">
+                <Building2 className="w-6 h-6 text-[#1F82D2]" />
+              </div>
+              <div>
+                <h2 className="text-lg font-extrabold text-[#0A0F1D] font-serif">
+                  Bienvenido al Portal de Gestión Mayorista
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Agencia asociada activa: <strong className="text-slate-700">{agencyName}</strong> (ID: DT-94821)
+                </p>
+              </div>
             </div>
 
-            <h2 className="text-xl font-bold text-slate-900">
-              Demostración con Acceso Restringido
-            </h2>
-            <p className="text-xs text-slate-500 mt-1.5 mb-6">
-              Este módulo de lectura y validación con IA es de uso interno exclusivo. Introduce la clave de acceso de KIP para desbloquear la demo.
-            </p>
-
-            {authError && (
-              <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 text-left">
-                {authError}
+            <div className="flex flex-wrap gap-2 md:gap-4 text-xs font-bold">
+              <div className="bg-slate-50 px-3.5 py-2 rounded-lg border border-slate-200 text-slate-600 flex items-center gap-2">
+                <Globe className="w-4 h-4 text-[#1F82D2]" />
+                <span>Receptivos en 45+ Países</span>
               </div>
-            )}
-
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="relative">
-                <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="password"
-                  value={passcode}
-                  onChange={(e) => setPasscode(e.target.value)}
-                  placeholder="Clave de acceso de la demo"
-                  autoFocus
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none transition-all"
-                />
+              <div className="bg-slate-50 px-3.5 py-2 rounded-lg border border-slate-200 text-slate-600 flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-emerald-600" />
+                <span>Garantía de Comisión B2B</span>
               </div>
-
-              <button
-                type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-teal-500/30 focus:outline-none"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Desbloquear Demostración</span>
-              </button>
-            </form>
-
-            <div className="mt-6 pt-4 border-t border-slate-100 text-[11px] text-slate-400">
-              Seguridad KIP Viajes · Acceso controlado por token de sesión
             </div>
+          </div>
+        )}
+
+        {/* Tab content rendering */}
+        {isLoading ? (
+          <div className="py-20 text-center space-y-4">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0A0F1D] mx-auto"></div>
+            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Cargando consola B2B de Dynamic Tours...</p>
           </div>
         ) : (
-          <PassportReader />
+          <>
+            {activeTab === "home" && (
+              <Home 
+                setActiveTab={setActiveTab}
+                bookings={bookings}
+                agencyName={agencyName}
+                agentName={agentName}
+              />
+            )}
+
+            {activeTab === "catalog" && (
+              <ToursCatalog 
+                onAddBooking={handleAddBooking} 
+                agencyName={agencyName}
+                agentName={agentName}
+              />
+            )}
+
+            {activeTab === "ai-builder" && (
+              <AIAssistant 
+                onAddBooking={handleAddBooking} 
+                agencyName={agencyName}
+                agentName={agentName}
+              />
+            )}
+
+            {activeTab === "bookings" && (
+              <BookingsDashboard 
+                bookings={bookings}
+                onUpdateBookingStatus={handleUpdateBookingStatus}
+                onDeleteBooking={handleDeleteBooking}
+                agencyName={agencyName}
+              />
+            )}
+
+            {activeTab === "agency-portal" && (
+              <AgencyPortal 
+                agencyName={agencyName}
+                agentName={agentName}
+              />
+            )}
+
+            {activeTab === "passports" && (
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                <PassportReader />
+              </div>
+            )}
+          </>
         )}
+
       </main>
 
-      {/* Footer minimalista */}
-      <footer className="py-6 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
-        © {new Date().getFullYear()} KIP Viajes · Entorno de Demostración
-      </footer>
-    </div>
-  )
-}
+      {/* Footer Area with elegant aesthetic details */}
+      <footer className="bg-[#0A0F1D] text-white border-t border-[#1E293B] mt-12 py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-white p-1.5 rounded-lg flex items-center justify-center shadow-sm shrink-0">
+                <Logo className="h-8 shrink-0" classNameImg="mix-blend-multiply" />
+              </div>
+              <div className="flex flex-col leading-none tracking-tight">
+                <span className="text-[17px] font-extrabold text-white tracking-wider">DYNAMIC</span>
+                <span className="text-[14px] font-bold text-[#1F82D2] tracking-widest mt-0.5">TOURS</span>
+              </div>
+            </div>
+            <p className="text-[11px] text-slate-400 leading-relaxed max-w-xs">
+              Mayorista de viajes con Licencia CICMA 1948. Especialistas en diseño exclusivo de experiencias a medida y de alta gama para agencias de viajes minoristas.
+            </p>
+          </div>
 
-export default App
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold text-[#1F82D2] uppercase tracking-widest">Soporte Mayorista 24/7</h4>
+            <ul className="text-[11px] text-slate-300 space-y-1.5">
+              <li>Línea Directa Agentes: <strong>+34 910 888 222</strong></li>
+              <li>Soporte de Emergencia en Destino: <strong>+34 600 999 999</strong></li>
+              <li>Email de Booking: <strong>reservas@dynamic-tours.com</strong></li>
+              <li>Atención Grupos: <strong>grupos@dynamic-tours.com</strong></li>
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold text-[#1F82D2] uppercase tracking-widest">Seguridad & Garantía</h4>
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Todos los depósitos de reserva y pagos recibidos en este portal B2B están protegidos mediante garantías financieras reguladas según directiva de viajes combinados de la Unión Europea y avalados por el Fondo de Garantías Mayoristas.
+            </p>
+            <div className="flex gap-2 items-center text-emerald-500 font-bold text-[10px] uppercase tracking-wider bg-white/5 py-1.5 px-3 rounded border border-white/5 w-max">
+              <ShieldCheck className="w-4 h-4 shrink-0" />
+              Conexión Encriptada SSL Segura
+            </div>
+          </div>
+
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-[#1E293B] mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between text-[10px] text-slate-400 gap-4">
+          <p>© 2026 Dynamic Tours S.A. Todos los derechos reservados.</p>
+          <div className="flex gap-4">
+            <a href="#" className="hover:underline">Condiciones Generales B2B</a>
+            <a href="#" className="hover:underline">Política de Privacidad Mayorista</a>
+            <a href="#" className="hover:underline">Aviso de Cookies</a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  );
+}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { assetUrl } from "../utils/assets";
 
 interface LogoProps {
   className?: string;
@@ -9,12 +10,12 @@ interface LogoProps {
 
 export default function Logo({ className = "h-12", iconOnly = false, classNameImg = "" }: LogoProps) {
   const logoSources = [
-    "/nuevo logo dynamic transparente.png",
-    "/logo_dynamic_3.png",
-    "/dynamic_logo_transparente.png",
-    "/dynamic logo 2 .png",
-    "/DYNAMIC-logo-oscurecido.png",
-    "/dynamic_logo_1_ok.png"
+    assetUrl("nuevo logo dynamic transparente.png"),
+    assetUrl("logo_dynamic_3.png"),
+    assetUrl("dynamic_logo_transparente.png"),
+    assetUrl("dynamic logo 2 .png"),
+    assetUrl("DYNAMIC-logo-oscurecido.png"),
+    assetUrl("dynamic_logo_1_ok.png")
   ];
 
   const [currentSrcIndex, setCurrentSrcIndex] = useState(0);
