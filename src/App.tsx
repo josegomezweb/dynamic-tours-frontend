@@ -10,6 +10,7 @@ import AgencyPortal from "./components/AgencyPortal";
 import LeyendasDetail from "./components/LeyendasDetail";
 import MaravillasDetail from "./components/MaravillasDetail";
 import { PassportReader } from "./components/PassportReader";
+import TestBanner from "./components/TestBanner";
 import { Booking } from "./types";
 import { 
   ShieldCheck, 
@@ -183,51 +184,49 @@ export default function App() {
     setBookings((prev) => prev.filter((b) => b.id !== id));
   };
 
-  // Render Leyendas Detail Page
-  if (viewMode === "leyendas-detail") {
-    return (
-      <LeyendasDetail 
-        onBack={() => setViewMode("public")} 
-        onEnterB2B={() => {
-          setViewMode("b2b");
-          setActiveTab("bookings");
-        }} 
-        agencyName={agencyName}
-        agentName={agentName}
-        onAddBooking={handleAddBooking}
-      />
-    );
-  }
+  // Helper to render active view
+  const renderViewContent = () => {
+    if (viewMode === "leyendas-detail") {
+      return (
+        <LeyendasDetail 
+          onBack={() => setViewMode("public")} 
+          onEnterB2B={() => {
+            setViewMode("b2b");
+            setActiveTab("bookings");
+          }} 
+          agencyName={agencyName}
+          agentName={agentName}
+          onAddBooking={handleAddBooking}
+        />
+      );
+    }
 
-  // Render Maravillas Detail Page
-  if (viewMode === "maravillas-detail") {
-    return (
-      <MaravillasDetail 
-        onBack={() => setViewMode("public")} 
-        onEnterB2B={() => {
-          setViewMode("b2b");
-          setActiveTab("home");
-        }} 
-      />
-    );
-  }
+    if (viewMode === "maravillas-detail") {
+      return (
+        <MaravillasDetail 
+          onBack={() => setViewMode("public")} 
+          onEnterB2B={() => {
+            setViewMode("b2b");
+            setActiveTab("home");
+          }} 
+        />
+      );
+    }
 
-  // Render Public Corporate Site
-  if (viewMode === "public") {
-    return (
-      <PublicWeb 
-        onEnterB2B={handleEnterB2B} 
-        onSelectLeyendas={() => setViewMode("leyendas-detail")} 
-        onSelectMaravillas={() => setViewMode("maravillas-detail")}
-      />
-    );
-  }
+    if (viewMode === "public") {
+      return (
+        <PublicWeb 
+          onEnterB2B={handleEnterB2B} 
+          onSelectLeyendas={() => setViewMode("leyendas-detail")} 
+          onSelectMaravillas={() => setViewMode("maravillas-detail")}
+        />
+      );
+    }
 
-  // Render Private B2B Agency Portal
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
-      
-      {/* Navbar header */}
+    // Render Private B2B Agency Portal
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+        {/* Navbar header */}
       <Navbar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -394,6 +393,16 @@ export default function App() {
         </div>
       </footer>
 
+    </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      <TestBanner />
+      <div className="flex-1 flex flex-col">
+        {renderViewContent()}
+      </div>
     </div>
   );
 }

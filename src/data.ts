@@ -53,7 +53,7 @@ export const SAMPLE_TOURS: Tour[] = [
     wholesalePrice: 169,
     retailPrice: 199,
     commission: 15,
-    image: "https://images.unsplash.com/photo-1555881400-74d7acaacd81?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1509356843151-3e7d96241e11?auto=format&fit=crop&w=800&q=80",
     summary: "Escapada gastronómica y cultural en Oporto con encanto atlántico. Incluye 2 noches en hotel seleccionado en régimen de alojamiento y desayuno, crucero tradicional de los seis puentes por la Ribera del Duero y seguro básico.",
     highlights: [
       "2 noches de alojamiento en Oporto en régimen de AD",
@@ -302,7 +302,7 @@ export const SAMPLE_TOURS: Tour[] = [
     wholesalePrice: 1060,
     retailPrice: 1250,
     commission: 15,
-    image: "https://images.unsplash.com/photo-1503177119275-0aa32b31d468?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=800&q=80",
     summary: "Operativa chárter exclusiva sin escalas desde aeropuertos de provincias españoles (Asturias, Zaragoza, Sevilla, Bilbao, Valencia, Santiago). Incluye crucero de 4 noches en pensión completa, 3 noches en El Cairo y Abu Simbel en avión incluido.",
     highlights: [
       "Vuelos chárter directos sin escalas desde tu aeropuerto provincial",

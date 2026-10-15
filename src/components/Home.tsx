@@ -46,7 +46,7 @@ export default function Home({ setActiveTab, bookings, agencyName, agentName }: 
       title: "Egipto desde Provincias: Vuelos Chárter Directos",
       date: "Salidas Otoño - Invierno 2026",
       desc: "Reserve plazas garantizadas desde aeropuertos de provincias españoles como Zaragoza, Bilbao, Asturias, Valencia o Santiago con vuelos directos. Comisiones preferentes y cupos aéreos 100% asegurados.",
-      image: "https://images.unsplash.com/photo-1503177119275-0aa32b31d468?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=800&q=80",
       targetTab: "catalog",
       highlights: ["Vuelo chárter directo sin escalas", "Crucero 5★ Pensión Completa", "Guía Egiptólogo nativo en español"]
     },

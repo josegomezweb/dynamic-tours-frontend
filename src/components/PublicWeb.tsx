@@ -60,7 +60,7 @@ const REGIONS_DATA: RegionItem[] = [
   {
     id: "oriente_medio",
     name: "ORIENTE MEDIO",
-    image: "/region_oriente_medio.png",
+    image: "/destino_card_oriente_medio.jpg",
     phrase: "Del Nilo a Petra, descubre Oriente Medio.",
     categoryUrl: "https://www.dynamic-tours.com/destinos/oriente-medio/",
     countries: [
@@ -94,7 +94,7 @@ const REGIONS_DATA: RegionItem[] = [
   {
     id: "europa",
     name: "EUROPA",
-    image: "/region_europa.png",
+    image: "/destino_card_europa.jpg",
     phrase: "Monumentos clásicos, capitales imperiales y paisajes de ensueño.",
     categoryUrl: "https://www.dynamic-tours.com/destinos/europa/",
     countries: [
@@ -402,7 +402,7 @@ const DYNAMIC_CATALOG_TOURS: DynamicCatalogTour[] = [
     duration: "8 Días / 7 Noches",
     price: "899 €",
     description: "4 noches en Estambul (AD) y 3 noches en Capadocia (PC) con vuelo doméstico, visitas guiadas y vuelos Turkish Airlines.",
-    image: "/turquía dynamic.png",
+    image: "/turquia_dynamic.png",
     tag: "VUELO DOMÉSTICO INCLUIDO",
     officialUrl: "https://www.dynamic-tours.com/destinos/turquia/",
     highlights: ["Turkish Airlines con equipaje", "Vuelo doméstico Estambul-Capadocia", "Valle de Göreme y chimeneas de hadas", "Bósforo y Santa Sofía"]
@@ -460,7 +460,7 @@ const DYNAMIC_CATALOG_TOURS: DynamicCatalogTour[] = [
     duration: "8 Días / 7 Noches",
     price: "1.425 €",
     description: "4N Ammán + 2N Petra + 1N en campamento beduino en Wadi Rum en MP. Safari 4x4 por el desierto, entrada a Petra y Mar Muerto.",
-    image: "https://images.unsplash.com/photo-1579606032824-c184288b839d?auto=format&fit=crop&w=800&q=80",
+    image: "/jordania_petra.jpg",
     tag: "PETRA & DESIERTO",
     officialUrl: "https://www.dynamic-tours.com/destinos/jordania/",
     highlights: ["Día completo en Petra", "Noche en campamento de Wadi Rum", "Safari 4x4 de 2 horas", "Flotar en el Mar Muerto"]
@@ -488,7 +488,7 @@ const DYNAMIC_CATALOG_TOURS: DynamicCatalogTour[] = [
     duration: "7 a 9 Días",
     price: "A consultar",
     description: "Eventos exclusivos en Little Petra, cenas de gala en el desierto de Wadi Rum y operativas para asociaciones y empresas.",
-    image: "https://images.unsplash.com/photo-1563297121-e77c442cf282?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80",
     tag: "GRUPOS B2B",
     officialUrl: "https://www.dynamic-tours.com/viajes-grupos",
     highlights: ["Cena de gala privada en Wadi Rum", "Entrada nocturna Petra by Night", "Autocar de lujo", "Coordinador mayorista in situ"]
@@ -518,7 +518,7 @@ const DYNAMIC_CATALOG_TOURS: DynamicCatalogTour[] = [
     duration: "4 Días / 3 Noches",
     price: "265 €",
     description: "Descubra el encanto de Lisboa histórica, barrio de Alfama, Torre de Belém y excursión de día completo al Palacio da Pena en Sintra.",
-    image: "https://images.unsplash.com/photo-1508672019048-805b876b67e2?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1585208798174-6cedd86e019a?auto=format&fit=crop&w=800&q=80",
     tag: "TOP VENTAS",
     officialUrl: "https://www.dynamic-tours.com/destinos/portugal/",
     highlights: ["Excursión a Sintra y Cascais", "Hotel 4★ con desayuno buffet", "Vuelos regulares", "Visitas panorámicas"]
@@ -532,7 +532,7 @@ const DYNAMIC_CATALOG_TOURS: DynamicCatalogTour[] = [
     duration: "8 Días / 7 Noches",
     price: "790 €",
     description: "Oporto, Coímbra, Fátima, Lisboa, Évora y playas del Algarve con visitas culturales, catas y guía acompañante en español.",
-    image: "https://images.unsplash.com/photo-1555881400-74d7acaacd81?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1509356843151-3e7d96241e11?auto=format&fit=crop&w=800&q=80",
     tag: "CIRCUITO COMPLETO",
     officialUrl: "https://www.dynamic-tours.com/destinos/portugal/",
     highlights: ["Ruta completa norte a sur", "Hoteles 4★ seleccionados", "Media pensión con bebidas", "Guía en español"]
@@ -1081,7 +1081,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
       duration: "8D / 7N",
       description: "Maravillas del Hachemita: Petra al completo, desierto de Wadi Rum y Mar Muerto.",
       price: "1.425 €",
-      image: "https://images.unsplash.com/photo-1579606032824-c184288b839d?auto=format&fit=crop&w=800&q=80",
+      image: "/jordania_petra.jpg",
       destKey: "jordania"
     },
     {
@@ -1156,7 +1156,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
       duration: "8 DÍAS | 7 NOCHES",
       description: "4 noches en Estambul y 3 noches en Capadocia con vuelo doméstico, visitas guiadas y traslados incluidos.",
       price: "1.509€",
-      image: "/turquía dynamic.png",
+      image: "/turquia_dynamic.png",
       imagePos: "object-[center_32%]",
       bottomImagePos: "object-[center_60%]",
       isLeyendas: false
@@ -1433,7 +1433,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
       title: "TURQUÍA:\nDescuento de 100€ por persona",
       subtitle: "Para reservas hasta agotar cupos.",
       tag: "Rebajas 2026",
-      image: "/turquía dynamic.png"
+      image: "/turquia_dynamic.png"
     },
     {
       id: 3,
@@ -1654,7 +1654,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
     {
       title: "Maravillas del Hachemita y Wadi Rum",
       category: "oriente-medio",
-      image: "https://images.unsplash.com/photo-1579606032824-c184288b839d?auto=format&fit=crop&w=800&q=80",
+      image: "/jordania_petra.jpg",
       description: "4N Ammán en MP + 2N Petra en MP + 1N en Campamento Beduino en Wadi Rum en MP bajo las estrellas. Safari en 4x4 por el desierto, entrada a Petra y Mar Muerto.",
       duration: "8 Días / 7 Noches",
       flights: "Vuelos regulares a Ammán y traslados",
@@ -1726,7 +1726,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
     {
       title: "Folleto Egipto Completo",
       desc: "Programas regulares, cruceros de firma, extensiones al Mar Rojo y salidas desde provincias españolas.",
-      image: "https://images.unsplash.com/photo-1503177119275-0aa32b31d468?auto=format&fit=crop&w=400&q=80",
+      image: "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=800&q=80",
       year: "Temporada 2026 / 2027"
     },
     {

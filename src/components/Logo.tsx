@@ -13,7 +13,6 @@ export default function Logo({ className = "h-12", iconOnly = false, classNameIm
     assetUrl("nuevo logo dynamic transparente.png"),
     assetUrl("logo_dynamic_3.png"),
     assetUrl("dynamic_logo_transparente.png"),
-    assetUrl("dynamic logo 2 .png"),
     assetUrl("DYNAMIC-logo-oscurecido.png"),
     assetUrl("dynamic_logo_1_ok.png")
   ];
