@@ -313,6 +313,13 @@ export const Navbar: React.FC<Props> = ({ env, onNavigate }) => {
             >
               Buceo Mar Rojo
             </button>
+            <button
+              onClick={() => onNavigate('passports')}
+              className="px-3 py-1.5 rounded-lg text-dynamic-blue bg-blue-50/70 hover:bg-blue-100/70 font-semibold transition flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-dynamic-accent" />
+              Lector Pasaportes
+            </button>
           </nav>
         </div>
 

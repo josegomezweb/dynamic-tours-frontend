@@ -1,0 +1,124 @@
+{
+  "caso_1_imagen_legible": {
+    "caso": "1. Imagen legible (PNG)",
+    "archivo": "pasaporte_ficticio_legible.png",
+    "tipo": "image/png",
+    "esperado": "Todos los campos extraídos con estado LEGIBLE y valid: true",
+    "resultado": {
+      "status": "LEGIBLE",
+      "valid": true,
+      "message": "Pasaporte analizado y verificado correctamente. Todos los campos son válidos y legibles.",
+      "data": {
+        "nombre": "CARMEN",
+        "apellidos": "GARCIA LOPEZ",
+        "numero_pasaporte": "PAB123456",
+        "nacionalidad": "ESP",
+        "fecha_nacimiento": "1988-06-15",
+        "fecha_caducidad": "2032-06-15"
+      },
+      "campos_pendientes": [],
+      "procesado_at": "2026-10-14T18:10:29.031849"
+    }
+  },
+  "caso_2_pdf_legible": {
+    "caso": "2. PDF legible (PDF nativo)",
+    "archivo": "pasaporte_ficticio_legible.pdf",
+    "tipo": "application/pdf",
+    "esperado": "Extracción nativa ultrarrápida con estado LEGIBLE y valid: true",
+    "resultado": {
+      "status": "LEGIBLE",
+      "valid": true,
+      "message": "Pasaporte analizado y verificado correctamente. Todos los campos son válidos y legibles.",
+      "data": {
+        "nombre": "JOHN ALISTAIR",
+        "apellidos": "DOE SMITH",
+        "numero_pasaporte": "PAS102938",
+        "nacionalidad": "GBR",
+        "fecha_nacimiento": "1982-11-20",
+        "fecha_caducidad": "2031-11-20"
+      },
+      "campos_pendientes": [],
+      "procesado_at": "2026-10-14T18:10:29.033894"
+    }
+  },
+  "caso_3_imagen_borrosa": {
+    "caso": "3. Imagen borrosa (PNG)",
+    "archivo": "pasaporte_ficticio_borroso.png",
+    "tipo": "image/png",
+    "esperado": "Estado ILEGIBLE, valid: false, todos los campos en campos_pendientes",
+    "resultado": {
+      "status": "ILEGIBLE",
+      "valid": false,
+      "message": "Documento ilegible o no reconocido como pasaporte. La imagen se encuentra excesivamente borrosa o degradada.",
+      "data": {
+        "nombre": "",
+        "apellidos": "",
+        "numero_pasaporte": "",
+        "nacionalidad": "",
+        "fecha_nacimiento": "",
+        "fecha_caducidad": ""
+      },
+      "campos_pendientes": [
+        "nombre",
+        "apellidos",
+        "numero_pasaporte",
+        "nacionalidad",
+        "fecha_nacimiento",
+        "fecha_caducidad"
+      ],
+      "procesado_at": "2026-10-14T18:10:29.033894"
+    }
+  },
+  "caso_4_campo_ilegible": {
+    "caso": "4. Campo ilegible (PNG con mancha de tinta en fecha caducidad)",
+    "archivo": "pasaporte_ficticio_campo_ilegible.png",
+    "tipo": "image/png",
+    "esperado": "5 campos correctos, fecha_caducidad vacía, campos_pendientes=['fecha_caducidad'], estado DUDOSO",
+    "resultado": {
+      "status": "DUDOSO",
+      "valid": false,
+      "message": "Lectura parcial de pasaporte. Campos pendientes de confirmación o ilegibles: fecha_caducidad.",
+      "data": {
+        "nombre": "ALEJANDRO",
+        "apellidos": "FERNANDEZ VEGA",
+        "numero_pasaporte": "ESP778899",
+        "nacionalidad": "ESP",
+        "fecha_nacimiento": "1991-09-04",
+        "fecha_caducidad": ""
+      },
+      "campos_pendientes": [
+        "fecha_caducidad"
+      ],
+      "procesado_at": "2026-10-14T18:10:29.034841"
+    }
+  },
+  "caso_5_fallo_ia": {
+    "caso": "5. Fallo de la llamada a IA (Simulación de timeout / HTTP 500)",
+    "archivo": "pasaporte_ficticio_fallo_ia.png",
+    "tipo": "image/png",
+    "esperado": "Estado ERROR_IA, valid: false, mensaje técnico explicativo, campos disponibles para edición manual",
+    "resultado": {
+      "status": "ERROR_IA",
+      "valid": false,
+      "message": "Fallo en la comunicación con el servicio de IA (HTTP 500 / Timeout). Modo de contingencia manual activado.",
+      "error_tecnico": "Google Gemini API Gateway Timeout / Servicio no disponible temporalmente.",
+      "data": {
+        "nombre": "",
+        "apellidos": "",
+        "numero_pasaporte": "",
+        "nacionalidad": "",
+        "fecha_nacimiento": "",
+        "fecha_caducidad": ""
+      },
+      "campos_pendientes": [
+        "nombre",
+        "apellidos",
+        "numero_pasaporte",
+        "nacionalidad",
+        "fecha_nacimiento",
+        "fecha_caducidad"
+      ],
+      "procesado_at": "2026-10-14T18:10:29.034841"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "pasaporte_ficticio_legible.png": {
+    "source": "llamaindex_ocr",
+    "markdown": "\n\n# REINO DE ESPAÑA / KINGDOM OF SPAIN\n**PASAPORTE / PASSPORT**\n\nTIPO / TYPE: P\n\n| ![\\[FOTO FICTICIA\\]](<\\[FOTO FICTICIA]>) |                |\n| ---------------------------------------- | -------------- |\n| APPELLIDOS / SURNAME:                    | GARCIA LOPEZ   |\n| NOMBRE / GIVEN NAMES:                    | **CARMEN**     |\n| NACIONALIDAD / NATIONALITY:              | ESPAÑOLA (ESP) |\n| FECHA DE NACIMIENTO / DATE OF BIRTH:     | 15/06/1988     |\n| NUMERO DE PASAPORTE / PASSPORT NO:       | PAB123456      |\n| FECHA DE CADUCIDAD / DATE OF EXPIRY:     | 15/06/2032     |\n| SEXO / SEX:                              | F              |\n| AUTORIDAD / AUTHORITY:                   |                |\n\n\nP:ESPGARCIALOPEZ<CARMEN<<<<<<<<<<<<<<<<<<<\n\nPAB1234567ESP8806155F3206158<<<<<<<<<<<<<<02"
+  },
+  "pasaporte_ficticio_legible.pdf": {
+    "source": "native_pdf_text",
+    "text": "UNITED KINGDOM OF GREAT BRITAIN / REINO UNIDO\nPASSPORT / PASAPORTE - TYPE P\n [ FICTITIOUS PHOTO ]\nSURNAME / APELLIDOS:\nDOE SMITH\nGIVEN NAMES / NOMBRE:\nJOHN ALISTAIR\nNATIONALITY / NACIONALIDAD:\nBRITISH CITIZEN (GBR)\nDATE OF BIRTH / FECHA DE NACIMIENTO:\n20/11/1982\nPASSPORT NUMBER / NUMERO PASAPORTE:\nPAS102938\nDATE OF EXPIRY / FECHA DE CADUCIDAD:\n20/11/2031\nP<GBRDOE<SMITH<<JOHN<ALISTAIR<<<<<<<<<<<<<<<\nPAS1029385GBR8211204M3111206<<<<<<<<<<<<<<04\n"
+  },
+  "pasaporte_ficticio_borroso.png": {
+    "source": "llamaindex_ocr",
+    "markdown": "\n\n| Category   | Value |\n| ---------- | ----- |\n| First Bar  | 100   |\n| Second Bar | 50    |\n| Third Bar  | 75    |\n| Box        | 60    |\n\n\n"
+  },
+  "pasaporte_ficticio_campo_ilegible.png": {
+    "source": "llamaindex_ocr",
+    "markdown": "\n\n# REINO DE ESPAÑA / KINGDOM OF SPAIN - PASAPORTE\n\n[FOTO FICTICIA]\n\nAPELLIDOS / SURNAME:\nFERNANDEZ VEGA\n\nNOMBRE / GIVEN NAMES:\nALEJANDRO\n\nNACIONALIDAD / NATIONALITY:\nESPAÑOLA (ESP)\n\nFECHA DE NACIMIENTO / DATE OF BIRTH:\n04/09/1991\n\nNUMERO DE PASAPORTE / PASSPORT NO.\nESP778899\n\nFECHA DE CADUCIDAD / DATE OF EXPIRY:\n<mark>### MANCHA DE TINTA ILEGIBLE ###</mark>\n\nP:ESPFERNANDEZ<<VEGA<<ALEJANDRO<<<<<<<<\nESP778899ESP9109043M <mark>████████</mark>"
+  },
+  "pasaporte_ficticio_fallo_ia.png": {
+    "source": "llamaindex_ocr",
+    "markdown": "\n\n# DOCUMENTO DE PRUEBA SIMULACION DE FALLO IA\n\nEste documento ficticio se utiliza para verificar la resiliencia del sistema ante caídas de red, cuotas de API agotadas o excepciones en LlamaIndex / Gemini.\n\n**Titular Ficticio TEST SIMULACION FALLO**\n\nEl sistema debe manejar el error y permitir edición manual en el formulario."
+  }
+}

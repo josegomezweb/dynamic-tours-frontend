@@ -1,0 +1,37 @@
+name: Despliegue Automático Dynamic Tours
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  web-deploy:
+    name: Compilar y Desplegar por FTP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar proyecto para producción
+        run: npm run build
+
+      - name: Sincronizar por FTP con de-nada.es/dynamic
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST || 'ftp.de-nada.es' }}
+          username: ${{ secrets.FTP_USER || 'hosting175537eu@de-nada.es' }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ./dynamic/
+          dangerous-clean-slate: false

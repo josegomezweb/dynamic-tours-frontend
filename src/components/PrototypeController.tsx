@@ -3,7 +3,7 @@ import { Eye, Shield, Building } from 'lucide-react'
 
 export type Environment = 'public' | 'dtprueba' | 'halpru'
 export type ViewMode = 'agent' | 'client'
-export type Screen = 'home' | 'detail' | 'intranet'
+export type Screen = 'home' | 'detail' | 'intranet' | 'passports'
 
 interface Props {
   env: Environment
@@ -137,6 +137,17 @@ export const PrototypeController: React.FC<Props> = ({
               3. Intranet B2B
             </button>
           )}
+          <button
+            onClick={() => setScreen('passports')}
+            className={`px-2.5 py-1 rounded font-medium transition text-xs flex items-center gap-1.5 ${
+              screen === 'passports'
+                ? 'bg-dynamic-blue text-white font-bold shadow'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+            4. Lector Pasaportes IA
+          </button>
         </div>
       </div>
     </aside>

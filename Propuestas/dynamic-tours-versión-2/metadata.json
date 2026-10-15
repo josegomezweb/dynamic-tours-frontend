@@ -1,0 +1,6 @@
+{
+  "name": "Dynamic Tours",
+  "description": "Web corporativa oficial de Dynamic Tours. Descubra nuestros viajes de firma de alta gama diseñados a medida y acceda a nuestro portal exclusivo B2B con tecnología de cotización IA para agencias de viajes asociadas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
