@@ -190,8 +190,11 @@ export default function App() {
         onBack={() => setViewMode("public")} 
         onEnterB2B={() => {
           setViewMode("b2b");
-          setActiveTab("home");
+          setActiveTab("bookings");
         }} 
+        agencyName={agencyName}
+        agentName={agentName}
+        onAddBooking={handleAddBooking}
       />
     );
   }

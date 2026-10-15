@@ -2595,43 +2595,29 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
       </section>
 
       {/* Nuevo Bloque Introductorio B2B */}
-      <section className="bg-white py-9 sm:py-11 lg:py-20 xl:py-24 overflow-hidden relative z-10">
+      <section className="bg-white py-12 sm:py-16 lg:py-20 xl:py-24 overflow-hidden relative z-10">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div 
             ref={introRef}
-            className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-8 lg:gap-12 xl:gap-16"
+            className={`max-w-4xl mx-auto text-center space-y-3 sm:space-y-4 transition-all duration-[600ms] ease-out motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+              introInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[10px]"
+            }`}
           >
-            {/* Columna Izquierda: Antetítulo y Título */}
-            <div 
-              className={`lg:w-[45%] xl:w-[44%] shrink-0 text-left space-y-2.5 sm:space-y-3 transition-all duration-[600ms] ease-out motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
-                introInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[10px]"
-              }`}
-            >
-              <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
-                DYNAMIC TOURS · MAYORISTA DE VIAJES
-              </span>
-              <h2 className="text-[26px] sm:text-[30px] lg:text-[36px] xl:text-[40px] font-semibold text-[#0A1628] leading-[1.18] tracking-tight">
-                <span className="block">Conocemos el destino.</span>
-                <span className="block mt-0.5 sm:mt-1">Entendemos tu negocio.</span>
-              </h2>
-            </div>
+            {/* Antetítulo */}
+            <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
+              DYNAMIC TOURS · MAYORISTA DE VIAJES
+            </span>
 
-            {/* Divisor vertical (solo escritorio) */}
-            <div 
-              className="hidden lg:block w-px self-stretch bg-slate-200/90 shrink-0 my-1" 
-              aria-hidden="true" 
-            />
+            {/* Título: igual tipografía y tamaño que 'Cada cliente, una forma de viajar...' */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
+              Conocemos el destino.<br className="hidden sm:inline" />{" "}
+              Entendemos tu negocio.
+            </h2>
 
-            {/* Columna Derecha: Párrafo */}
-            <div 
-              className={`lg:flex-1 text-left transition-all duration-[600ms] delay-[100ms] ease-out motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
-                introInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[10px]"
-              }`}
-            >
-              <p className="text-[#475569] text-[15px] sm:text-[16px] lg:text-[17px] xl:text-[17.5px] font-normal leading-[1.62] max-w-2xl">
-                En Dynamic Tours trabajamos junto a las agencias de viajes para dar forma a lo que sus clientes buscan. Ampliamos nuestra programación con nuevos destinos y experiencias, combinando circuitos, cruceros y viajes a medida con atención cercana al profesional. Te acompañamos desde la elección del itinerario hasta la gestión de la reserva.
-              </p>
-            </div>
+            {/* Párrafo debajo del título */}
+            <p className="pt-2 sm:pt-3 text-[#475569] text-base sm:text-lg lg:text-[17px] xl:text-[18px] font-normal leading-relaxed sm:leading-[1.65] max-w-3xl mx-auto">
+              Trabajamos junto a las agencias de viajes para dar forma a lo que sus clientes buscan. Ampliamos de forma continua y &ldquo;Dynamica&rdquo; nuestra programación con nuevos destinos y experiencias, combinando circuitos, cruceros y viajes a medida, ofreciendo respaldo desde la elección del itinerario hasta la gestión de la reserva.
+            </p>
           </div>
         </div>
       </section>
@@ -2909,17 +2895,14 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
       )}
 
       {/* OFERTAS DESTACADAS Section */}
-      <section id="ofertas" className="py-10 sm:py-14 bg-[#F8FAFC] border-y border-slate-200/70 relative">
+      <section id="ofertas" className="pt-10 sm:pt-14 pb-12 sm:pb-16 bg-[#F8FAFC] border-t border-slate-200/70 relative">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Section Header */}
-          <div className="space-y-1.5 text-left mb-7 sm:mb-8">
+          <div className="text-left mb-6 sm:mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0A0F1D] font-sans tracking-tight">
               Ofertas destacadas
             </h2>
-            <p className="text-slate-500 text-xs sm:text-sm max-w-2xl leading-relaxed">
-              Programas oficiales diseñados exclusivamente con cupos aéreos propios, tarifas comisionables preferentes y el respaldo técnico de nuestro equipo mayorista.
-            </p>
           </div>
 
           {/* Grid: Exactly 3 columns and 2 rows on desktop (2 cols on tablet, 1 col on mobile) */}
@@ -3032,176 +3015,22 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
         </div>
       </section>
 
-      {/* B2B QUICK ACTION DASHBOARD (Reubicado después de ofertas) */}
-      <section className="bg-slate-50 border-b border-slate-200/80 py-12 relative z-30">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            {/* Action 1 */}
-            <div 
-              onClick={() => setIsLoginModalOpen(true)}
-              className="bg-white hover:bg-slate-50 border-t-2 border-t-[#1F82D2] border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-sm hover:shadow-md hover:-translate-y-0.5"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="p-2.5 bg-[#1F82D2]/5 rounded text-[#1F82D2] group-hover:bg-[#1F82D2] group-hover:text-white transition-all duration-300">
-                    <Lock className="w-5 h-5" />
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#1F82D2] group-hover:translate-x-1 transition-all" />
-                </div>
-                <h4 className="text-sm font-black uppercase tracking-wider font-sans text-[#0A0F1D] group-hover:text-[#1F82D2] transition-colors">Sistema de Reservas B2B</h4>
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  Acceso directo de consolidación para bloquear plazas, cotizar y emitir confirmaciones en tiempo real.
-                </p>
-              </div>
-              <span className="text-[9px] font-black uppercase text-[#1F82D2] tracking-widest pt-4 block border-t border-slate-100 group-hover:text-[#52A72B] transition-colors">Acceso Seguro &rarr;</span>
-            </div>
-
-            {/* Action 2 */}
-            <a 
-              href="#ofertas"
-              className="bg-white hover:bg-slate-50 border-t-2 border-t-[#52A72B] border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-sm hover:shadow-md hover:-translate-y-0.5 no-underline"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="p-2.5 bg-[#52A72B]/5 rounded text-[#52A72B] group-hover:bg-[#52A72B] group-hover:text-white transition-all duration-300">
-                    <Download className="w-5 h-5" />
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#52A72B] group-hover:translate-x-1 transition-all" />
-                </div>
-                <h4 className="text-sm font-black uppercase tracking-wider font-sans text-[#0A0F1D] group-hover:text-[#52A72B] transition-colors">Catálogos PDF 2026/27</h4>
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  Descargue folletos oficiales listos para imprimir o compartir con sus clientes minoristas.
-                </p>
-              </div>
-              <span className="text-[9px] font-black uppercase text-[#52A72B] tracking-widest pt-4 block border-t border-slate-100 group-hover:text-[#1F82D2] transition-colors">Biblioteca Digital &rarr;</span>
-            </a>
-
-            {/* Action 3 */}
-            <a 
-              href="#alta-agencia"
-              className="bg-white hover:bg-slate-50 border-t-2 border-t-[#1F82D2] border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-sm hover:shadow-md hover:-translate-y-0.5 no-underline"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="p-2.5 bg-[#1F82D2]/5 rounded text-[#1F82D2] group-hover:bg-[#1F82D2] group-hover:text-white transition-all duration-300">
-                    <Building2 className="w-5 h-5" />
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#1F82D2] group-hover:translate-x-1 transition-all" />
-                </div>
-                <h4 className="text-sm font-black uppercase tracking-wider font-sans text-[#0A0F1D] group-hover:text-[#1F82D2] transition-colors">Acreditación Minorista</h4>
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  Regístrese legalmente con su licencia CICMA o equivalente para comercializar nuestra programación exclusiva.
-                </p>
-              </div>
-              <span className="text-[9px] font-black uppercase text-[#1F82D2] tracking-widest pt-4 block border-t border-slate-100 group-hover:text-[#52A72B] transition-colors">Registrarse Ahora &rarr;</span>
-            </a>
-
-            {/* Action 4 */}
-            <div 
-              onClick={() => window.open("https://wa.me/34690125031", "_blank")}
-              className="bg-white hover:bg-slate-50 border-t-2 border-t-emerald-500 border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-sm hover:shadow-md hover:-translate-y-0.5"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="p-2.5 bg-emerald-50 text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
-                    <MessageSquare className="w-5 h-5" />
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
-                </div>
-                <h4 className="text-sm font-black uppercase tracking-wider font-sans text-[#0A0F1D] group-hover:text-[#1F82D2] transition-colors">Teléfono Guardia 24/7</h4>
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  Canal de emergencia y soporte de urgencia operativa activo las 24 horas antes, durante y después del viaje.
-                </p>
-              </div>
-              <span className="text-[9px] font-black uppercase text-emerald-500 tracking-widest pt-4 block border-t border-slate-100 group-hover:text-[#1F82D2] transition-colors">WhatsApp Activo &rarr;</span>
-            </div>
-
-          </div>
+      {/* Destinos: Frase inspiracional y 5 Tarjetas Verticales de Regiones */}
+      <section id="destinos-cards" className="pt-16 sm:pt-20 lg:pt-24 xl:pt-28 pb-12 sm:pb-16 bg-white relative overflow-hidden">
+        {/* Frase inspiracional B2B */}
+        <div className="text-center max-w-4xl mx-auto px-4 sm:px-6 mb-16 sm:mb-20 lg:mb-24">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
+            Cada cliente, una forma de viajar.<br className="hidden sm:inline" />{" "}
+            Tu agencia, un mundo de posibilidades.
+          </h2>
         </div>
-      </section>
 
-      {/* THE WHOLESALER'S PROMISE (Reubicado después de ofertas) */}
-      <section className="py-24 bg-white border-b border-slate-200/80 relative">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-          
-          <div className="text-center max-w-2xl mx-auto space-y-3.5">
-            <span className="text-xs font-black bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent uppercase tracking-[0.25em] block">SOPORTE Y SOLVENCIA</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0A0F1D] font-sans uppercase tracking-tight">El Rigor de un Gran Mayorista</h2>
-            <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-              Trabajamos exclusivamente para la agencia de viajes minorista. Conozca las ventajas logísticas que diferencian los programas oficiales de Dynamic Tours S.A.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            
-            {/* Feature 1 */}
-            <div className="flex gap-4 items-start text-left p-2">
-              <div className="w-11 h-11 rounded-lg bg-[#0A0F1D]/5 flex items-center justify-center text-[#0A0F1D] shrink-0">
-                <Users className="w-5 h-5" />
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="text-xs font-black text-[#0A0F1D] uppercase tracking-wider">Especialistas por Destino</h3>
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  Nuestros departamentos están integrados por egiptólogos y expertos calificados por destino. Brindamos asesoramiento técnico riguroso y cotizaciones a medida inmediatas para viajes de grupo e individuales.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="flex gap-4 items-start text-left p-2">
-              <div className="w-11 h-11 rounded-lg bg-[#52A72B]/5 flex items-center justify-center text-[#52A72B] shrink-0">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="text-xs font-black text-[#0A0F1D] uppercase tracking-wider">Seguro de Viaje Incluido</h3>
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  Toda nuestra programación base incluye un seguro de asistencia médica multiviaje, garantizando coberturas sólidas ante imprevistos de salud o cancelaciones para la tranquilidad de sus clientes.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="flex gap-4 items-start text-left p-2">
-              <div className="w-11 h-11 rounded-lg bg-[#1F82D2]/5 flex items-center justify-center text-[#1F82D2] shrink-0">
-                <Plane className="w-5 h-5" />
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="text-xs font-black text-[#0A0F1D] uppercase tracking-wider">Cupos Especiales Chárter</h3>
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  Operamos vuelos chárter especiales directos desde múltiples aeropuertos de provincias españolas durante todo el año, asegurando disponibilidad incluso en temporadas de máxima demanda vacacional.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="flex gap-4 items-start text-left p-2">
-              <div className="w-11 h-11 rounded-lg bg-[#52A72B]/5 flex items-center justify-center text-[#52A72B] shrink-0">
-                <Globe className="w-5 h-5" />
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="text-xs font-black text-[#0A0F1D] uppercase tracking-wider">Fidelidad 100% B2B</h3>
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  Mantenemos un blindaje absoluto del canal mayorista. No atendemos bajo ninguna circunstancia a clientes finales de forma directa. Protegemos rigurosamente su comisión y su relación con el viajero.
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Destinos: 5 Tarjetas Verticales de Regiones */}
-      <section id="destinos-cards" className="py-10 sm:py-14 bg-white relative overflow-hidden">
         <div className="w-full lg:w-[95%] max-w-[1680px] mx-auto">
           {/* Header del apartado */}
-          <div className="space-y-1.5 text-left mb-6 sm:mb-8 px-4 sm:px-6 lg:px-0">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0A0F1D] font-sans tracking-tight">
+          <div className="text-left mb-6 sm:mb-7 px-4 sm:px-6 lg:px-0">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0A0F1D] font-sans tracking-tight">
               Destinos Dynamic
-            </h2>
-            <p className="text-slate-500 text-xs sm:text-sm max-w-3xl leading-relaxed">
-              Hay destinos que tus viajeros llevan tiempo imaginando y otros que descubrirán gracias a tu recomendación. Reunimos ruta y experiencias para que puedas ofrecerles un viaje que despierte sus ganas de hacer las maletas. Explora nuestra programación y encuentra nuevas ideas para tu agencia, con el conocimiento del destino y el respaldo de nuestro equipo a cada paso.
-            </p>
+            </h3>
           </div>
 
           {/* Fila en escritorio / carrusel fluido con snap en móvil */}
@@ -3331,75 +3160,349 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
         </div>
       </section>
 
-      {/* Nosotros y Delegaciones */}
-      <section id="nosotros" className="py-20 bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      {/* 1. GRUPOS A MEDIDA: Cada grupo, un viaje a medida */}
+      <section id="grupos-a-medida" className="py-16 sm:py-20 lg:py-24 bg-[#F8FAFC] border-t border-slate-200/80 relative">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="lg:col-span-7 space-y-6 text-left">
-            <span className="text-xs font-black bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent uppercase tracking-widest block">NUESTRA CARTA DE GARANTÍA</span>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-[#0A0F1D] font-sans tracking-tight">Compromiso Exclusivo con el Canal Profesional</h3>
-            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-              Fundada en Madrid, <strong className="text-[#0A0F1D]">Dynamic Tours S.A.</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia. Nuestra filosofía operativa se asienta sobre la excelencia absoluta del servicio terrestre privado en destino, una política inquebrantable de fidelidad al canal minorista y una constante inversión tecnológica para dotar de herramientas avanzadas a las agencias colaboradoras.
-            </p>
-            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-              Cada programa que lleva nuestra firma cuenta con el respaldo legal exigido por el Ministerio de Turismo, un robusto seguro multiasistencia médico líder, canales de comunicación directa de urgencia 24/7/365 en español y guías nativos titulados en arqueología e historia.
-            </p>
+          {/* Header centrado estilo Conocemos el destino */}
+          <div className="text-center max-w-4xl mx-auto space-y-2.5 sm:space-y-3 mb-10 sm:mb-14">
+            <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
+              GRUPOS A MEDIDA
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
+              Cada grupo, un viaje <span className="bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent font-normal">a medida.</span>
+            </h2>
           </div>
 
-          <div className="lg:col-span-5 space-y-6">
-            <div className="bg-slate-50 p-6 rounded-sm border border-slate-200 shadow-sm text-left">
-              <h5 className="text-xs font-black text-[#0A0F1D] uppercase tracking-widest border-b border-slate-200 pb-2.5 mb-4 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 bg-[#1F82D2] inline-block"></span>
-                Delegación Central España
-              </h5>
-              <div className="space-y-3 text-xs font-semibold text-slate-600">
-                <p className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-[#1F82D2] shrink-0 mt-0.5" />
-                  <span>Avda. Menéndez Pelayo, 83, 28007 - Madrid, España</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-[#1F82D2] shrink-0" />
-                  <span className="text-[#0A0F1D] font-bold">+34 915 521 443</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-[#1F82D2] shrink-0" />
-                  <span>reservas@dynamic-tours.com</span>
-                </p>
+          {/* Bloque: Imagen a la izquierda, texto a la derecha */}
+          <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-14 items-center">
+              
+              {/* Imagen a la izquierda */}
+              <div className="lg:col-span-6 xl:col-span-6">
+                <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_8px_28px_rgba(0,0,0,0.08)] border border-slate-200 group aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3]">
+                  <img 
+                    src={assetUrl("grupos_a_medida_egipto.jpg")} 
+                    alt="Grupos a medida con guía arqueológico especializado · Dynamic Tours" 
+                    className="w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-3.5 left-4 right-4 flex items-center justify-between text-white text-xs">
+                    <span className="font-semibold text-white/95 tracking-wide drop-shadow-xs">
+                      Itinerarios y Asesoramiento Técnico Exclusivo
+                    </span>
+                    <span className="text-[10px] font-semibold text-white/95 bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/25">
+                      100% B2B
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="bg-slate-50 p-6 rounded-sm border border-slate-200 shadow-sm text-left">
-              <h5 className="text-xs font-black text-[#0A0F1D] uppercase tracking-widest border-b border-slate-200 pb-2.5 mb-4 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 bg-[#0A0F1D] inline-block"></span>
-                Delegación Oficial Portugal
-              </h5>
-              <div className="space-y-3 text-xs font-semibold text-slate-600">
-                <p className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-[#1F82D2] shrink-0 mt-0.5" />
-                  <span>Rua de Cinco de Outubro, 185, 4100-175 Porto, Portugal</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-[#1F82D2] shrink-0" />
-                  <span className="text-[#0A0F1D] font-bold">+351 912 757 377</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-[#1F82D2] shrink-0" />
-                  <span>reservas@dynamic-tours.pt</span>
-                </p>
+              {/* Texto a la derecha */}
+              <div className="lg:col-span-6 xl:col-span-6 space-y-6 text-left flex flex-col justify-center">
+                <div className="space-y-4">
+                  <p className="text-slate-600 text-sm sm:text-base lg:text-[16.5px] leading-relaxed">
+                    El motivo del viaje, el ritmo y las expectativas cambian de un grupo a otro. Diseñamos itinerarios, alojamientos y servicios adaptados, con especialistas que acompañan a tu agencia en la preparación del viaje.
+                  </p>
+                  <p className="text-[#0A0F1D] font-medium text-sm sm:text-base lg:text-[16.5px] leading-relaxed">
+                    Cuéntanos qué grupo tienes en mente. Empezamos por ahí.
+                  </p>
+                </div>
+
+                <div className="pt-2">
+                  <a 
+                    href="#alta-agencia"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:brightness-110 active:scale-98 text-white font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-xl shadow-xs transition-all cursor-pointer group w-fit"
+                  >
+                    <span>Solicitar propuesta para un grupo</span>
+                    <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
               </div>
+
             </div>
           </div>
 
         </div>
       </section>
 
+      {/* 2. NUESTRA CARTA DE GARANTÍA: Compromiso Exclusivo con el Canal Profesional */}
+      <section id="nosotros" className="py-16 sm:py-20 lg:py-24 bg-white border-t border-slate-200/80 relative">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Bloque Principal: Texto y Fotografía Corporativa */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-14 items-center">
+            
+            <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-left">
+              <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
+                NUESTRA CARTA DE GARANTÍA
+              </span>
+              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
+                Compromiso Exclusivo con el Canal Profesional
+              </h3>
+              <p className="text-slate-600 text-xs sm:text-sm lg:text-[15px] leading-relaxed">
+                Fundada en Madrid, <strong className="text-[#0A0F1D]">Dynamic Tours S.A.</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia. Nuestra filosofía operativa se asienta sobre la excelencia absoluta del servicio terrestre privado en destino, una política inquebrantable de fidelidad al canal minorista y una constante inversión tecnológica para dotar de herramientas avanzadas a las agencias colaboradoras.
+              </p>
+              <p className="text-slate-600 text-xs sm:text-sm lg:text-[15px] leading-relaxed">
+                Cada programa que lleva nuestra firma cuenta con el respaldo legal exigido por el Ministerio de Turismo, un robusto seguro multiasistencia médico líder, canales de comunicación directa de urgencia 24/7/365 en español y guías nativos titulados en arqueología e historia.
+              </p>
+            </div>
+
+            {/* Fotografía de Sede Corporativa B2B con Logo Dynamic */}
+            <div className="lg:col-span-5">
+              <div className="relative rounded-2xl overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.12)] border border-slate-200 group">
+                <img 
+                  src={assetUrl("oficinas_dynamic_b2b.png")} 
+                  alt="Sede Central y Compromiso Profesional B2B · Dynamic Tours" 
+                  className="w-full h-auto aspect-[16/10] sm:aspect-[16/9] object-cover object-center group-hover:scale-102 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-3.5 left-4 right-4 flex items-center justify-between text-white">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#52A72B] inline-block animate-pulse"></span>
+                    <span className="text-xs font-bold tracking-wide">Sede Central B2B</span>
+                  </div>
+                  <span className="text-[10px] font-semibold text-white/95 bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/25">
+                    Atención Exclusiva a Agencias
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Delegaciones Central España y Oficial Portugal */}
+          <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            
+            {/* Delegación España */}
+            <div className="bg-[#F8FAFC] p-5 sm:p-6 rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow text-left">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 mb-3.5">
+                <h5 className="text-xs font-black text-[#0A0F1D] uppercase tracking-widest flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-xs bg-[#1F82D2] inline-block"></span>
+                  Delegación Central España
+                </h5>
+                <span className="text-[10px] font-bold text-slate-400 font-mono tracking-wider">MADRID</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-600">
+                <p className="flex items-start gap-2">
+                  <MapPin className="w-4 h-4 text-[#1F82D2] shrink-0 mt-0.5" />
+                  <span className="text-slate-700">Avda. Menéndez Pelayo, 83, Madrid</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-[#1F82D2] shrink-0" />
+                  <a href="tel:+34915521443" className="text-[#0A0F1D] font-bold hover:text-[#1F82D2] transition-colors">+34 915 521 443</a>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-[#1F82D2] shrink-0" />
+                  <a href="mailto:reservas@dynamic-tours.com" className="text-slate-700 hover:text-[#1F82D2] transition-colors">reservas@dynamic-tours.com</a>
+                </p>
+              </div>
+            </div>
+
+            {/* Delegación Portugal */}
+            <div className="bg-[#F8FAFC] p-5 sm:p-6 rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow text-left">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 mb-3.5">
+                <h5 className="text-xs font-black text-[#0A0F1D] uppercase tracking-widest flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-xs bg-[#52A72B] inline-block"></span>
+                  Delegación Oficial Portugal
+                </h5>
+                <span className="text-[10px] font-bold text-slate-400 font-mono tracking-wider">PORTO</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-600">
+                <p className="flex items-start gap-2">
+                  <MapPin className="w-4 h-4 text-[#52A72B] shrink-0 mt-0.5" />
+                  <span className="text-slate-700">Rua 5 de Outubro, 185, Porto</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-[#52A72B] shrink-0" />
+                  <a href="tel:+351912757377" className="text-[#0A0F1D] font-bold hover:text-[#52A72B] transition-colors">+351 912 757 377</a>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-[#52A72B] shrink-0" />
+                  <a href="mailto:reservas@dynamic-tours.pt" className="text-slate-700 hover:text-[#52A72B] transition-colors">reservas@dynamic-tours.pt</a>
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* 3. SOPORTE Y SOLVENCIA: El Rigor de un Gran Mayorista */}
+      <section className="py-16 sm:py-20 bg-[#F8FAFC] border-t border-slate-200/80 relative">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
+          
+          <div className="text-center max-w-2xl mx-auto space-y-2.5 sm:space-y-3">
+            <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
+              SOPORTE Y SOLVENCIA
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
+              El Rigor de un Gran Mayorista
+            </h2>
+            <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
+              Ventajas logísticas y garantías operativas diseñadas exclusivamente para la agencia minorista.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            
+            {/* Feature 1 */}
+            <div className="bg-white hover:bg-slate-50/80 border border-slate-200/80 p-5 sm:p-6 rounded-2xl transition-all duration-300 text-left space-y-2.5 group hover:shadow-xs">
+              <div className="w-10 h-10 rounded-xl bg-[#1F82D2]/10 text-[#1F82D2] flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Users className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-bold text-[#0A0F1D] tracking-tight">
+                Especialistas por Destino
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Egiptólogos y técnicos expertos. Asesoramiento riguroso y cotizaciones a medida inmediatas.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-white hover:bg-slate-50/80 border border-slate-200/80 p-5 sm:p-6 rounded-2xl transition-all duration-300 text-left space-y-2.5 group hover:shadow-xs">
+              <div className="w-10 h-10 rounded-xl bg-[#52A72B]/10 text-[#52A72B] flex items-center justify-center group-hover:scale-105 transition-transform">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-bold text-[#0A0F1D] tracking-tight">
+                Seguro de Viaje Incluido
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Asistencia médica y multiviaje en toda la programación base para máxima tranquilidad.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-white hover:bg-slate-50/80 border border-slate-200/80 p-5 sm:p-6 rounded-2xl transition-all duration-300 text-left space-y-2.5 group hover:shadow-xs">
+              <div className="w-10 h-10 rounded-xl bg-[#1F82D2]/10 text-[#1F82D2] flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Plane className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-bold text-[#0A0F1D] tracking-tight">
+                Cupos Chárter Propios
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Vuelos directos desde múltiples aeropuertos de provincias con plazas garantizadas.
+              </p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="bg-white hover:bg-slate-50/80 border border-slate-200/80 p-5 sm:p-6 rounded-2xl transition-all duration-300 text-left space-y-2.5 group hover:shadow-xs">
+              <div className="w-10 h-10 rounded-xl bg-[#52A72B]/10 text-[#52A72B] flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Globe className="w-5 h-5" />
+              </div>
+              <h3 className="text-sm font-bold text-[#0A0F1D] tracking-tight">
+                Fidelidad 100% B2B
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Blindaje absoluto: jamás atendemos cliente final, protegiendo tu comisión y relación.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 4. B2B QUICK ACTION DASHBOARD: Tarjetas de accesos directos */}
+      <section className="bg-white border-t border-b border-slate-200/80 py-12 relative z-30">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            {/* Action 1 */}
+            <div 
+              onClick={() => setIsLoginModalOpen(true)}
+              className="bg-[#F8FAFC] hover:bg-slate-100/70 border-t-2 border-t-[#1F82D2] border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-xs hover:shadow-md hover:-translate-y-0.5"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="p-2.5 bg-[#1F82D2]/5 rounded text-[#1F82D2] group-hover:bg-[#1F82D2] group-hover:text-white transition-all duration-300">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#1F82D2] group-hover:translate-x-1 transition-all" />
+                </div>
+                <h4 className="text-sm font-black uppercase tracking-wider font-sans text-[#0A0F1D] group-hover:text-[#1F82D2] transition-colors">Sistema de Reservas B2B</h4>
+                <p className="text-slate-500 text-[11px] leading-relaxed">
+                  Acceso directo de consolidación para bloquear plazas, cotizar y emitir confirmaciones en tiempo real.
+                </p>
+              </div>
+              <span className="text-[9px] font-black uppercase text-[#1F82D2] tracking-widest pt-4 block border-t border-slate-200 group-hover:text-[#52A72B] transition-colors">Acceso Seguro &rarr;</span>
+            </div>
+
+            {/* Action 2 */}
+            <a 
+              href="#ofertas"
+              className="bg-[#F8FAFC] hover:bg-slate-100/70 border-t-2 border-t-[#52A72B] border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-xs hover:shadow-md hover:-translate-y-0.5 no-underline"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="p-2.5 bg-[#52A72B]/5 rounded text-[#52A72B] group-hover:bg-[#52A72B] group-hover:text-white transition-all duration-300">
+                    <Download className="w-5 h-5" />
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#52A72B] group-hover:translate-x-1 transition-all" />
+                </div>
+                <h4 className="text-sm font-black uppercase tracking-wider font-sans text-[#0A0F1D] group-hover:text-[#52A72B] transition-colors">Catálogos PDF 2026/27</h4>
+                <p className="text-slate-500 text-[11px] leading-relaxed">
+                  Descargue folletos oficiales listos para imprimir o compartir con sus clientes minoristas.
+                </p>
+              </div>
+              <span className="text-[9px] font-black uppercase text-[#52A72B] tracking-widest pt-4 block border-t border-slate-200 group-hover:text-[#1F82D2] transition-colors">Biblioteca Digital &rarr;</span>
+            </a>
+
+            {/* Action 3 */}
+            <a 
+              href="#alta-agencia"
+              className="bg-[#F8FAFC] hover:bg-slate-100/70 border-t-2 border-t-[#1F82D2] border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-xs hover:shadow-md hover:-translate-y-0.5 no-underline"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="p-2.5 bg-[#1F82D2]/5 rounded text-[#1F82D2] group-hover:bg-[#1F82D2] group-hover:text-white transition-all duration-300">
+                    <Building2 className="w-5 h-5" />
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#1F82D2] group-hover:translate-x-1 transition-all" />
+                </div>
+                <h4 className="text-sm font-black uppercase tracking-wider font-sans text-[#0A0F1D] group-hover:text-[#1F82D2] transition-colors">Acreditación Minorista</h4>
+                <p className="text-slate-500 text-[11px] leading-relaxed">
+                  Regístrese legalmente con su licencia CICMA o equivalente para comercializar nuestra programación exclusiva.
+                </p>
+              </div>
+              <span className="text-[9px] font-black uppercase text-[#1F82D2] tracking-widest pt-4 block border-t border-slate-200 group-hover:text-[#52A72B] transition-colors">Registrarse Ahora &rarr;</span>
+            </a>
+
+            {/* Action 4 */}
+            <div 
+              onClick={() => window.open("https://wa.me/34690125031", "_blank")}
+              className="bg-[#F8FAFC] hover:bg-slate-100/70 border-t-2 border-t-emerald-500 border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-xs hover:shadow-md hover:-translate-y-0.5"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="p-2.5 bg-emerald-50 text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
+                    <MessageSquare className="w-5 h-5" />
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+                </div>
+                <h4 className="text-sm font-black uppercase tracking-wider font-sans text-[#0A0F1D] group-hover:text-[#1F82D2] transition-colors">Teléfono Guardia 24/7</h4>
+                <p className="text-slate-500 text-[11px] leading-relaxed">
+                  Canal de emergencia y soporte de urgencia operativa activo las 24 horas antes, durante y después del viaje.
+                </p>
+              </div>
+              <span className="text-[9px] font-black uppercase text-emerald-500 tracking-widest pt-4 block border-t border-slate-200 group-hover:text-[#1F82D2] transition-colors">WhatsApp Activo &rarr;</span>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* Agency Registration Form (Alta de Agencia) */}
-      <section id="alta-agencia" className="py-20 bg-slate-50 border-t border-slate-200">
+      <section id="alta-agencia" className="py-20 bg-[#F8FAFC] border-t border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-10">
           
-          <div className="space-y-2">
-            <span className="text-xs font-black bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent uppercase tracking-widest block">REGISTRO DE AGENCIA COLABORADORA</span>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0A0F1D] font-sans uppercase tracking-tight">Solicitud de Registro de Agencia B2B</h3>
+          <div className="space-y-2.5 sm:space-y-3">
+            <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
+              REGISTRO DE AGENCIA COLABORADORA
+            </span>
+            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
+              Solicitud de Registro de Agencia B2B
+            </h3>
             <p className="text-slate-600 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
               Si dispone de una agencia de viajes minorista legalmente constituida y desea tramitar expedientes, cotizaciones, o formalizar reservas aéreas y terrestres directas, inicie su registro de acreditación.
             </p>
