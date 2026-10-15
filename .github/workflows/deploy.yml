@@ -29,9 +29,9 @@ jobs:
       - name: Sincronizar por FTP con de-nada.es/dynamic
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_HOST || 'ftp.de-nada.es' }}
-          username: ${{ secrets.FTP_USER || 'hosting175537eu@de-nada.es' }}
+          server: ftp.de-nada.es
+          username: hosting175537eu@de-nada.es
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: ./dynamic/
+          server-dir: dynamic/
           dangerous-clean-slate: false
