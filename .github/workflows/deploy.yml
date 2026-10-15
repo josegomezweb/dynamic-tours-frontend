@@ -27,11 +27,6 @@ jobs:
         run: npm run build
 
       - name: Sincronizar por FTP con de-nada.es/dynamic
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ftp.de-nada.es
-          username: hosting175537eu@de-nada.es
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: dynamic/
-          dangerous-clean-slate: false
+        env:
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD || 'patimasFTP78#' }}
+        run: python scripts/deploy_ftp.py
