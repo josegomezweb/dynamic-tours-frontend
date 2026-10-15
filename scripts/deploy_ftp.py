@@ -1,5 +1,8 @@
 import os, sys, ftplib
 
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 FTP_HOST = "ftp.de-nada.es"
 FTP_USER = "hosting175537eu@de-nada.es"
 FTP_PASS = os.environ.get("FTP_PASSWORD", "patimasFTP78#")
