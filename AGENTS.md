@@ -15,7 +15,7 @@ git pull
 ```
 *Objetivo:* Asegurar que el entorno local contiene los últimos cambios subidos por el otro colaborador antes de escribir código.
 
-### B. Al Finalizar Cualquier Tarea:
+### B. Al Finalizar Cualquier Tarea o al solicitar subir a producción:
 Una vez completados los cambios solicitados por el usuario y comprobado que compilan sin errores (`npm run build`):
 1. El agente **DEBE** preparar y subir automáticamente los cambios a GitHub:
 ```bash
@@ -23,7 +23,12 @@ git add .
 git commit -m "tipo: descripción clara y concisa de la mejora"
 git push
 ```
-2. **Impacto:** Este `git push` dispara automáticamente el workflow de GitHub Actions (`.github/workflows/deploy.yml`), que compila y publica la web por FTP en `https://de-nada.es/dynamic/` en menos de 1 minuto.
+2. **Despliegue Inmediato en Producción:**
+Para actualizar inmediatamente `https://de-nada.es/dynamic/` sin esperas, el agente debe ejecutar:
+```bash
+npm run deploy
+```
+Este comando compila el proyecto y sincroniza los archivos al servidor FTP directamente.
 
 ---
 
