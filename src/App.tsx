@@ -9,6 +9,7 @@ import Logo from "./components/Logo";
 import AgencyPortal from "./components/AgencyPortal";
 import LeyendasDetail from "./components/LeyendasDetail";
 import MaravillasDetail from "./components/MaravillasDetail";
+import ViajesMedidaGrupos from "./components/ViajesMedidaGrupos";
 import { PassportReader } from "./components/PassportReader";
 import TestBanner from "./components/TestBanner";
 import { Booking } from "./types";
@@ -28,7 +29,8 @@ import {
 } from "lucide-react";
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<"public" | "b2b" | "leyendas-detail" | "maravillas-detail">("public");
+  const [viewMode, setViewMode] = useState<"public" | "b2b" | "leyendas-detail" | "maravillas-detail" | "viajes-a-medida-grupos">("public");
+  const [scrollToGruposForm, setScrollToGruposForm] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("home");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -184,12 +186,56 @@ export default function App() {
     setBookings((prev) => prev.filter((b) => b.id !== id));
   };
 
+  // Handle direct url hash and hashchange navigation
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === "#viajes-a-medida-grupos" || hash === "#grupos") {
+        setViewMode("viajes-a-medida-grupos");
+        setScrollToGruposForm(false);
+      } else if (hash === "#formulario-grupos") {
+        setViewMode("viajes-a-medida-grupos");
+        setScrollToGruposForm(true);
+      } else if (hash === "#leyendas-detail") {
+        setViewMode("leyendas-detail");
+      } else if (hash === "#maravillas-detail") {
+        setViewMode("maravillas-detail");
+      } else if (hash === "#b2b") {
+        setViewMode("b2b");
+      } else if (hash === "" || hash === "#" || hash === "#inicio" || hash === "#ofertas" || hash === "#nosotros") {
+        setViewMode((prev) => (prev === "b2b" ? "b2b" : "public"));
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
   // Helper to render active view
   const renderViewContent = () => {
+    if (viewMode === "viajes-a-medida-grupos") {
+      return (
+        <ViajesMedidaGrupos 
+          onBackToHome={() => {
+            window.location.hash = "";
+            setViewMode("public");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }} 
+          onEnterB2B={handleEnterB2B}
+          initialScrollToForm={scrollToGruposForm}
+        />
+      );
+    }
+
     if (viewMode === "leyendas-detail") {
       return (
         <LeyendasDetail 
-          onBack={() => setViewMode("public")} 
+          onBack={() => {
+            window.location.hash = "";
+            setViewMode("public");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }} 
           onEnterB2B={() => {
             setViewMode("b2b");
             setActiveTab("bookings");
@@ -204,7 +250,11 @@ export default function App() {
     if (viewMode === "maravillas-detail") {
       return (
         <MaravillasDetail 
-          onBack={() => setViewMode("public")} 
+          onBack={() => {
+            window.location.hash = "";
+            setViewMode("public");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }} 
           onEnterB2B={() => {
             setViewMode("b2b");
             setActiveTab("home");
@@ -217,8 +267,25 @@ export default function App() {
       return (
         <PublicWeb 
           onEnterB2B={handleEnterB2B} 
-          onSelectLeyendas={() => setViewMode("leyendas-detail")} 
-          onSelectMaravillas={() => setViewMode("maravillas-detail")}
+          onSelectLeyendas={() => {
+            window.location.hash = "leyendas-detail";
+            setViewMode("leyendas-detail");
+          }} 
+          onSelectMaravillas={() => {
+            window.location.hash = "maravillas-detail";
+            setViewMode("maravillas-detail");
+          }}
+          onSelectGrupos={() => {
+            window.location.hash = "viajes-a-medida-grupos";
+            setScrollToGruposForm(false);
+            setViewMode("viajes-a-medida-grupos");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onSelectGruposForm={() => {
+            window.location.hash = "formulario-grupos";
+            setScrollToGruposForm(true);
+            setViewMode("viajes-a-medida-grupos");
+          }}
         />
       );
     }

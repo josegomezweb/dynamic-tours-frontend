@@ -39,6 +39,8 @@ interface PublicWebProps {
   onEnterB2B: (agent: string, agency: string) => void;
   onSelectLeyendas?: () => void;
   onSelectMaravillas?: () => void;
+  onSelectGrupos?: () => void;
+  onSelectGruposForm?: () => void;
 }
 
 interface DestinationItem {
@@ -819,7 +821,13 @@ const DYNAMIC_CATALOG_TOURS: DynamicCatalogTour[] = [
   }
 ];
 
-export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravillas }: PublicWebProps) {
+export default function PublicWeb({ 
+  onEnterB2B, 
+  onSelectLeyendas, 
+  onSelectMaravillas,
+  onSelectGrupos,
+  onSelectGruposForm
+}: PublicWebProps) {
   const [activeCategory, setActiveCategory] = useState<string>("todos");
   const [inquiryName, setInquiryName] = useState<string>("");
   const [inquiryEmail, setInquiryEmail] = useState<string>("");
@@ -1041,92 +1049,96 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
 
   const featuredCards = [
     {
-      id: "portugal",
-      badge: "ESCAPADA",
-      badgeBg: "bg-white/25",
-      country: "PORTUGAL",
-      duration: "3D / 2N",
-      description: "Escapada gastronómica y cultural con encanto atlántico.",
-      price: "299 €",
-      image: "/portugal_porto.jpg",
-      destKey: "portugal"
+      id: "sri-lanka",
+      badge: "",
+      badgeBg: "",
+      country: "SRI LANKA",
+      duration: "9D / 7N",
+      title: "Aventura, tradición y naturaleza salvaje",
+      subtitle: "Programas de 9 días / 7 noches.",
+      description: "Aventura, tradición y naturaleza salvaje. Programas de 9 días / 7 noches.",
+      price: "",
+      image: "/sri_lanka_portada.jpg",
+      destKey: "sri-lanka"
     },
     {
-      id: "egipto",
-      badge: "CIRCUITO ESTRELLA",
-      badgeBg: "bg-[#eab308]",
-      country: "EGIPTO",
+      id: "descubre-egipto",
+      badge: "",
+      badgeBg: "",
+      country: "DESCUBRE EGIPTO",
       duration: "8D / 7N",
-      description: "Maravillas del Nilo: 4N crucero Pensión Completa + 3N Cairo + Pirámides.",
-      price: "924 €",
-      image: "https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=800&q=80",
+      title: "Programas de 8 días / 7 noches.",
+      subtitle: "Bajada de precios. Plazas limitadas hasta agotar cupos.",
+      description: "Programas de 8 días / 7 noches. Bajada de precios. Plazas limitadas hasta agotar cupos.",
+      price: "",
+      image: "/egipto_descubre_esfinge.jpg",
+      destKey: "egipto"
+    },
+    {
+      id: "egipto-senior",
+      badge: "",
+      badgeBg: "",
+      country: "EGIPTO SELECTO SENIOR",
+      duration: "8D / 7N",
+      title: "Para mayores de 55 años y acompañantes",
+      subtitle: "Salidas: lunes y viernes",
+      details: "Incluye: agua, visado, cuota de servicios, suplemento de carburante y asistencia.",
+      description: "Para mayores de 55 años y acompañantes. Salidas: lunes y viernes.",
+      price: "",
+      image: "/egipto_senior_clean.jpg",
+      destKey: "egipto"
+    },
+    {
+      id: "egipto-salidas-especiales",
+      badge: "",
+      badgeBg: "",
+      country: "EGIPTO · SALIDAS ESPECIALES",
+      duration: "8D / 7N",
+      title: "Puente de Diciembre, Fin de Año y Semana Blanca",
+      subtitle: "Plazas limitadas hasta agotar cupos.",
+      description: "Puente de Diciembre, Fin de Año y Semana Blanca. Plazas limitadas hasta agotar cupos.",
+      price: "",
+      image: "/egipto_especiales_navidad.jpg",
       destKey: "egipto"
     },
     {
       id: "turquia",
-      badge: "GRAN VIAJE",
-      badgeBg: "bg-[#10b981]",
+      badge: "",
+      badgeBg: "",
       country: "TURQUÍA",
       duration: "8D / 7N",
+      title: "Sueños de Estambul y Capadocia",
+      subtitle: "Bósforo, Göreme y vuelos Turkish Airlines.",
       description: "Sueños de Estambul y Capadocia: Bósforo, Göreme y vuelos Turkish Airlines.",
-      price: "899 €",
+      price: "",
       image: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80",
       destKey: "turquia"
     },
     {
       id: "jordania",
-      badge: "AVENTURA",
-      badgeBg: "bg-[#f97316]",
+      badge: "",
+      badgeBg: "",
       country: "JORDANIA",
       duration: "8D / 7N",
+      title: "Maravillas del Hachemita",
+      subtitle: "Petra al completo, desierto de Wadi Rum y Mar Muerto.",
       description: "Maravillas del Hachemita: Petra al completo, desierto de Wadi Rum y Mar Muerto.",
-      price: "1.425 €",
+      price: "",
       image: "/jordania_petra.jpg",
       destKey: "jordania"
     },
     {
-      id: "india",
-      badge: "ESPIRITUALIDAD",
-      badgeBg: "bg-[#ec4899]",
-      country: "INDIA",
-      duration: "9D / 7N",
-      description: "Triángulo de Oro y Benarés: Delhi monumental, Jaipur, Taj Mahal y el Ganges.",
-      price: "1.290 €",
-      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80",
-      destKey: "india"
-    },
-    {
       id: "uzbekistan",
-      badge: "RUTA DE LA SEDA",
-      badgeBg: "bg-[#8b5cf6]",
+      badge: "",
+      badgeBg: "",
       country: "UZBEKISTÁN",
       duration: "8D / 7N",
+      title: "Uzbekistán Clásico",
+      subtitle: "Samarcanda, oasis de Bujará y Jiva con tren rápido Afrosiyob.",
       description: "Uzbekistán Clásico: Samarcanda, oasis de Bujará y Jiva con tren rápido Afrosiyob.",
-      price: "1.390 €",
+      price: "",
       image: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=80",
       destKey: "uzbekistan"
-    },
-    {
-      id: "kenia",
-      badge: "SAFARI",
-      badgeBg: "bg-[#eab308]",
-      country: "KENIA",
-      duration: "9D / 6N",
-      description: "Masái Footsteps: Safaris en Masái Mara, Lago Naivasha y vistas al Kilimanjaro.",
-      price: "2.190 €",
-      image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80",
-      destKey: "kenia"
-    },
-    {
-      id: "marruecos",
-      badge: "DESIERTO",
-      badgeBg: "bg-[#06b6d4]",
-      country: "MARRUECOS",
-      duration: "8D / 7N",
-      description: "Ciudades Rojas y Desierto: Marrakech, kasbahs de Ait Ben Haddou y Merzouga.",
-      price: "635 €",
-      image: "https://images.unsplash.com/photo-1539020140153-e479b8c22e70?auto=format&fit=crop&w=800&q=80",
-      destKey: "marruecos"
     }
   ];
 
@@ -1808,7 +1820,20 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
               <span className="text-slate-300">·</span>
               <a href="#ofertas" className="hover:text-[#1F82D2] transition-colors font-bold">Ofertas</a>
               <span className="text-slate-300">·</span>
-              <a href="#grupos" className="hover:text-[#1F82D2] transition-colors font-bold">Grupos</a>
+              <a 
+                href="#viajes-a-medida-grupos" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onSelectGrupos) {
+                    onSelectGrupos();
+                  } else {
+                    window.location.hash = "viajes-a-medida-grupos";
+                  }
+                }}
+                className="hover:text-[#1F82D2] transition-colors font-bold cursor-pointer"
+              >
+                Grupos
+              </a>
               <span className="text-slate-300">·</span>
               <a href="#nosotros" className="hover:text-[#1F82D2] transition-colors font-bold">Sobre Dynamic</a>
             </nav>
@@ -2049,11 +2074,13 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                   className="w-full h-full object-cover rounded-t-[20px]"
                 />
                 {/* Pill Badge */}
-                <div className="absolute top-2.5 left-2.5">
-                  <span className="inline-block bg-white/25 backdrop-blur-md border border-white/40 text-white text-[10px] font-bold tracking-wider px-3 py-0.5 rounded-full shadow-xs uppercase">
-                    {featuredCards[featuredCardIndex].badge}
-                  </span>
-                </div>
+                {featuredCards[featuredCardIndex].badge ? (
+                  <div className="absolute top-2.5 left-2.5">
+                    <span className="inline-block bg-white/25 backdrop-blur-md border border-white/40 text-white text-[10px] font-bold tracking-wider px-3 py-0.5 rounded-full shadow-xs uppercase">
+                      {featuredCards[featuredCardIndex].badge}
+                    </span>
+                  </div>
+                ) : null}
               </div>
 
               {/* Card Body - Frosted Translucent Glass matching the search bar */}
@@ -2067,26 +2094,30 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
               >
                 <div className={`space-y-2.5 transition-opacity duration-300 ease-in-out ${isCardFading ? "opacity-30" : "opacity-100"}`}>
                   {/* Title & Duration */}
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-white text-xs sm:text-[13px] font-bold tracking-widest uppercase">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-white text-xs sm:text-[13px] font-bold tracking-widest uppercase leading-snug">
                       {featuredCards[featuredCardIndex].country}
                     </h3>
-                    <span className="text-white/80 text-[11px] font-medium tracking-tight">
+                    <span className="text-white/80 text-[11px] font-medium tracking-tight whitespace-nowrap shrink-0 pt-0.5">
                       {featuredCards[featuredCardIndex].duration}
                     </span>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-white/85 text-xs font-normal leading-relaxed min-h-[34px] line-clamp-2">
-                    {featuredCards[featuredCardIndex].description}
-                  </p>
-
-                  {/* Price */}
-                  <div className="pt-0.5 flex items-baseline gap-1.5">
-                    <span className="text-white/70 text-xs font-normal">Desde</span>
-                    <span className="text-white text-2xl font-bold tracking-tight">
-                      {featuredCards[featuredCardIndex].price}
-                    </span>
+                  {/* Title & Subtitle (Mockup style for Sri Lanka & Egypt cards) */}
+                  <div className="space-y-1.5 min-h-[64px]">
+                    <h4 className="text-white text-[14px] sm:text-[15px] font-medium leading-snug">
+                      {featuredCards[featuredCardIndex].title}
+                    </h4>
+                    {featuredCards[featuredCardIndex].subtitle && (
+                      <p className="text-white/80 text-xs font-normal leading-tight">
+                        {featuredCards[featuredCardIndex].subtitle}
+                      </p>
+                    )}
+                    {"details" in featuredCards[featuredCardIndex] && (featuredCards[featuredCardIndex] as any).details ? (
+                      <p className="text-white/70 text-[11px] font-normal leading-tight pt-0.5">
+                        {(featuredCards[featuredCardIndex] as any).details}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
 
@@ -2096,7 +2127,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                   <button
                     onClick={() => {
                       const card = featuredCards[featuredCardIndex];
-                      if (card.id === "egipto" && onSelectLeyendas) {
+                      if ((card.id === "egipto" || card.id.startsWith("egipto") || card.id === "descubre-egipto") && onSelectLeyendas) {
                         onSelectLeyendas();
                       } else {
                         setSelectedDest(card.destKey);
@@ -2115,7 +2146,7 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
                       </defs>
                       <rect x="0.75" y="0.75" width="calc(100% - 1.5px)" height="calc(100% - 1.5px)" rx="7" ry="7" fill="none" stroke="url(#vpBorderGrad)" strokeWidth="1.5" />
                     </svg>
-                    <span className="relative z-10">Ver programa</span>
+                    <span className="relative z-10">Ver programas</span>
                     <ArrowRight className="w-3 h-3 text-white relative z-10" />
                   </button>
 
@@ -2579,14 +2610,33 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
               )}
             </div>
 
-            {/* Search Button */}
+            {/* Search Button (sin color de fondo, bordeado con degradado como los botones de las tarjetas flotantes) */}
             <button
               type="button"
               onClick={handleSearch}
-              className="bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:brightness-110 active:scale-98 text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0"
+              className="relative group inline-flex items-center justify-center gap-2 px-6 py-3 text-white font-semibold text-xs sm:text-sm rounded-xl hover:bg-white/10 active:scale-98 transition-all cursor-pointer whitespace-nowrap shrink-0 bg-transparent"
             >
-              <Search className="w-4 h-4 text-white" />
-              <span>Buscar</span>
+              <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-xl" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="searchBtnBorderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#1F82D2" />
+                    <stop offset="100%" stopColor="#52A72B" />
+                  </linearGradient>
+                </defs>
+                <rect 
+                  x="0.75" 
+                  y="0.75" 
+                  width="calc(100% - 1.5px)" 
+                  height="calc(100% - 1.5px)" 
+                  rx="11" 
+                  ry="11" 
+                  fill="none" 
+                  stroke="url(#searchBtnBorderGrad)" 
+                  strokeWidth="1.5" 
+                />
+              </svg>
+              <Search className="w-4 h-4 text-white relative z-10 transition-transform group-hover:scale-105" />
+              <span className="relative z-10">Buscar</span>
             </button>
 
           </div>
@@ -3167,10 +3217,11 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
           {/* Header centrado estilo Conocemos el destino */}
           <div className="text-center max-w-4xl mx-auto space-y-2.5 sm:space-y-3 mb-10 sm:mb-14">
             <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
-              GRUPOS A MEDIDA
+              VIAJES A MEDIDA Y GRUPOS
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
-              Cada grupo, un viaje <span className="bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent font-normal">a medida.</span>
+              De lo que tus clientes imaginan.<br className="hidden sm:inline" />{" "}
+              Al viaje que les propones.
             </h2>
           </div>
 
@@ -3202,16 +3253,24 @@ export default function PublicWeb({ onEnterB2B, onSelectLeyendas, onSelectMaravi
               <div className="lg:col-span-6 xl:col-span-6 space-y-6 text-left flex flex-col justify-center">
                 <div className="space-y-4">
                   <p className="text-slate-600 text-sm sm:text-base lg:text-[16.5px] leading-relaxed">
-                    El motivo del viaje, el ritmo y las expectativas cambian de un grupo a otro. Diseñamos itinerarios, alojamientos y servicios adaptados, con especialistas que acompañan a tu agencia en la preparación del viaje.
+                    Nuestro equipo de especialistas trabaja junto a tu agencia para convertir las ideas de tus clientes en una propuesta adaptada a sus preferencias, necesidades y presupuesto.
                   </p>
-                  <p className="text-[#0A0F1D] font-medium text-sm sm:text-base lg:text-[16.5px] leading-relaxed">
-                    Cuéntanos qué grupo tienes en mente. Empezamos por ahí.
+                  <p className="text-slate-600 text-sm sm:text-base lg:text-[16.5px] leading-relaxed">
+                    Te ayudamos a definir fechas, alojamientos, traslados, excursiones y servicios adicionales. Tú aportas el conocimiento de tus viajeros; nosotros, el asesoramiento y la logística para dar forma al viaje.
                   </p>
                 </div>
 
                 <div className="pt-2">
                   <a 
-                    href="#alta-agencia"
+                    href="#formulario-grupos"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (onSelectGruposForm) {
+                        onSelectGruposForm();
+                      } else {
+                        window.location.hash = "formulario-grupos";
+                      }
+                    }}
                     className="inline-flex items-center gap-2 bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:brightness-110 active:scale-98 text-white font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-xl shadow-xs transition-all cursor-pointer group w-fit"
                   >
                     <span>Solicitar propuesta para un grupo</span>
