@@ -10,6 +10,7 @@ import AgencyPortal from "./components/AgencyPortal";
 import LeyendasDetail from "./components/LeyendasDetail";
 import MaravillasDetail from "./components/MaravillasDetail";
 import ViajesMedidaGrupos from "./components/ViajesMedidaGrupos";
+import EgiptoSeniorDetail from "./components/EgiptoSeniorDetail";
 import { PassportReader } from "./components/PassportReader";
 import TestBanner from "./components/TestBanner";
 import { Booking } from "./types";
@@ -29,7 +30,7 @@ import {
 } from "lucide-react";
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<"public" | "b2b" | "leyendas-detail" | "maravillas-detail" | "viajes-a-medida-grupos">("public");
+  const [viewMode, setViewMode] = useState<"public" | "b2b" | "leyendas-detail" | "maravillas-detail" | "viajes-a-medida-grupos" | "egipto-senior-detail">("public");
   const [scrollToGruposForm, setScrollToGruposForm] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("home");
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -200,6 +201,8 @@ export default function App() {
         setViewMode("leyendas-detail");
       } else if (hash === "#maravillas-detail") {
         setViewMode("maravillas-detail");
+      } else if (hash.startsWith("#egipto-senior") || hash.startsWith("#destino-egipto-selecto-senior")) {
+        setViewMode("egipto-senior-detail");
       } else if (hash === "#b2b") {
         setViewMode("b2b");
       } else if (hash === "" || hash === "#" || hash === "#inicio" || hash === "#ofertas" || hash === "#nosotros") {
@@ -247,6 +250,25 @@ export default function App() {
       );
     }
 
+    if (viewMode === "egipto-senior-detail") {
+      return (
+        <EgiptoSeniorDetail 
+          onBack={() => {
+            window.location.hash = "";
+            setViewMode("public");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }} 
+          onEnterB2B={() => {
+            setViewMode("b2b");
+            setActiveTab("bookings");
+          }} 
+          agencyName={agencyName}
+          agentName={agentName}
+          onAddBooking={handleAddBooking}
+        />
+      );
+    }
+
     if (viewMode === "maravillas-detail") {
       return (
         <MaravillasDetail 
@@ -271,6 +293,11 @@ export default function App() {
             window.location.hash = "leyendas-detail";
             setViewMode("leyendas-detail");
           }} 
+          onSelectSenior={() => {
+            window.location.hash = "egipto-senior-detail";
+            setViewMode("egipto-senior-detail");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           onSelectMaravillas={() => {
             window.location.hash = "maravillas-detail";
             setViewMode("maravillas-detail");

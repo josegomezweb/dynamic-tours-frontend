@@ -39,6 +39,7 @@ interface PublicWebProps {
   onEnterB2B: (agent: string, agency: string) => void;
   onSelectLeyendas?: () => void;
   onSelectMaravillas?: () => void;
+  onSelectSenior?: () => void;
   onSelectGrupos?: () => void;
   onSelectGruposForm?: () => void;
 }
@@ -825,6 +826,7 @@ export default function PublicWeb({
   onEnterB2B, 
   onSelectLeyendas, 
   onSelectMaravillas,
+  onSelectSenior,
   onSelectGrupos,
   onSelectGruposForm
 }: PublicWebProps) {
@@ -1156,7 +1158,8 @@ export default function PublicWeb({
       image: "/senior dynamic ok.png",
       imagePos: "object-[center_36%]",
       bottomImagePos: "object-[center_70%]",
-      isLeyendas: false
+      isLeyendas: false,
+      isSenior: true
     },
     {
       id: "suenos-estambul",
@@ -2127,7 +2130,9 @@ export default function PublicWeb({
                   <button
                     onClick={() => {
                       const card = featuredCards[featuredCardIndex];
-                      if ((card.id === "egipto" || card.id.startsWith("egipto") || card.id === "descubre-egipto") && onSelectLeyendas) {
+                      if (card.id === "egipto-senior" && onSelectSenior) {
+                        onSelectSenior();
+                      } else if ((card.id === "egipto" || card.id.startsWith("egipto") || card.id === "descubre-egipto") && onSelectLeyendas) {
                         onSelectLeyendas();
                       } else {
                         setSelectedDest(card.destKey);
@@ -2957,10 +2962,19 @@ export default function PublicWeb({
 
           {/* Grid: Exactly 3 columns and 2 rows on desktop (2 cols on tablet, 1 col on mobile) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 xl:gap-[38px]">
-            {featuredOffers.map((offer) => (
+            {featuredOffers.map((offer) => {
+              const isCardClickable = Boolean((offer.isLeyendas && onSelectLeyendas) || ((offer.isSenior || offer.id === "senior-55") && onSelectSenior));
+              return (
               <div 
                 key={offer.id}
-                className="relative rounded-[18px] sm:rounded-[20px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] border border-slate-200/80 transition-all duration-300 group flex flex-col h-[385px] sm:h-[395px] lg:h-[400px] xl:h-[415px]"
+                onClick={() => {
+                  if (offer.isLeyendas && onSelectLeyendas) {
+                    onSelectLeyendas();
+                  } else if ((offer.isSenior || offer.id === "senior-55") && onSelectSenior) {
+                    onSelectSenior();
+                  }
+                }}
+                className={`relative rounded-[18px] sm:rounded-[20px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] border border-slate-200/80 transition-all duration-300 group flex flex-col h-[385px] sm:h-[395px] lg:h-[400px] xl:h-[415px] ${isCardClickable ? "cursor-pointer" : ""}`}
               >
                 {/* 1. ÁREA SUPERIOR: Fotografía encuadrada respecto al área visible superior */}
                 <div className="relative w-full flex-1 overflow-hidden bg-slate-100">
@@ -3044,6 +3058,8 @@ export default function PublicWeb({
                           e.stopPropagation();
                           if (offer.isLeyendas && onSelectLeyendas) {
                             onSelectLeyendas();
+                          } else if ((offer.isSenior || offer.id === "senior-55") && onSelectSenior) {
+                            onSelectSenior();
                           } else {
                             setIsLoginModalOpen(true);
                           }
@@ -3059,7 +3075,8 @@ export default function PublicWeb({
                 </div>
 
               </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>
