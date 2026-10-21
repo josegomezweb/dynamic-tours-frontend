@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Logo from "./Logo";
+import SeamlessHeroVideo from "./SeamlessHeroVideo";
 import { assetUrl } from "../utils/assets";
 import {
   Search,
@@ -42,6 +43,7 @@ interface PublicWebProps {
   onSelectSenior?: () => void;
   onSelectGrupos?: () => void;
   onSelectGruposForm?: () => void;
+  onSelectDestinos?: () => void;
 }
 
 interface DestinationItem {
@@ -828,7 +830,8 @@ export default function PublicWeb({
   onSelectMaravillas,
   onSelectSenior,
   onSelectGrupos,
-  onSelectGruposForm
+  onSelectGruposForm,
+  onSelectDestinos
 }: PublicWebProps) {
   const [activeCategory, setActiveCategory] = useState<string>("todos");
   const [inquiryName, setInquiryName] = useState<string>("");
@@ -859,6 +862,43 @@ export default function PublicWeb({
   const [selectedRegionId, setSelectedRegionId] = useState<string>("oriente_medio");
   const [expandedDestCards, setExpandedDestCards] = useState<Record<string, boolean>>({});
 
+  // Animación de entrada suave para el bloque «Sobre Dynamic»
+  const [isSobreDynamicVisible, setIsSobreDynamicVisible] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      if (window.innerHeight > 2000) return true; // Capturas o pantallas completas
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true;
+    }
+    return false;
+  });
+  const sobreDynamicRef = React.useRef<HTMLElement | null>(null);
+
+  React.useEffect(() => {
+    if (isSobreDynamicVisible) return;
+
+    const el = sobreDynamicRef.current;
+    if (!el) return;
+
+    // Si ya está dentro o muy cerca de la ventana, activar de inmediato
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight + 200) {
+      setIsSobreDynamicVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsSobreDynamicVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '120px 0px', threshold: 0.05 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isSobreDynamicVisible]);
+
   const toggleDestCard = (id: string, e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
@@ -869,14 +909,14 @@ export default function PublicWeb({
       [id]: !prev[id]
     }));
   };
-  const destinosButtonRef = React.useRef<HTMLButtonElement | null>(null);
+  const buscadorButtonRef = React.useRef<HTMLButtonElement | null>(null);
   const megamenuRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isDestDropdownOpen) {
         setIsDestDropdownOpen(false);
-        destinosButtonRef.current?.focus();
+        buscadorButtonRef.current?.focus();
       }
     };
 
@@ -884,8 +924,8 @@ export default function PublicWeb({
       if (
         megamenuRef.current && 
         !megamenuRef.current.contains(e.target as Node) &&
-        destinosButtonRef.current &&
-        !destinosButtonRef.current.contains(e.target as Node)
+        buscadorButtonRef.current &&
+        !buscadorButtonRef.current.contains(e.target as Node)
       ) {
         setIsDestDropdownOpen(false);
       }
@@ -1148,12 +1188,12 @@ export default function PublicWeb({
     {
       id: "senior-55",
       title: "Egipto Selecto Senior",
-      titleLine1: "Egipto",
-      titleLine2: "Selecto Senior",
-      subtitle: "Especial mayores de 55 años",
+      titleLine1: "Egipto Selecto Senior",
+      titleLine2: null,
+      subtitle: "Especial mayores de 55 años + acompañantes",
       tag: "ESPECIAL +55",
       duration: "8 DÍAS | 7 NOCHES",
-      description: "Crucero de 4 noches por el Nilo y 3 noches en El Cairo con visitas exclusivas, traslados y régimen todo incluido.",
+      description: "Crucero por el Nilo y estancia en El Cairo en pensión completa (3/4 y 4/3 noches). Incluye vuelos internacionales y domésticos, traslados, visitas guiadas, seguro y tasas.",
       price: "1.285€",
       image: "/senior dynamic ok.png",
       imagePos: "object-[center_36%]",
@@ -1169,7 +1209,7 @@ export default function PublicWeb({
       subtitle: null,
       tag: "VUELO DOMÉSTICO INCLUIDO",
       duration: "8 DÍAS | 7 NOCHES",
-      description: "4 noches en Estambul y 3 noches en Capadocia con vuelo doméstico, visitas guiadas y traslados incluidos.",
+      description: "4 noches en Estambul con desayuno y 3 noches en Capadocia en pensión completa. Incluye vuelo doméstico, vuelos internacionales, visitas guiadas, traslados, tasas y seguro.",
       price: "1.509€",
       image: "/turquia_dynamic.png",
       imagePos: "object-[center_32%]",
@@ -1178,13 +1218,14 @@ export default function PublicWeb({
     },
     {
       id: "descubre-egipto",
-      title: "Descubre Egipto - Crucero por el Nilo + El Cairo",
+      title: "Descubre Egipto - Últimas plazas",
       titleLine1: "Descubre Egipto",
-      titleLine2: "Crucero por el Nilo + El Cairo",
-      subtitle: null,
+      titleLine2: null,
+      subtitle: "ÚLTIMAS PLAZAS",
+      isSubtitlePulsing: true,
       tag: "BAJADA DE PRECIOS",
       duration: "8 DÍAS | 7 NOCHES",
-      description: "Crucero por el Nilo en pensión completa y estancia en El Cairo con visitas guiadas a templos y pirámides.",
+      description: "Crucero de 3/4 noches por el Nilo en pensión completa y 3/4 noches en El Cairo con desayuno, y una noche en Luxor en pensión completa los domingos. Incluye vuelos, traslados, visitas, tasas y seguro.",
       price: "499€",
       image: "/egipto_feluca.png",
       imagePos: "object-[20%_74%]",
@@ -1199,7 +1240,7 @@ export default function PublicWeb({
       subtitle: null,
       tag: "CIRCUITO CON VUELOS",
       duration: "8 DÍAS | 7 NOCHES",
-      description: "Estambul, Capadocia y Pamukkale con vuelo doméstico, hoteles seleccionados y recorrido cultural completo.",
+      description: "4 noches en Estambul con desayuno, 2 noches en Capadocia y 1 noche en Pamukkale en pensión completa. Incluye vuelo doméstico, visitas guiadas, traslados, tasas y seguro de viaje.",
       price: "1.599€",
       image: "/pamukkale_ruta_turca.jpg",
       imagePos: "object-[center_42%]",
@@ -1214,7 +1255,7 @@ export default function PublicWeb({
       subtitle: null,
       tag: "SALIDAS DESDE PROVINCIAS",
       duration: "8 DÍAS | 7 NOCHES",
-      description: "Crucero por el Nilo y estancia en El Cairo con cupos garantizados y vuelos directos desde múltiples aeropuertos.",
+      description: "Crucero por el Nilo de 3/4 noches en pensión completa, estancia en El Cairo con desayuno y 1 noche en Luxor o Asuán según operativa. Con vuelos, traslados, visitas y seguro.",
       price: "1.064€",
       image: "/egipto_fin_de_ano.jpg",
       imagePos: "object-center",
@@ -1229,7 +1270,7 @@ export default function PublicWeb({
       subtitle: null,
       tag: "SIN ABU SIMBEL",
       duration: "8 DÍAS | 7 NOCHES",
-      description: "Crucero por el Nilo en pensión completa y estancia en El Cairo con entrada por Asuán y salidas en viernes.",
+      description: "3 noches de crucero por el Nilo en pensión completa y 4 noches en El Cairo con desayuno, con salida en viernes. Incluye vuelos internacionales y domésticos, traslados, visitas, tasas y seguro (no incluye Abu Simbel).",
       price: "764€",
       image: "/dia_5_guiza.jpg",
       imagePos: "object-[center_28%]",
@@ -1277,13 +1318,9 @@ export default function PublicWeb({
   const [cardSize, setCardSize] = useState({ width: 450, height: 260 });
 
   // Dragging states
-  const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   React.useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
     if (window.location.hash) {
       const targetId = window.location.hash.replace("#", "");
       const el = document.getElementById(targetId);
@@ -1801,24 +1838,20 @@ export default function PublicWeb({
 
             {/* Public Navigation Links */}
             <nav className="hidden lg:flex items-center gap-2.5 xl:gap-5 text-[11px] xl:text-xs font-bold text-slate-800 whitespace-nowrap">
-              <button 
-                ref={destinosButtonRef}
-                onClick={() => setIsDestDropdownOpen(!isDestDropdownOpen)}
-                aria-expanded={isDestDropdownOpen}
-                aria-haspopup="true"
-                className={`flex items-center gap-1.5 uppercase tracking-wider transition-all py-1.5 px-3 rounded-lg cursor-pointer font-bold text-xs ${
-                  isDestDropdownOpen 
-                    ? "bg-white border border-[#1F82D2] text-[#0A0F1D]" 
-                    : "bg-transparent border border-transparent text-slate-800 hover:text-[#1F82D2]"
-                }`}
+              <a 
+                href="#destinos" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onSelectDestinos) {
+                    onSelectDestinos();
+                  } else {
+                    window.location.hash = "destinos";
+                  }
+                }}
+                className="hover:text-[#1F82D2] transition-colors font-bold cursor-pointer uppercase tracking-wider py-1.5 px-3 rounded-lg"
               >
-                <span>DESTINOS</span>
-                {isDestDropdownOpen ? (
-                  <ChevronUp className="w-3.5 h-3.5 text-[#1F82D2]" />
-                ) : (
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
-                )}
-              </button>
+                DESTINOS
+              </a>
 
               <span className="text-slate-300">·</span>
               <a href="#ofertas" className="hover:text-[#1F82D2] transition-colors font-bold">Ofertas</a>
@@ -1841,29 +1874,26 @@ export default function PublicWeb({
               <a href="#nosotros" className="hover:text-[#1F82D2] transition-colors font-bold">Sobre Dynamic</a>
             </nav>
 
-            {/* Right Buttons: Buscador + ACCESO AGENCIAS */}
+            {/* Right Buttons: Buscador (abre el megamenú buscador) + ACCESO AGENCIAS */}
             <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
               <button
+                ref={buscadorButtonRef}
                 onClick={() => setIsDestDropdownOpen(!isDestDropdownOpen)}
-                className={`lg:hidden flex items-center gap-1 font-bold text-xs py-1.5 px-2.5 rounded-lg transition-all cursor-pointer ${
+                aria-expanded={isDestDropdownOpen}
+                aria-haspopup="true"
+                className={`flex items-center gap-1.5 font-bold text-xs py-1.5 px-3 rounded-full border transition-all cursor-pointer shadow-2xs ${
                   isDestDropdownOpen 
-                    ? "bg-white border border-[#1F82D2] text-[#0A0F1D]" 
-                    : "bg-[#f1f5f9] text-slate-700 hover:bg-[#e2e8f0]"
+                    ? "bg-white border-[#1F82D2] text-[#0A0F1D] ring-2 ring-[#1F82D2]/20" 
+                    : "bg-[#f1f5f9] hover:bg-[#e2e8f0] border-slate-200/80 text-slate-700"
                 }`}
               >
-                <span>Destinos</span>
-                {isDestDropdownOpen ? <ChevronUp className="w-3 h-3 text-[#1F82D2]" /> : <ChevronDown className="w-3 h-3 text-slate-500" />}
-              </button>
-
-              <button
-                onClick={() => {
-                  const el = document.getElementById("hero-finder");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="hidden sm:flex items-center gap-1.5 bg-[#f1f5f9] hover:bg-[#e2e8f0] text-slate-700 font-bold text-xs py-1.5 px-3 rounded-full border border-slate-200/80 transition-all cursor-pointer shadow-2xs"
-              >
-                <Search className="w-3.5 h-3.5 text-slate-500" />
+                <Search className={`w-3.5 h-3.5 ${isDestDropdownOpen ? "text-[#1F82D2]" : "text-slate-500"}`} />
                 <span>Buscador</span>
+                {isDestDropdownOpen ? (
+                  <ChevronUp className="w-3 h-3 text-[#1F82D2]" />
+                ) : (
+                  <ChevronDown className="w-3 h-3 text-slate-400" />
+                )}
               </button>
 
               <button
@@ -1896,9 +1926,9 @@ export default function PublicWeb({
                 <button 
                   onClick={() => {
                     setIsDestDropdownOpen(false);
-                    destinosButtonRef.current?.focus();
+                    buscadorButtonRef.current?.focus();
                   }}
-                  aria-label="Cerrar menú de destinos"
+                  aria-label="Cerrar menú del buscador"
                   className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
@@ -1984,16 +2014,7 @@ export default function PublicWeb({
                   {activeRegion.phrase}
                 </p>
 
-                <div className="flex items-center gap-4 sm:gap-6 w-full md:w-auto justify-between md:justify-end">
-                  <a
-                    href="https://www.dynamic-tours.com/destinos/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs sm:text-[13px] font-bold text-[#0A0F1D] hover:text-[#1F82D2] transition-colors whitespace-nowrap cursor-pointer"
-                  >
-                    Ir a Destinos Dynamic
-                  </a>
-
+                <div className="flex items-center justify-end w-full md:w-auto">
                   <a
                     href={activeRegion.categoryUrl}
                     target="_blank"
@@ -2014,25 +2035,12 @@ export default function PublicWeb({
       {/* HERO SECTION MATCHING REFERENCE DESIGN */}
       <section className="relative z-20 text-white overflow-visible min-h-[640px] md:h-[calc(100vh-4rem)] md:max-h-[665px] md:min-h-[560px] flex flex-col justify-between">
         
-        {/* Hero Video Background Layer (kept exactly as inserted) */}
-        <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950">
-          <video
-            ref={videoRef}
-            src={assetUrl("home_dynamic_hero_optimized.mp4")}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            className="w-full h-full object-cover scale-100"
-          >
-            <source src={assetUrl("home_dynamic_hero_optimized.mp4")} type="video/mp4" />
-            <source src={assetUrl("home_dynamic_hero_720p.mp4")} type="video/mp4" />
-          </video>
-          {/* Natural cinematic overlay for readability while keeping video luminous */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20"></div>
-        </div>
+        {/* Hero Video Background Layer with seamless crossfade looping */}
+        <SeamlessHeroVideo 
+          src={assetUrl("video_home_dynamic_ok.mp4")} 
+          poster={assetUrl("video_hero_poster.jpg")}
+          crossfadeDuration={1.2} 
+        />
 
         {/* Hero Main Content Area */}
         <div className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-4 sm:pb-6 relative z-20 flex-1 flex flex-col lg:flex-row items-center justify-between gap-8">
@@ -3032,7 +3040,7 @@ export default function PublicWeb({
                       </h3>
 
                       {offer.subtitle && (
-                        <p className="text-[11.5px] sm:text-[12px] font-semibold text-[#0A1931] pt-0.5 leading-tight">
+                        <p className={`text-[11.5px] sm:text-[12px] font-semibold text-[#0A1931] pt-0.5 leading-tight ${offer.isSubtitlePulsing ? "animate-subtle-blink" : ""}`}>
                           {offer.subtitle}
                         </p>
                       )}
@@ -3064,9 +3072,9 @@ export default function PublicWeb({
                             setIsLoginModalOpen(true);
                           }
                         }}
-                        className="inline-flex items-center justify-center gap-1.5 w-[118px] sm:w-[126px] xl:w-[132px] h-[36px] sm:h-[38px] rounded-[9px] sm:rounded-[10px] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:brightness-105 active:scale-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer whitespace-nowrap border-0 shrink-0"
+                        className="inline-flex items-center justify-center gap-1.5 w-[124px] sm:w-[130px] xl:w-[136px] h-[36px] sm:h-[38px] rounded-[9px] sm:rounded-[10px] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:brightness-105 active:scale-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer whitespace-nowrap border-0 shrink-0"
                       >
-                        <span>Ver viaje</span>
+                        <span>Ver detalles</span>
                         <ArrowRight className="w-3.5 h-3.5 text-white stroke-[2]" />
                       </button>
                     </div>
@@ -3237,8 +3245,8 @@ export default function PublicWeb({
               VIAJES A MEDIDA Y GRUPOS
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
-              De lo que tus clientes imaginan.<br className="hidden sm:inline" />{" "}
-              Al viaje que les propones.
+              De lo que tus clientes imaginan<br className="hidden sm:inline" />{" "}
+              al viaje que les propones.
             </h2>
           </div>
 
@@ -3246,28 +3254,19 @@ export default function PublicWeb({
           <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-14 items-center">
               
-              {/* Imagen a la izquierda */}
-              <div className="lg:col-span-6 xl:col-span-6">
-                <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_8px_28px_rgba(0,0,0,0.08)] border border-slate-200 group aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3]">
+              {/* Imagen a la izquierda (ligeramente más pequeña y con recorte superior) */}
+              <div className="lg:col-span-5 xl:col-span-5">
+                <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.06)] border border-slate-200 group aspect-[16/11] max-w-md mx-auto lg:max-w-none">
                   <img 
                     src={assetUrl("grupos_a_medida_egipto.jpg")} 
                     alt="Grupos a medida con guía arqueológico especializado · Dynamic Tours" 
-                    className="w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-700"
+                    className="w-full h-full object-cover object-[center_65%] group-hover:scale-102 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute bottom-3.5 left-4 right-4 flex items-center justify-between text-white text-xs">
-                    <span className="font-semibold text-white/95 tracking-wide drop-shadow-xs">
-                      Itinerarios y Asesoramiento Técnico Exclusivo
-                    </span>
-                    <span className="text-[10px] font-semibold text-white/95 bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/25">
-                      100% B2B
-                    </span>
-                  </div>
                 </div>
               </div>
 
               {/* Texto a la derecha */}
-              <div className="lg:col-span-6 xl:col-span-6 space-y-6 text-left flex flex-col justify-center">
+              <div className="lg:col-span-7 xl:col-span-7 space-y-6 text-left flex flex-col justify-center">
                 <div className="space-y-4">
                   <p className="text-slate-600 text-sm sm:text-base lg:text-[16.5px] leading-relaxed">
                     Nuestro equipo de especialistas trabaja junto a tu agencia para convertir las ideas de tus clientes en una propuesta adaptada a sus preferencias, necesidades y presupuesto.
@@ -3278,204 +3277,254 @@ export default function PublicWeb({
                 </div>
 
                 <div className="pt-2">
-                  <a 
-                    href="#formulario-grupos"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (onSelectGruposForm) {
-                        onSelectGruposForm();
-                      } else {
-                        window.location.hash = "formulario-grupos";
-                      }
-                    }}
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:brightness-110 active:scale-98 text-white font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-xl shadow-xs transition-all cursor-pointer group w-fit"
-                  >
-                    <span>Solicitar propuesta para un grupo</span>
-                    <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
-                  </a>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* 2. NUESTRA CARTA DE GARANTÍA: Compromiso Exclusivo con el Canal Profesional */}
-      <section id="nosotros" className="py-16 sm:py-20 lg:py-24 bg-white border-t border-slate-200/80 relative">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Bloque Principal: Texto y Fotografía Corporativa */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-14 items-center">
-            
-            <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-left">
-              <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
-                NUESTRA CARTA DE GARANTÍA
-              </span>
-              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
-                Compromiso Exclusivo con el Canal Profesional
-              </h3>
-              <p className="text-slate-600 text-xs sm:text-sm lg:text-[15px] leading-relaxed">
-                Fundada en Madrid, <strong className="text-[#0A0F1D]">Dynamic Tours S.A.</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia. Nuestra filosofía operativa se asienta sobre la excelencia absoluta del servicio terrestre privado en destino, una política inquebrantable de fidelidad al canal minorista y una constante inversión tecnológica para dotar de herramientas avanzadas a las agencias colaboradoras.
-              </p>
-              <p className="text-slate-600 text-xs sm:text-sm lg:text-[15px] leading-relaxed">
-                Cada programa que lleva nuestra firma cuenta con el respaldo legal exigido por el Ministerio de Turismo, un robusto seguro multiasistencia médico líder, canales de comunicación directa de urgencia 24/7/365 en español y guías nativos titulados en arqueología e historia.
-              </p>
-            </div>
-
-            {/* Fotografía de Sede Corporativa B2B con Logo Dynamic */}
-            <div className="lg:col-span-5">
-              <div className="relative rounded-2xl overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.12)] border border-slate-200 group">
-                <img 
-                  src={assetUrl("oficinas_dynamic_b2b.png")} 
-                  alt="Sede Central y Compromiso Profesional B2B · Dynamic Tours" 
-                  className="w-full h-auto aspect-[16/10] sm:aspect-[16/9] object-cover object-center group-hover:scale-102 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/20 to-transparent pointer-events-none" />
-                <div className="absolute bottom-3.5 left-4 right-4 flex items-center justify-between text-white">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#52A72B] inline-block animate-pulse"></span>
-                    <span className="text-xs font-bold tracking-wide">Sede Central B2B</span>
+                  <div className="p-[1.5px] rounded-[10px] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] inline-flex shrink-0 shadow-sm">
+                    <a 
+                      href="#formulario-grupos"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (onSelectGruposForm) {
+                          onSelectGruposForm();
+                        } else {
+                          window.location.hash = "formulario-grupos";
+                        }
+                      }}
+                      className="px-4 sm:px-5 h-[36px] sm:h-[38px] rounded-[8.5px] bg-white hover:bg-slate-50 text-[#0A1931] hover:text-[#1F82D2] text-xs font-semibold flex items-center justify-center gap-2.5 transition-colors cursor-pointer whitespace-nowrap"
+                    >
+                      <span>Solicitar propuesta</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#0A1931] stroke-[2]" />
+                    </a>
                   </div>
-                  <span className="text-[10px] font-semibold text-white/95 bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/25">
-                    Atención Exclusiva a Agencias
-                  </span>
                 </div>
               </div>
+
             </div>
-
-          </div>
-
-          {/* Delegaciones Central España y Oficial Portugal */}
-          <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-            
-            {/* Delegación España */}
-            <div className="bg-[#F8FAFC] p-5 sm:p-6 rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow text-left">
-              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 mb-3.5">
-                <h5 className="text-xs font-black text-[#0A0F1D] uppercase tracking-widest flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-xs bg-[#1F82D2] inline-block"></span>
-                  Delegación Central España
-                </h5>
-                <span className="text-[10px] font-bold text-slate-400 font-mono tracking-wider">MADRID</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-600">
-                <p className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-[#1F82D2] shrink-0 mt-0.5" />
-                  <span className="text-slate-700">Avda. Menéndez Pelayo, 83, Madrid</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-[#1F82D2] shrink-0" />
-                  <a href="tel:+34915521443" className="text-[#0A0F1D] font-bold hover:text-[#1F82D2] transition-colors">+34 915 521 443</a>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-[#1F82D2] shrink-0" />
-                  <a href="mailto:reservas@dynamic-tours.com" className="text-slate-700 hover:text-[#1F82D2] transition-colors">reservas@dynamic-tours.com</a>
-                </p>
-              </div>
-            </div>
-
-            {/* Delegación Portugal */}
-            <div className="bg-[#F8FAFC] p-5 sm:p-6 rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow text-left">
-              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 mb-3.5">
-                <h5 className="text-xs font-black text-[#0A0F1D] uppercase tracking-widest flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-xs bg-[#52A72B] inline-block"></span>
-                  Delegación Oficial Portugal
-                </h5>
-                <span className="text-[10px] font-bold text-slate-400 font-mono tracking-wider">PORTO</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-600">
-                <p className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-[#52A72B] shrink-0 mt-0.5" />
-                  <span className="text-slate-700">Rua 5 de Outubro, 185, Porto</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-[#52A72B] shrink-0" />
-                  <a href="tel:+351912757377" className="text-[#0A0F1D] font-bold hover:text-[#52A72B] transition-colors">+351 912 757 377</a>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-[#52A72B] shrink-0" />
-                  <a href="mailto:reservas@dynamic-tours.pt" className="text-slate-700 hover:text-[#52A72B] transition-colors">reservas@dynamic-tours.pt</a>
-                </p>
-              </div>
-            </div>
-
           </div>
 
         </div>
       </section>
 
-      {/* 3. SOPORTE Y SOLVENCIA: El Rigor de un Gran Mayorista */}
-      <section className="py-16 sm:py-20 bg-[#F8FAFC] border-t border-slate-200/80 relative">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
-          
-          <div className="text-center max-w-2xl mx-auto space-y-2.5 sm:space-y-3">
-            <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
-              SOPORTE Y SOLVENCIA
+      {/* 2. SOBRE DYNAMIC (Composición limpia según mockup aprobado) */}
+      <section 
+        id="nosotros" 
+        ref={sobreDynamicRef}
+        className="relative w-full overflow-hidden bg-white py-14 sm:py-16 lg:py-20 border-t border-slate-200/80"
+      >
+        {/* Fotografía corporativa de fondo a todo el ancho */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={assetUrl("sobre_dynamic_bg.png")} 
+            alt="Sede Central y Equipo · Dynamic Tours" 
+            className="w-full h-full object-cover object-[78%_center] lg:object-[82%_center]"
+            loading="lazy"
+          />
+          {/* Capa gradual horizontal: blanco puro a la izquierda para texto, desvaneciéndose antes de alcanzar el logo de la derecha */}
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to right, #FFFFFF 0%, #FFFFFF 36%, rgba(255, 255, 255, 0.85) 44%, rgba(255, 255, 255, 0.2) 52%, transparent 58%)'
+            }}
+          />
+          {/* Capa blanca suave adicional en pantallas móviles para garantizar legibilidad completa */}
+          <div className="absolute inset-0 pointer-events-none sm:hidden bg-white/60" />
+          {/* Capa gradual vertical inferior: transición suave a blanco donde se sitúan los 3 iconos */}
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to top, #FFFFFF 0%, #FFFFFF 14%, rgba(255, 255, 255, 0.75) 24%, transparent 40%)'
+            }}
+          />
+        </div>
+
+        {/* Contenedor habitual de la home con animación de entrada suave */}
+        <div 
+          className={`relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 transition-all duration-500 ease-out ${
+            isSobreDynamicVisible 
+              ? "opacity-100 translate-y-0" 
+              : "opacity-0 translate-y-3 motion-reduce:opacity-100 motion-reduce:translate-y-0"
+          }`}
+        >
+          {/* Bloque de Textos alineado a la izquierda */}
+          <div className="max-w-2xl text-left">
+            {/* Rótulo pequeño con degradado Dynamic (mismo estilo que VIAJES A MEDIDA Y GRUPOS) */}
+            <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none mb-2.5 sm:mb-3">
+              SOBRE DYNAMIC
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
-              El Rigor de un Gran Mayorista
+
+            {/* Título en dos líneas (mismo estilo, color, tipografía y grosor que grupos) */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2] mb-4 sm:mb-5">
+              <span className="block">Compromiso de respaldo.</span>
+              <span className="block">Garantía de excelencia.</span>
             </h2>
-            <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
-              Ventajas logísticas y garantías operativas diseñadas exclusivamente para la agencia minorista.
+
+            {/* Párrafo exacto con únicamente "Dynamic Tours S.A." en negrita */}
+            <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed max-w-xl mb-6 sm:mb-7">
+              Fundada en Madrid en el año 2000, <strong className="font-bold text-[#0A1931]">Dynamic Tours S.A.</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia.
             </p>
+
+            {/* Botón "Saber más →": borde fino degradado, interior blanco/transparente, texto azul oscuro */}
+            <div className="p-[1.5px] rounded-[10px] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] inline-flex shrink-0 shadow-sm">
+              <a
+                href="#nosotros"
+                className="px-4 sm:px-5 h-[36px] sm:h-[38px] rounded-[8.5px] bg-white hover:bg-slate-50 text-[#0A1931] hover:text-[#1F82D2] text-xs font-semibold flex items-center justify-center gap-2.5 transition-colors cursor-pointer whitespace-nowrap"
+              >
+                <span>Saber más</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#0A1931] stroke-[2]" />
+              </a>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-            
-            {/* Feature 1 */}
-            <div className="bg-white hover:bg-slate-50/80 border border-slate-200/80 p-5 sm:p-6 rounded-2xl transition-all duration-300 text-left space-y-2.5 group hover:shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-[#1F82D2]/10 text-[#1F82D2] flex items-center justify-center group-hover:scale-105 transition-transform">
-                <Users className="w-5 h-5" />
+          {/* Tres Iconos Inferiores en fila equilibrada */}
+          <div className="mt-10 sm:mt-14 lg:mt-18 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-6 lg:gap-12 max-w-4xl mx-auto text-center items-start">
+              
+              {/* Icono 1: Auriculares · Equipo especializado */}
+              <div className="flex flex-col items-center">
+                <svg className="w-10 h-10 sm:w-12 sm:h-12" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="iconGradSobre1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#1F82D2" />
+                      <stop offset="100%" stopColor="#52A72B" />
+                    </linearGradient>
+                  </defs>
+                  {/* Arco superior de la diadema */}
+                  <path 
+                    d="M12 24C12 17.37 17.37 12 24 12C30.63 12 36 17.37 36 24" 
+                    stroke="url(#iconGradSobre1)" 
+                    strokeWidth="2.2" 
+                    strokeLinecap="round" 
+                  />
+                  {/* Auricular izquierdo */}
+                  <rect 
+                    x="9" 
+                    y="22" 
+                    width="5.5" 
+                    height="10" 
+                    rx="2.5" 
+                    stroke="url(#iconGradSobre1)" 
+                    strokeWidth="2.2" 
+                  />
+                  {/* Auricular derecho */}
+                  <rect 
+                    x="33.5" 
+                    y="22" 
+                    width="5.5" 
+                    height="10" 
+                    rx="2.5" 
+                    stroke="url(#iconGradSobre1)" 
+                    strokeWidth="2.2" 
+                  />
+                  {/* Brazo de micrófono curvado hacia la boca */}
+                  <path 
+                    d="M12 31V33.5C12 36.5 14.5 39 17.5 39H22" 
+                    stroke="url(#iconGradSobre1)" 
+                    strokeWidth="2.2" 
+                    strokeLinecap="round" 
+                  />
+                  <circle 
+                    cx="24" 
+                    cy="39" 
+                    r="2" 
+                    fill="url(#iconGradSobre1)" 
+                  />
+                </svg>
+                <p className="text-xs sm:text-[15px] font-semibold text-[#0A1931] tracking-tight leading-snug mt-2 sm:mt-3">
+                  <span className="block">Equipo</span>
+                  <span className="block">especializado</span>
+                </p>
               </div>
-              <h3 className="text-sm font-bold text-[#0A0F1D] tracking-tight">
-                Especialistas por Destino
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Egiptólogos y técnicos expertos. Asesoramiento riguroso y cotizaciones a medida inmediatas.
-              </p>
-            </div>
 
-            {/* Feature 2 */}
-            <div className="bg-white hover:bg-slate-50/80 border border-slate-200/80 p-5 sm:p-6 rounded-2xl transition-all duration-300 text-left space-y-2.5 group hover:shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-[#52A72B]/10 text-[#52A72B] flex items-center justify-center group-hover:scale-105 transition-transform">
-                <ShieldCheck className="w-5 h-5" />
+              {/* Icono 2: Manos con corazón y cruz · Seguro básico incluido */}
+              <div className="flex flex-col items-center">
+                <svg className="w-10 h-10 sm:w-12 sm:h-12" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="iconGradSobre2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#1F82D2" />
+                      <stop offset="100%" stopColor="#52A72B" />
+                    </linearGradient>
+                  </defs>
+                  {/* Corazón con cruz */}
+                  <path 
+                    d="M24 18C22.6 15.6 18.5 12 18.5 8.5C18.5 6.3 20.3 4.5 22.5 4.5C23.7 4.5 24.8 5.2 25.5 6.2C26.2 5.2 27.3 4.5 28.5 4.5C30.7 4.5 32.5 6.3 32.5 8.5C32.5 12 28.4 15.6 27 18L25.5 19.5L24 18Z" 
+                    stroke="url(#iconGradSobre2)" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                  />
+                  <path 
+                    d="M25.5 7.5V12.5M23 10H28" 
+                    stroke="url(#iconGradSobre2)" 
+                    strokeWidth="1.8" 
+                    strokeLinecap="round" 
+                  />
+                  {/* Manos estilizadas de apoyo */}
+                  <path 
+                    d="M13 23C13 26 14.5 28.5 17 30.5L24 36L25.5 37.2L27 36L34 30.5C36.5 28.5 38 26 38 23" 
+                    stroke="url(#iconGradSobre2)" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                  />
+                  <path 
+                    d="M11 28L14 34C16.5 38.5 20.5 41 25.5 41C30.5 41 34.5 38.5 37 34L40 28" 
+                    stroke="url(#iconGradSobre2)" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                  />
+                </svg>
+                <p className="text-xs sm:text-[15px] font-semibold text-[#0A1931] tracking-tight leading-snug mt-2 sm:mt-3">
+                  <span className="block">Seguro básico</span>
+                  <span className="block">incluido</span>
+                </p>
               </div>
-              <h3 className="text-sm font-bold text-[#0A0F1D] tracking-tight">
-                Seguro de Viaje Incluido
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Asistencia médica y multiviaje en toda la programación base para máxima tranquilidad.
-              </p>
-            </div>
 
-            {/* Feature 3 */}
-            <div className="bg-white hover:bg-slate-50/80 border border-slate-200/80 p-5 sm:p-6 rounded-2xl transition-all duration-300 text-left space-y-2.5 group hover:shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-[#1F82D2]/10 text-[#1F82D2] flex items-center justify-center group-hover:scale-105 transition-transform">
-                <Plane className="w-5 h-5" />
+              {/* Icono 3: Maleta con reloj · Asistencia en viaje 24 h */}
+              <div className="flex flex-col items-center">
+                <svg className="w-10 h-10 sm:w-12 sm:h-12" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="iconGradSobre3" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#1F82D2" />
+                      <stop offset="100%" stopColor="#52A72B" />
+                    </linearGradient>
+                  </defs>
+                  {/* Asa superior de la maleta */}
+                  <path 
+                    d="M19 14V11C19 9.89543 19.8954 9 21 9H27C28.1046 9 29 9.89543 29 11V14" 
+                    stroke="url(#iconGradSobre3)" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                  />
+                  {/* Cuerpo de la maleta */}
+                  <path 
+                    d="M25 39H13C10.79 39 9 37.21 9 35V17C9 14.79 10.79 13 13 13H35C37.21 13 39 14.79 39 17V24" 
+                    stroke="url(#iconGradSobre3)" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                  />
+                  {/* Reloj integrado en esquina inferior derecha */}
+                  <circle 
+                    cx="33.5" 
+                    cy="33.5" 
+                    r="7.5" 
+                    fill="white"
+                    stroke="url(#iconGradSobre3)" 
+                    strokeWidth="2" 
+                  />
+                  <path 
+                    d="M33.5 29.5V33.5L36 35" 
+                    stroke="url(#iconGradSobre3)" 
+                    strokeWidth="1.8" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                  />
+                </svg>
+                <p className="text-xs sm:text-[15px] font-semibold text-[#0A1931] tracking-tight leading-snug mt-2 sm:mt-3">
+                  <span className="block">Asistencia</span>
+                  <span className="block">en viaje 24 h</span>
+                </p>
               </div>
-              <h3 className="text-sm font-bold text-[#0A0F1D] tracking-tight">
-                Cupos Chárter Propios
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Vuelos directos desde múltiples aeropuertos de provincias con plazas garantizadas.
-              </p>
-            </div>
 
-            {/* Feature 4 */}
-            <div className="bg-white hover:bg-slate-50/80 border border-slate-200/80 p-5 sm:p-6 rounded-2xl transition-all duration-300 text-left space-y-2.5 group hover:shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-[#52A72B]/10 text-[#52A72B] flex items-center justify-center group-hover:scale-105 transition-transform">
-                <Globe className="w-5 h-5" />
-              </div>
-              <h3 className="text-sm font-bold text-[#0A0F1D] tracking-tight">
-                Fidelidad 100% B2B
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Blindaje absoluto: jamás atendemos cliente final, protegiendo tu comisión y relación.
-              </p>
             </div>
-
           </div>
+
         </div>
       </section>
 

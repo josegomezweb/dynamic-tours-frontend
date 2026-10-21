@@ -14,3 +14,16 @@
 .animate-fade-in {
   animation: fadeIn 0.25s ease-out forwards;
 }
+
+@keyframes subtleBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.animate-subtle-blink {
+  animation: subtleBlink 2s ease-in-out infinite;
+}

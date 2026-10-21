@@ -11,6 +11,7 @@ import LeyendasDetail from "./components/LeyendasDetail";
 import MaravillasDetail from "./components/MaravillasDetail";
 import ViajesMedidaGrupos from "./components/ViajesMedidaGrupos";
 import EgiptoSeniorDetail from "./components/EgiptoSeniorDetail";
+import DestinosPage from "./components/DestinosPage";
 import { PassportReader } from "./components/PassportReader";
 import TestBanner from "./components/TestBanner";
 import { Booking } from "./types";
@@ -30,7 +31,7 @@ import {
 } from "lucide-react";
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<"public" | "b2b" | "leyendas-detail" | "maravillas-detail" | "viajes-a-medida-grupos" | "egipto-senior-detail">("public");
+  const [viewMode, setViewMode] = useState<"public" | "b2b" | "leyendas-detail" | "maravillas-detail" | "viajes-a-medida-grupos" | "egipto-senior-detail" | "destinos">("public");
   const [scrollToGruposForm, setScrollToGruposForm] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("home");
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -203,6 +204,8 @@ export default function App() {
         setViewMode("maravillas-detail");
       } else if (hash.startsWith("#egipto-senior") || hash.startsWith("#destino-egipto-selecto-senior")) {
         setViewMode("egipto-senior-detail");
+      } else if (hash === "#destinos" || hash.startsWith("#destinos")) {
+        setViewMode("destinos");
       } else if (hash === "#b2b") {
         setViewMode("b2b");
       } else if (hash === "" || hash === "#" || hash === "#inicio" || hash === "#ofertas" || hash === "#nosotros") {
@@ -285,6 +288,34 @@ export default function App() {
       );
     }
 
+    if (viewMode === "destinos") {
+      return (
+        <DestinosPage 
+          onBackToHome={() => {
+            window.location.hash = "";
+            setViewMode("public");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }} 
+          onEnterB2B={handleEnterB2B}
+          onSelectSenior={() => {
+            window.location.hash = "egipto-senior-detail";
+            setViewMode("egipto-senior-detail");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onSelectLeyendas={() => {
+            window.location.hash = "leyendas-detail";
+            setViewMode("leyendas-detail");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onSelectGrupos={() => {
+            window.location.hash = "viajes-a-medida-grupos";
+            setViewMode("viajes-a-medida-grupos");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
+      );
+    }
+
     if (viewMode === "public") {
       return (
         <PublicWeb 
@@ -312,6 +343,11 @@ export default function App() {
             window.location.hash = "formulario-grupos";
             setScrollToGruposForm(true);
             setViewMode("viajes-a-medida-grupos");
+          }}
+          onSelectDestinos={() => {
+            window.location.hash = "destinos";
+            setViewMode("destinos");
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         />
       );

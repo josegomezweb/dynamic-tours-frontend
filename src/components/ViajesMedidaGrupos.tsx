@@ -247,7 +247,9 @@ ${particularidades || "Ninguna especificada"}`;
           <nav className="hidden lg:flex items-center gap-2.5 xl:gap-5 text-[11px] xl:text-xs font-bold text-slate-800 whitespace-nowrap">
             <button 
               type="button"
-              onClick={onBackToHome}
+              onClick={() => {
+                window.location.hash = "destinos";
+              }}
               className="flex items-center gap-1.5 uppercase tracking-wider transition-all py-1.5 px-3 rounded-lg cursor-pointer font-bold text-xs bg-transparent text-slate-800 hover:text-[#1F82D2]"
             >
               <span>DESTINOS</span>
