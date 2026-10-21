@@ -448,8 +448,8 @@ export default function DestinosPage({
       {/* 1. PORTADA PANORÁMICA CON VÍDEO DE LA TIERRA */}
       <section className="relative w-full h-[320px] sm:h-[400px] lg:h-[450px] overflow-hidden bg-slate-950">
         <SeamlessHeroVideo 
-          src="/portada_destinos.mp4"
-          poster="/portada_destinos_poster.jpg"
+          src={assetUrl("portada_destinos.mp4")}
+          poster={assetUrl("portada_destinos_poster.jpg")}
           crossfadeDuration={1.2}
           objectPosition="object-[82%_center] sm:object-[78%_center] lg:object-right"
         />

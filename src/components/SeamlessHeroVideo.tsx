@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
+import { assetUrl } from "../utils/assets";
 
 interface SeamlessHeroVideoProps {
   src: string;
@@ -19,6 +20,9 @@ export default function SeamlessHeroVideo({
   const isFadingRef = useRef<boolean>(false);
   const activePlayerRef = useRef<"A" | "B">("A");
 
+  const resolvedSrc = assetUrl(src);
+  const resolvedPoster = poster ? assetUrl(poster) : undefined;
+
   useEffect(() => {
     activePlayerRef.current = activePlayer;
   }, [activePlayer]);
@@ -38,7 +42,7 @@ export default function SeamlessHeroVideo({
       vB.defaultMuted = true;
       vB.currentTime = 0;
     }
-  }, [src]);
+  }, [resolvedSrc]);
 
   const triggerCrossfade = useCallback(() => {
     if (isFadingRef.current) return;
@@ -96,9 +100,9 @@ export default function SeamlessHeroVideo({
   return (
     <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950 pointer-events-none select-none">
       {/* Background Poster Fallback during initial stream buffering */}
-      {poster && (
+      {resolvedPoster && (
         <img
-          src={poster}
+          src={resolvedPoster}
           alt=""
           aria-hidden="true"
           className={`absolute inset-0 w-full h-full object-cover ${objectPosition} z-0`}
@@ -108,8 +112,8 @@ export default function SeamlessHeroVideo({
       {/* Video A */}
       <video
         ref={videoRefA}
-        src={src}
-        poster={poster}
+        src={resolvedSrc}
+        poster={resolvedPoster}
         autoPlay
         muted
         playsInline
@@ -121,12 +125,14 @@ export default function SeamlessHeroVideo({
         style={{
           transitionDuration: `${crossfadeDuration}s`
         }}
-      />
+      >
+        <source src={resolvedSrc} type="video/mp4" />
+      </video>
 
       {/* Video B */}
       <video
         ref={videoRefB}
-        src={src}
+        src={resolvedSrc}
         muted
         playsInline
         preload="auto"
@@ -137,7 +143,9 @@ export default function SeamlessHeroVideo({
         style={{
           transitionDuration: `${crossfadeDuration}s`
         }}
-      />
+      >
+        <source src={resolvedSrc} type="video/mp4" />
+      </video>
 
       {/* Natural cinematic overlay for readability while keeping video luminous */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent z-20 pointer-events-none" />
