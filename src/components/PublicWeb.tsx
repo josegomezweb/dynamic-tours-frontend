@@ -3303,38 +3303,12 @@ export default function PublicWeb({
         </div>
       </section>
 
-      {/* 2. SOBRE DYNAMIC (Composición limpia según mockup aprobado) */}
+      {/* 2. SOBRE DYNAMIC (Composición limpia centrada sin imagen de fondo) */}
       <section 
         id="nosotros" 
         ref={sobreDynamicRef}
-        className="relative w-full overflow-hidden bg-white py-14 sm:py-16 lg:py-20 border-t border-slate-200/80"
+        className="relative w-full bg-white py-14 sm:py-16 lg:py-20 border-t border-slate-200/80"
       >
-        {/* Fotografía corporativa de fondo alejada según mockup */}
-        <div className="absolute right-0 top-0 bottom-12 sm:bottom-16 w-full sm:w-[90%] md:w-[78%] lg:w-[64%] xl:w-[58%] z-0 pointer-events-none overflow-hidden">
-          <img 
-            src={assetUrl("sobre_dynamic_bg.png")} 
-            alt="Sede Central y Equipo · Dynamic Tours" 
-            className="w-full h-full object-cover object-right"
-            loading="lazy"
-          />
-        </div>
-        {/* Capa gradual horizontal: blanco puro a la izquierda para texto, desvaneciéndose suavemente hacia la derecha */}
-        <div 
-          className="absolute inset-0 pointer-events-none z-0"
-          style={{
-            background: 'linear-gradient(to right, #FFFFFF 0%, #FFFFFF 38%, rgba(255, 255, 255, 0.85) 48%, rgba(255, 255, 255, 0.15) 58%, transparent 68%)'
-          }}
-        />
-        {/* Capa blanca suave adicional en pantallas móviles para garantizar legibilidad completa */}
-        <div className="absolute inset-0 pointer-events-none sm:hidden bg-white/70 z-0" />
-        {/* Capa gradual vertical inferior: transición suave a blanco donde se sitúan los 3 iconos */}
-        <div 
-          className="absolute inset-0 pointer-events-none z-0"
-          style={{
-            background: 'linear-gradient(to top, #FFFFFF 0%, #FFFFFF 16%, rgba(255, 255, 255, 0.8) 28%, transparent 42%)'
-          }}
-        />
-
         {/* Contenedor habitual de la home con animación de entrada suave */}
         <div 
           className={`relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 transition-all duration-500 ease-out ${
@@ -3343,8 +3317,8 @@ export default function PublicWeb({
               : "opacity-0 translate-y-3 motion-reduce:opacity-100 motion-reduce:translate-y-0"
           }`}
         >
-          {/* Bloque de Textos alineado a la izquierda */}
-          <div className="max-w-2xl text-left">
+          {/* Bloque de Textos centrado */}
+          <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
             {/* Rótulo pequeño con degradado Dynamic (mismo estilo que VIAJES A MEDIDA Y GRUPOS) */}
             <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none mb-2.5 sm:mb-3">
               SOBRE DYNAMIC
@@ -3357,12 +3331,12 @@ export default function PublicWeb({
             </h2>
 
             {/* Párrafo 1 con únicamente "Dynamic Tours" en negrita (sin S.A.) */}
-            <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed max-w-xl mb-3.5 sm:mb-4">
+            <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed max-w-2xl mb-3.5 sm:mb-4">
               Fundada en Madrid en el año 2000, <strong className="font-bold text-[#0A1931]">Dynamic Tours</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia.
             </p>
 
             {/* Párrafo 2 de refuerzo de servicio a la agencia */}
-            <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed max-w-xl mb-6 sm:mb-7">
+            <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed max-w-2xl mb-6 sm:mb-7">
               Ponemos esa experiencia al servicio de tu agencia, con asesoramiento, apoyo en las cotizaciones y atención a la operativa diaria. Un equipo experto al que acudir en cada paso.
             </p>
 
@@ -3379,7 +3353,7 @@ export default function PublicWeb({
           </div>
 
           {/* Tres Iconos Inferiores en fila equilibrada */}
-          <div className="mt-10 sm:mt-14 lg:mt-18 pt-2">
+          <div className="mt-12 sm:mt-14 lg:mt-16 pt-2">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-6 lg:gap-12 max-w-4xl mx-auto text-center items-start">
               
               {/* Icono 1: Auriculares · Equipo especializado */}
