@@ -3309,31 +3309,31 @@ export default function PublicWeb({
         ref={sobreDynamicRef}
         className="relative w-full overflow-hidden bg-white py-14 sm:py-16 lg:py-20 border-t border-slate-200/80"
       >
-        {/* Fotografía corporativa de fondo a todo el ancho */}
-        <div className="absolute inset-0 z-0">
+        {/* Fotografía corporativa de fondo alejada según mockup */}
+        <div className="absolute right-0 top-0 bottom-12 sm:bottom-16 w-full sm:w-[90%] md:w-[78%] lg:w-[64%] xl:w-[58%] z-0 pointer-events-none overflow-hidden">
           <img 
             src={assetUrl("sobre_dynamic_bg.png")} 
             alt="Sede Central y Equipo · Dynamic Tours" 
-            className="w-full h-full object-cover object-[78%_center] lg:object-[82%_center]"
+            className="w-full h-full object-cover object-right"
             loading="lazy"
           />
-          {/* Capa gradual horizontal: blanco puro a la izquierda para texto, desvaneciéndose antes de alcanzar el logo de la derecha */}
-          <div 
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(to right, #FFFFFF 0%, #FFFFFF 36%, rgba(255, 255, 255, 0.85) 44%, rgba(255, 255, 255, 0.2) 52%, transparent 58%)'
-            }}
-          />
-          {/* Capa blanca suave adicional en pantallas móviles para garantizar legibilidad completa */}
-          <div className="absolute inset-0 pointer-events-none sm:hidden bg-white/60" />
-          {/* Capa gradual vertical inferior: transición suave a blanco donde se sitúan los 3 iconos */}
-          <div 
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(to top, #FFFFFF 0%, #FFFFFF 14%, rgba(255, 255, 255, 0.75) 24%, transparent 40%)'
-            }}
-          />
         </div>
+        {/* Capa gradual horizontal: blanco puro a la izquierda para texto, desvaneciéndose suavemente hacia la derecha */}
+        <div 
+          className="absolute inset-0 pointer-events-none z-0"
+          style={{
+            background: 'linear-gradient(to right, #FFFFFF 0%, #FFFFFF 38%, rgba(255, 255, 255, 0.85) 48%, rgba(255, 255, 255, 0.15) 58%, transparent 68%)'
+          }}
+        />
+        {/* Capa blanca suave adicional en pantallas móviles para garantizar legibilidad completa */}
+        <div className="absolute inset-0 pointer-events-none sm:hidden bg-white/70 z-0" />
+        {/* Capa gradual vertical inferior: transición suave a blanco donde se sitúan los 3 iconos */}
+        <div 
+          className="absolute inset-0 pointer-events-none z-0"
+          style={{
+            background: 'linear-gradient(to top, #FFFFFF 0%, #FFFFFF 16%, rgba(255, 255, 255, 0.8) 28%, transparent 42%)'
+          }}
+        />
 
         {/* Contenedor habitual de la home con animación de entrada suave */}
         <div 
@@ -3356,9 +3356,14 @@ export default function PublicWeb({
               <span className="block">Garantía de excelencia.</span>
             </h2>
 
-            {/* Párrafo exacto con únicamente "Dynamic Tours S.A." en negrita */}
+            {/* Párrafo 1 con únicamente "Dynamic Tours" en negrita (sin S.A.) */}
+            <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed max-w-xl mb-3.5 sm:mb-4">
+              Fundada en Madrid en el año 2000, <strong className="font-bold text-[#0A1931]">Dynamic Tours</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia.
+            </p>
+
+            {/* Párrafo 2 de refuerzo de servicio a la agencia */}
             <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed max-w-xl mb-6 sm:mb-7">
-              Fundada en Madrid en el año 2000, <strong className="font-bold text-[#0A1931]">Dynamic Tours S.A.</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia.
+              Ponemos esa experiencia al servicio de tu agencia, con asesoramiento, apoyo en las cotizaciones y atención a la operativa diaria. Un equipo experto al que acudir en cada paso.
             </p>
 
             {/* Botón "Saber más →": borde fino degradado, interior blanco/transparente, texto azul oscuro */}
@@ -3531,7 +3536,7 @@ export default function PublicWeb({
       {/* 4. B2B QUICK ACTION DASHBOARD: Tarjetas de accesos directos */}
       <section className="bg-white border-t border-b border-slate-200/80 py-12 relative z-30">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Action 1 */}
             <div 
@@ -3573,27 +3578,7 @@ export default function PublicWeb({
               <span className="text-[9px] font-black uppercase text-[#52A72B] tracking-widest pt-4 block border-t border-slate-200 group-hover:text-[#1F82D2] transition-colors">Biblioteca Digital &rarr;</span>
             </a>
 
-            {/* Action 3 */}
-            <a 
-              href="#alta-agencia"
-              className="bg-[#F8FAFC] hover:bg-slate-100/70 border-t-2 border-t-[#1F82D2] border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-xs hover:shadow-md hover:-translate-y-0.5 no-underline"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="p-2.5 bg-[#1F82D2]/5 rounded text-[#1F82D2] group-hover:bg-[#1F82D2] group-hover:text-white transition-all duration-300">
-                    <Building2 className="w-5 h-5" />
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#1F82D2] group-hover:translate-x-1 transition-all" />
-                </div>
-                <h4 className="text-sm font-black uppercase tracking-wider font-sans text-[#0A0F1D] group-hover:text-[#1F82D2] transition-colors">Acreditación Minorista</h4>
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  Regístrese legalmente con su licencia CICMA o equivalente para comercializar nuestra programación exclusiva.
-                </p>
-              </div>
-              <span className="text-[9px] font-black uppercase text-[#1F82D2] tracking-widest pt-4 block border-t border-slate-200 group-hover:text-[#52A72B] transition-colors">Registrarse Ahora &rarr;</span>
-            </a>
-
-            {/* Action 4 */}
+            {/* Action 3: Teléfono Guardia 24/7 */}
             <div 
               onClick={() => window.open("https://wa.me/34690125031", "_blank")}
               className="bg-[#F8FAFC] hover:bg-slate-100/70 border-t-2 border-t-emerald-500 border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-xs hover:shadow-md hover:-translate-y-0.5"

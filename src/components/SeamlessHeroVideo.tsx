@@ -44,6 +44,14 @@ export default function SeamlessHeroVideo({
     }
   }, [resolvedSrc]);
 
+  const handleCanPlay = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const v = e.currentTarget;
+    v.muted = true;
+    if (activePlayerRef.current === "A" && v === videoRefA.current) {
+      v.play().catch(() => {});
+    }
+  }, []);
+
   const triggerCrossfade = useCallback(() => {
     if (isFadingRef.current) return;
     isFadingRef.current = true;
@@ -118,6 +126,7 @@ export default function SeamlessHeroVideo({
         muted
         playsInline
         preload="auto"
+        onCanPlay={handleCanPlay}
         onEnded={triggerCrossfade}
         className={`absolute inset-0 w-full h-full object-cover ${objectPosition} transition-opacity ease-in-out ${
           activePlayer === "A" ? "opacity-100 z-10" : "opacity-0 z-0"
@@ -125,9 +134,7 @@ export default function SeamlessHeroVideo({
         style={{
           transitionDuration: `${crossfadeDuration}s`
         }}
-      >
-        <source src={resolvedSrc} type="video/mp4" />
-      </video>
+      />
 
       {/* Video B */}
       <video
@@ -143,9 +150,7 @@ export default function SeamlessHeroVideo({
         style={{
           transitionDuration: `${crossfadeDuration}s`
         }}
-      >
-        <source src={resolvedSrc} type="video/mp4" />
-      </video>
+      />
 
       {/* Natural cinematic overlay for readability while keeping video luminous */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent z-20 pointer-events-none" />
