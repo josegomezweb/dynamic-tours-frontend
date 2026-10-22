@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import Logo from "./Logo";
+import Footer from "./Footer";
 import SeamlessHeroVideo from "./SeamlessHeroVideo";
 import { assetUrl } from "../utils/assets";
 import { 
@@ -825,6 +826,14 @@ export default function DestinosPage({
         )}
 
       </main>
+
+      {/* Pie de página corporativo */}
+      <Footer 
+        onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+        onNavigateDestinos={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      />
 
       {/* MODAL DE ACCESO AGENCIAS / B2B */}
       {isLoginModalOpen && (

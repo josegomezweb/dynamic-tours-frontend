@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Logo from "./Logo";
+import Footer from "./Footer";
 import { assetUrl } from "../utils/assets";
 import { 
   ArrowRight, 
@@ -1087,41 +1088,15 @@ ${particularidades || "Ninguna especificada"}`;
       </main>
 
       {/* 7. PIE DE PÁGINA CORPORATIVO */}
-      <footer className="bg-slate-100 text-slate-800 border-t border-slate-200 py-12 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-          
-          <div className="space-y-4">
-            <div className="flex flex-row items-center gap-3">
-              <Logo className="h-11 shrink-0" classNameImg="mix-blend-multiply" />
-            </div>
-            <p className="text-[11px] text-slate-600 leading-relaxed max-w-xs">
-              Mayorista de viajes con Licencia CICMA 1948. Especialistas en diseño exclusivo de experiencias a medida y de alta gama para agencias de viajes minoristas.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <h4 className="text-xs font-black text-[#0A0F1D] uppercase tracking-widest">Garantías & Licencias</h4>
-            <p className="text-[11px] text-slate-600 leading-relaxed">
-              Cumplimos estrictamente con los avales, pólizas de responsabilidad civil y depósitos de garantía exigidos por la Directiva Europea de Viajes Combinados. Registrados en el registro de turismo de la Comunidad de Madrid con el código CICMA 1948.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <h4 className="text-xs font-black text-[#0A0F1D] uppercase tracking-widest">Área Legal</h4>
-            <ul className="text-[11px] text-slate-600 space-y-1.5">
-              <li><button type="button" onClick={() => setShowPrivacyModal(true)} className="hover:underline hover:text-[#0A0F1D] transition-colors cursor-pointer text-left">Condiciones Generales de Contratación</button></li>
-              <li><button type="button" onClick={() => setShowPrivacyModal(true)} className="hover:underline hover:text-[#0A0F1D] transition-colors cursor-pointer text-left">Política de Privacidad de Datos</button></li>
-              <li><button type="button" onClick={() => setShowPrivacyModal(true)} className="hover:underline hover:text-[#0A0F1D] transition-colors cursor-pointer text-left">Aviso Legal y Uso del Portal</button></li>
-              <li><button type="button" onClick={() => setShowPrivacyModal(true)} className="hover:underline hover:text-[#0A0F1D] transition-colors cursor-pointer text-left">Política de Cookies</button></li>
-            </ul>
-          </div>
-
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 mt-8 pt-6 text-center text-[10px] text-slate-500">
-          <p>© 2026 Dynamic Tours S.A. Todos los derechos reservados. Licencia CICMA 1948.</p>
-        </div>
-      </footer>
+      <Footer 
+        onOpenB2BLogin={() => {
+          if (onEnterB2B) onEnterB2B("Agente Profesional", "Agencia Minorista");
+          else window.location.hash = "b2b";
+        }}
+        onNavigateDestinos={() => {
+          window.location.hash = "destinos";
+        }}
+      />
 
       {/* MODAL DE POLÍTICA DE PRIVACIDAD */}
       {showPrivacyModal && (
