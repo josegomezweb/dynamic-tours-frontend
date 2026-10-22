@@ -2851,12 +2851,21 @@ export default function PublicWeb({
                     {/* Bloque superior de textos */}
                     <div className="space-y-0.5 text-left">
                       <h3 className="text-[17px] sm:text-[18px] lg:text-[18px] xl:text-[20px] font-semibold text-[#0A1931] leading-[1.14] tracking-tight">
-                        <span className="block">{offer.titleLine1}</span>
+                        {offer.isSubtitlePulsing && offer.subtitle ? (
+                          <span className="inline-flex items-baseline flex-wrap gap-x-2">
+                            <span>{offer.titleLine1}</span>
+                            <span className="text-[11px] sm:text-[11.5px] font-semibold text-[#0A1931] leading-tight animate-subtle-blink tracking-normal">
+                              {offer.subtitle}
+                            </span>
+                          </span>
+                        ) : (
+                          <span className="block">{offer.titleLine1}</span>
+                        )}
                         {offer.titleLine2 && <span className="block">{offer.titleLine2}</span>}
                       </h3>
 
-                      {offer.subtitle && (
-                        <p className={`text-[11.5px] sm:text-[12px] font-semibold text-[#0A1931] pt-0.5 leading-tight ${offer.isSubtitlePulsing ? "animate-subtle-blink" : ""}`}>
+                      {offer.subtitle && !offer.isSubtitlePulsing && (
+                        <p className="text-[11.5px] sm:text-[12px] font-semibold text-[#0A1931] pt-0.5 leading-tight">
                           {offer.subtitle}
                         </p>
                       )}
@@ -3028,19 +3037,38 @@ export default function PublicWeb({
 
                       {/* Botón Ver programas esmerilado sin color */}
                       <div className="mt-3.5 sm:mt-4">
-                        <a
-                          href={region.categoryUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedRegionId(region.id);
-                          }}
-                          className="inline-flex items-center gap-1.5 px-4.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-md border border-white/35 text-white text-[11px] sm:text-xs font-semibold tracking-wide shadow-[0_4px_16px_rgba(0,0,0,0.25)] hover:shadow-[0_6px_22px_rgba(0,0,0,0.35)] transition-all cursor-pointer whitespace-nowrap"
-                        >
-                          <span>Ver programas</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-                        </a>
+                        {region.id === "oriente_medio" ? (
+                          <a
+                            href="#destinos"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (onSelectDestinos) {
+                                onSelectDestinos();
+                              } else {
+                                window.location.hash = "destinos";
+                              }
+                            }}
+                            className="inline-flex items-center gap-1.5 px-4.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-md border border-white/35 text-white text-[11px] sm:text-xs font-semibold tracking-wide shadow-[0_4px_16px_rgba(0,0,0,0.25)] hover:shadow-[0_6px_22px_rgba(0,0,0,0.35)] transition-all cursor-pointer whitespace-nowrap"
+                          >
+                            <span>Ver programas</span>
+                            <ChevronRight className="w-3.5 h-3.5 text-white stroke-[2.5]" />
+                          </a>
+                        ) : (
+                          <a
+                            href={region.categoryUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedRegionId(region.id);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-4.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-md border border-white/35 text-white text-[11px] sm:text-xs font-semibold tracking-wide shadow-[0_4px_16px_rgba(0,0,0,0.25)] hover:shadow-[0_6px_22px_rgba(0,0,0,0.35)] transition-all cursor-pointer whitespace-nowrap"
+                          >
+                            <span>Ver programas</span>
+                            <ChevronRight className="w-3.5 h-3.5 text-white stroke-[2.5]" />
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -3401,79 +3429,30 @@ export default function PublicWeb({
       </section>
 
       {/* Agency Registration Form (Alta de Agencia) */}
-      <section id="alta-agencia" className="py-20 bg-[#F8FAFC] border-t border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-10">
+      <section id="alta-agencia" className="py-16 sm:py-20 lg:py-24 bg-[#F8FAFC] border-t border-slate-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 sm:space-y-10">
           
-          <div className="space-y-2.5 sm:space-y-3">
+          <div className="space-y-3 sm:space-y-4">
             <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
               REGISTRO DE AGENCIA COLABORADORA
             </span>
             <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
-              Solicitud de Registro de Agencia B2B
+              EMPECEMOS A TRABAJAR JUNTOS
             </h3>
-            <p className="text-slate-600 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
-              Si dispone de una agencia de viajes minorista legalmente constituida y desea tramitar expedientes, cotizaciones, o formalizar reservas aéreas y terrestres directas, inicie su registro de acreditación.
+            <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+              Registrate para acreditar tu agencia y accede a nuestro sistema de reservas, cotizaciones y tarifas exclusivas para profesionales.
             </p>
           </div>
 
-          <div className="bg-white rounded-md p-8 sm:p-10 border border-slate-200 shadow-sm text-left">
-            <form onSubmit={handleInquiry} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="space-y-1.5 text-xs">
-                <label className="font-bold text-slate-700 uppercase tracking-wider block">Nombre de la Agencia</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="Ej: Viajes Internacionales S.A."
-                  value={inquiryAgency}
-                  onChange={(e) => setInquiryAgency(e.target.value)}
-                  className="w-full border border-slate-200 rounded-sm py-3 px-3.5 bg-white focus:outline-none focus:border-[#0A0F1D] font-medium text-slate-800"
-                />
-              </div>
-
-              <div className="space-y-1.5 text-xs">
-                <label className="font-bold text-slate-700 uppercase tracking-wider block">Nombre del Agente de Contacto</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="Ej: Laura Gómez"
-                  value={inquiryName}
-                  onChange={(e) => setInquiryName(e.target.value)}
-                  className="w-full border border-slate-200 rounded-sm py-3 px-3.5 bg-white focus:outline-none focus:border-[#0A0F1D] font-medium text-slate-800"
-                />
-              </div>
-
-              <div className="space-y-1.5 text-xs sm:col-span-2">
-                <label className="font-bold text-slate-700 uppercase tracking-wider block">Correo Electrónico Corporativo (B2B)</label>
-                <input 
-                  type="email" 
-                  required
-                  placeholder="Ej: laura@viajesinternacionales.com"
-                  value={inquiryEmail}
-                  onChange={(e) => setInquiryEmail(e.target.value)}
-                  className="w-full border border-slate-200 rounded-sm py-3 px-3.5 bg-white focus:outline-none focus:border-[#0A0F1D] font-medium text-slate-800"
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:brightness-110 text-white font-black text-xs uppercase tracking-widest py-4 rounded-lg transition-all duration-300 shadow-md flex items-center justify-center gap-1.5 border-0 hover:shadow-lg cursor-pointer"
-                >
-                  <Building2 className="w-4 h-4" />
-                  Enviar Solicitud de Colaboración
-                </button>
-              </div>
-            </form>
-
-            {inquirySubmitted && (
-              <div className="mt-6 bg-emerald-50 text-emerald-800 border border-emerald-100 p-4 rounded-xl text-xs font-semibold animate-fade-in space-y-1 text-center">
-                <p className="flex items-center justify-center gap-1.5">
-                  <CheckCircle className="w-4 h-4 text-emerald-600" />
-                  ¡Solicitud de Registro Enviada con Éxito!
-                </p>
-                <p className="text-[11px] text-slate-500 font-normal">Nuestro departamento de administración verificará su licencia minorista de turismo (CICMA/CV) y le remitirá las claves de acceso B2B en menos de 24 horas.</p>
-              </div>
-            )}
+          <div className="flex justify-center pt-2">
+            <button
+              type="button"
+              onClick={() => setIsLoginModalOpen(true)}
+              className="inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:brightness-110 active:scale-98 text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl cursor-pointer"
+            >
+              <Building2 className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <span>Enviar solicitud de acceso</span>
+            </button>
           </div>
 
         </div>
