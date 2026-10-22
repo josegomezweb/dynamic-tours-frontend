@@ -172,18 +172,14 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
           
           {/* COLUMNA 1 (lg:col-span-4): Identidad Corporativa y Redes Sociales */}
           <div className="lg:col-span-4 space-y-5">
-            {/* Logo oficial integrado directamente sobre el fondo oscuro sin caja blanca */}
+            {/* Símbolo oficial D integrado directamente sobre el fondo oscuro sin caja blanca */}
             <div className="flex items-center gap-3.5">
-              <Logo className="h-9 sm:h-10 w-auto" classNameImg="brightness-0 invert drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)] select-none" />
+              <Logo iconOnly={true} className="h-10 sm:h-11 w-auto" classNameImg="drop-shadow-[0_2px_12px_rgba(31,130,210,0.35)] select-none" />
               <div className="flex flex-col leading-none">
                 <span className="text-base sm:text-lg font-bold text-white tracking-wide">DYNAMIC TOURS S.A.</span>
                 <span className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase mt-1">Mayorista de Viajes · C.I.C.M.A. 1266</span>
               </div>
             </div>
-
-            <p className="text-slate-400 text-xs sm:text-[13px] leading-relaxed">
-              Fundada en Madrid en el año 2000, somos institución mayorista de referencia en la península ibérica para grandes viajes, circuitos culturales de alta gama y programación exclusiva con respaldo directo a agencias minoristas.
-            </p>
 
             {/* Redes Sociales con diseño elegante */}
             <div className="pt-2 space-y-3">

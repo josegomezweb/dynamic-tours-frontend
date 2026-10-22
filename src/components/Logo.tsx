@@ -9,13 +9,15 @@ interface LogoProps {
 }
 
 export default function Logo({ className = "h-12", iconOnly = false, classNameImg = "" }: LogoProps) {
-  const logoSources = [
-    assetUrl("nuevo logo dynamic transparente.png"),
-    assetUrl("logo_dynamic_3.png"),
-    assetUrl("dynamic_logo_transparente.png"),
-    assetUrl("DYNAMIC-logo-oscurecido.png"),
-    assetUrl("dynamic_logo_1_ok.png")
-  ];
+  const logoSources = iconOnly
+    ? [assetUrl("dynamic_simbolo_d.png")]
+    : [
+        assetUrl("nuevo logo dynamic transparente.png"),
+        assetUrl("logo_dynamic_3.png"),
+        assetUrl("dynamic_logo_transparente.png"),
+        assetUrl("DYNAMIC-logo-oscurecido.png"),
+        assetUrl("dynamic_logo_1_ok.png")
+      ];
 
   const [currentSrcIndex, setCurrentSrcIndex] = useState(0);
 
