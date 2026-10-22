@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import B2BLoginModal from "./B2BLoginModal";
 import { assetUrl } from "../utils/assets";
 import { 
   ArrowLeft, 
@@ -79,6 +82,7 @@ export default function LeyendasDetail({
   agentName: propAgentName, 
   onAddBooking 
 }: LeyendasDetailProps) {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   // Navigation tabs
   const [activeTab, setActiveTab] = useState<"itinerary" | "inclusions" | "visits" | "hotels" | "flights" | "quote">("itinerary");
   const [expandedDay, setExpandedDay] = useState<number | null>(1);
@@ -484,8 +488,29 @@ export default function LeyendasDetail({
         </div>
       )}
 
+      {/* CABECERA CORPORATIVA OFICIAL */}
+      <Header 
+        activeNav="ofertas"
+        onNavigateHome={onBack}
+        onNavigateDestinos={() => {
+          window.location.hash = "destinos";
+        }}
+        onNavigateOfertas={onBack}
+        onNavigateGrupos={() => {
+          window.location.hash = "viajes-a-medida-grupos";
+        }}
+        onNavigateNosotros={() => {
+          onBack();
+          setTimeout(() => {
+            const el = document.getElementById("nosotros");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }}
+        onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+      />
+
       {/* Top Floating Bar */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-2xs">
+      <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-2xs">
         
         {/* Left: Volver a la Web button */}
         <button 
@@ -2115,6 +2140,21 @@ export default function LeyendasDetail({
           </div>
         );
       })()}
+
+      {/* Pie de página corporativo */}
+      <Footer 
+        onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+        onNavigateDestinos={() => {
+          window.location.hash = "destinos";
+        }}
+      />
+
+      {/* Modal B2B */}
+      <B2BLoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onEnterB2B={onEnterB2B} 
+      />
 
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Logo from "./Logo";
+import Header from "./Header";
 import Footer from "./Footer";
 import SeamlessHeroVideo from "./SeamlessHeroVideo";
 import { assetUrl } from "../utils/assets";
@@ -1817,221 +1818,35 @@ export default function PublicWeb({
   return (
     <div className="bg-slate-50 min-h-screen font-sans antialiased text-slate-800 overflow-x-hidden">
       
-            {/* Main Header matching reference design */}
-      <header className="sticky top-0 z-50 bg-white border-b border-slate-200/90 shadow-xs">
-        <div className="max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6">
-          <div className="flex justify-between items-center h-16">
-            
-            {/* Logo and Slogan */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              <div 
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="cursor-pointer flex items-center"
-              >
-                <Logo className="h-7.5 sm:h-8 shrink-0" classNameImg="mix-blend-multiply" />
-              </div>
-              <div className="hidden sm:block h-4.5 w-px bg-slate-300"></div>
-              <div className="hidden sm:flex items-center gap-1 font-bold text-[10px] sm:text-[10.5px] tracking-wide uppercase whitespace-nowrap">
-                <span className="text-[#1F82D2]">AGENCIA MAYORISTA</span>
-                <span className="text-[#52A72B]">DE VIAJES</span>
-              </div>
-            </div>
-
-            {/* Public Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-2.5 xl:gap-5 text-[11px] xl:text-xs font-bold text-slate-800 whitespace-nowrap">
-              <a 
-                href="#destinos" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onSelectDestinos) {
-                    onSelectDestinos();
-                  } else {
-                    window.location.hash = "destinos";
-                  }
-                }}
-                className="hover:text-[#1F82D2] transition-colors font-bold cursor-pointer uppercase tracking-wider py-1.5 px-3 rounded-lg"
-              >
-                DESTINOS
-              </a>
-
-              <span className="text-slate-300">·</span>
-              <a href="#ofertas" className="hover:text-[#1F82D2] transition-colors font-bold">Ofertas</a>
-              <span className="text-slate-300">·</span>
-              <a 
-                href="#viajes-a-medida-grupos" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onSelectGrupos) {
-                    onSelectGrupos();
-                  } else {
-                    window.location.hash = "viajes-a-medida-grupos";
-                  }
-                }}
-                className="hover:text-[#1F82D2] transition-colors font-bold cursor-pointer"
-              >
-                Grupos
-              </a>
-              <span className="text-slate-300">·</span>
-              <a href="#nosotros" className="hover:text-[#1F82D2] transition-colors font-bold">Sobre Dynamic</a>
-            </nav>
-
-            {/* Right Buttons: Buscador (abre el megamenú buscador) + ACCESO AGENCIAS */}
-            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-              <button
-                ref={buscadorButtonRef}
-                onClick={() => setIsDestDropdownOpen(!isDestDropdownOpen)}
-                aria-expanded={isDestDropdownOpen}
-                aria-haspopup="true"
-                className={`flex items-center gap-1.5 font-bold text-xs py-1.5 px-3 rounded-full border transition-all cursor-pointer shadow-2xs ${
-                  isDestDropdownOpen 
-                    ? "bg-white border-[#1F82D2] text-[#0A0F1D] ring-2 ring-[#1F82D2]/20" 
-                    : "bg-[#f1f5f9] hover:bg-[#e2e8f0] border-slate-200/80 text-slate-700"
-                }`}
-              >
-                <Search className={`w-3.5 h-3.5 ${isDestDropdownOpen ? "text-[#1F82D2]" : "text-slate-500"}`} />
-                <span>Buscador</span>
-                {isDestDropdownOpen ? (
-                  <ChevronUp className="w-3 h-3 text-[#1F82D2]" />
-                ) : (
-                  <ChevronDown className="w-3 h-3 text-slate-400" />
-                )}
-              </button>
-
-              <button
-                onClick={() => setIsLoginModalOpen(true)}
-                className="bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:opacity-95 text-white font-extrabold text-[10.5px] sm:text-[11px] uppercase tracking-wider py-1.5 px-2.5 sm:px-3 rounded-lg flex items-center gap-1.5 shadow-xs hover:shadow transition-all cursor-pointer whitespace-nowrap shrink-0"
-              >
-                <Lock className="w-3.5 h-3.5 shrink-0" />
-                <span>ACCESO AGENCIAS</span>
-              </button>
-            </div>
-
-          </div>
-        </div>
-
-        {/* MEGAMENÚ DESPLEGABLE DE DESTINOS */}
-        {isDestDropdownOpen && (
-          <div 
-            ref={megamenuRef}
-            role="region"
-            aria-label="Megamenú de Destinos"
-            className="absolute top-full left-0 w-full bg-white border-b border-slate-200/80 shadow-[0_20px_45px_rgba(0,0,0,0.14)] z-50 transition-all duration-200 animate-in fade-in slide-in-from-top-1 max-h-[85vh] overflow-y-auto"
-          >
-            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
-              
-              {/* Encabezado pequeño y botón de cierre × */}
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                  DESTINOS OFICIALES DYNAMIC
-                </span>
-                <button 
-                  onClick={() => {
-                    setIsDestDropdownOpen(false);
-                    buscadorButtonRef.current?.focus();
-                  }}
-                  aria-label="Cerrar menú del buscador"
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Fila de 5 Regiones en horizontal */}
-              <div className="flex overflow-x-auto no-scrollbar md:grid md:grid-cols-5 gap-2 sm:gap-3 lg:gap-4 pb-2 md:pb-0">
-                {REGIONS_DATA.map((region) => {
-                  const isActive = region.id === selectedRegionId;
-                  return (
-                    <button
-                      key={region.id}
-                      onClick={() => setSelectedRegionId(region.id)}
-                      className={`flex-shrink-0 w-36 md:w-auto p-3 sm:py-3.5 sm:px-4 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer text-center ${
-                        isActive 
-                          ? "bg-[#F0F7FF]" 
-                          : "bg-transparent hover:bg-slate-50/80"
-                      }`}
-                    >
-                      <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden transition-all duration-300 shadow-xs ${
-                        isActive 
-                          ? "ring-2 ring-[#1F82D2] ring-offset-2 ring-offset-[#F0F7FF] scale-102" 
-                          : "hover:scale-105"
-                      }`}>
-                        <img 
-                          src={assetUrl(region.image)} 
-                          alt={region.name} 
-                          className="w-full h-full object-cover" 
-                        />
-                      </div>
-                      <span className={`mt-2.5 font-bold text-xs sm:text-[13px] tracking-tight uppercase transition-colors ${
-                        isActive ? "text-[#1F82D2]" : "text-[#0A0F1D]"
-                      }`}>
-                        {region.name}
-                      </span>
-                      <span className="text-[11px] sm:text-xs text-slate-400 font-normal mt-0.5">
-                        {region.countries.length} países
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Separador fino */}
-              <div className="border-t border-slate-200/70 my-4 sm:my-5"></div>
-
-              {/* Título de la región activa con indicador vertical con degradado */}
-              <div className="flex items-center gap-2.5 mb-4 text-left">
-                <div className="w-2.5 h-6 rounded-xs bg-gradient-to-b from-[#1F82D2] to-[#52A72B]"></div>
-                <h3 className="text-xl sm:text-2xl font-black text-[#0A0F1D] tracking-tight uppercase">
-                  {activeRegion.name}
-                </h3>
-              </div>
-
-              {/* Destinos de la región seleccionada */}
-              <div className={`grid ${getGridColsClass(activeRegion.id)} gap-y-3 sm:gap-y-3.5 gap-x-4 sm:gap-x-6 text-left`}>
-                {activeRegion.countries.map((country, idx) => (
-                  <a
-                    key={idx}
-                    href={country.url}
-                    onClick={(e) => {
-                      if (country.destKey) {
-                        setSelectedDest(country.destKey);
-                        setIsDestDropdownOpen(false);
-                        const el = document.getElementById("ofertas");
-                        if (el) {
-                          e.preventDefault();
-                          el.scrollIntoView({ behavior: "smooth" });
-                        }
-                      }
-                    }}
-                    className="text-slate-600 hover:text-[#1F82D2] font-medium text-sm sm:text-[14.5px] transition-colors py-1 cursor-pointer focus:outline-none focus:text-[#1F82D2] truncate"
-                  >
-                    {country.name}
-                  </a>
-                ))}
-              </div>
-
-              {/* Franja Inferior */}
-              <div className="border-t border-slate-200/70 mt-5 sm:mt-6 pt-4 sm:pt-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <p className="text-xs sm:text-[13px] text-slate-500 font-normal text-left max-w-xl">
-                  {activeRegion.phrase}
-                </p>
-
-                <div className="flex items-center justify-end w-full md:w-auto">
-                  <a
-                    href={activeRegion.categoryUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:brightness-105 text-white font-bold text-xs sm:text-[12px] uppercase tracking-wider py-2.5 px-4 sm:px-5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
-                  >
-                    <span>VER PROGRAMAS DE {activeRegion.name}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-white" />
-                  </a>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        )}
-      </header>
+      {/* Main Header matching reference design */}
+      <Header 
+        activeNav="home"
+        onNavigateHome={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onNavigateDestinos={() => {
+          if (onSelectDestinos) onSelectDestinos();
+          else window.location.hash = "destinos";
+        }}
+        onNavigateOfertas={() => {
+          const el = document.getElementById("ofertas");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+          else window.location.hash = "ofertas";
+        }}
+        onNavigateGrupos={() => {
+          if (onSelectGrupos) onSelectGrupos();
+          else window.location.hash = "viajes-a-medida-grupos";
+        }}
+        onNavigateNosotros={() => {
+          const el = document.getElementById("nosotros");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+          else window.location.hash = "nosotros";
+        }}
+        onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+        onSelectDestination={(destKey) => {
+          setSelectedDest(destKey);
+          const el = document.getElementById("ofertas");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }}
+      />
 
       {/* HERO SECTION MATCHING REFERENCE DESIGN */}
       <section className="relative z-20 text-white overflow-visible min-h-[640px] md:h-[calc(100vh-4rem)] md:max-h-[665px] md:min-h-[560px] flex flex-col justify-between">
@@ -3318,43 +3133,51 @@ export default function PublicWeb({
               : "opacity-0 translate-y-3 motion-reduce:opacity-100 motion-reduce:translate-y-0"
           }`}
         >
-          {/* Bloque de Textos centrado */}
-          <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
-            {/* Rótulo pequeño con degradado Dynamic (mismo estilo que VIAJES A MEDIDA Y GRUPOS) */}
-            <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none mb-2.5 sm:mb-3">
-              SOBRE DYNAMIC
-            </span>
+          {/* Bloque en dos columnas: Título a la izquierda y Contenido a la derecha */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 xl:gap-16 items-start text-left">
+            {/* Columna Izquierda: Rótulo y Título */}
+            <div className="lg:col-span-5 space-y-2.5 sm:space-y-3">
+              {/* Rótulo pequeño con degradado Dynamic */}
+              <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
+                SOBRE DYNAMIC
+              </span>
 
-            {/* Título en dos líneas (mismo estilo, color, tipografía y grosor que grupos) */}
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2] mb-4 sm:mb-5">
-              <span className="block">Compromiso de respaldo.</span>
-              <span className="block">Garantía de excelencia.</span>
-            </h2>
+              {/* Título en dos líneas */}
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[38px] xl:text-[40px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
+                <span className="block">Compromiso de respaldo.</span>
+                <span className="block">Garantía de excelencia.</span>
+              </h2>
+            </div>
 
-            {/* Párrafo 1 con únicamente "Dynamic Tours" en negrita (sin S.A.) */}
-            <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed max-w-2xl mb-3.5 sm:mb-4">
-              Fundada en Madrid en el año 2000, <strong className="font-bold text-[#0A1931]">Dynamic Tours</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia.
-            </p>
+            {/* Columna Derecha: Párrafos y Botón */}
+            <div className="lg:col-span-7 space-y-3.5 sm:space-y-4">
+              {/* Párrafo 1 con únicamente "Dynamic Tours" en negrita (sin S.A.) */}
+              <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed">
+                Fundada en Madrid en el año 2000, <strong className="font-bold text-[#0A1931]">Dynamic Tours</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia.
+              </p>
 
-            {/* Párrafo 2 de refuerzo de servicio a la agencia */}
-            <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed max-w-2xl mb-6 sm:mb-7">
-              Ponemos esa experiencia al servicio de tu agencia, con asesoramiento, apoyo en las cotizaciones y atención a la operativa diaria. Un equipo experto al que acudir en cada paso.
-            </p>
+              {/* Párrafo 2 de refuerzo de servicio a la agencia */}
+              <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed">
+                Ponemos esa experiencia al servicio de tu agencia, con asesoramiento, apoyo en las cotizaciones y atención a la operativa diaria. Un equipo experto al que acudir en cada paso.
+              </p>
 
-            {/* Botón "Saber más →": borde fino degradado, interior blanco/transparente, texto azul oscuro */}
-            <div className="p-[1.5px] rounded-[10px] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] inline-flex shrink-0 shadow-sm">
-              <a
-                href="#nosotros"
-                className="px-4 sm:px-5 h-[36px] sm:h-[38px] rounded-[8.5px] bg-white hover:bg-slate-50 text-[#0A1931] hover:text-[#1F82D2] text-xs font-semibold flex items-center justify-center gap-2.5 transition-colors cursor-pointer whitespace-nowrap"
-              >
-                <span>Saber más</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#0A1931] stroke-[2]" />
-              </a>
+              {/* Botón "Saber más →": borde fino degradado, interior blanco/transparente, texto azul oscuro */}
+              <div className="pt-2">
+                <div className="p-[1.5px] rounded-[10px] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] inline-flex shrink-0 shadow-sm">
+                  <a
+                    href="#nosotros"
+                    className="px-4 sm:px-5 h-[36px] sm:h-[38px] rounded-[8.5px] bg-white hover:bg-slate-50 text-[#0A1931] hover:text-[#1F82D2] text-xs font-semibold flex items-center justify-center gap-2.5 transition-colors cursor-pointer whitespace-nowrap"
+                  >
+                    <span>Saber más</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-[#0A1931] stroke-[2]" />
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Tres Iconos Inferiores en fila equilibrada */}
-          <div className="mt-12 sm:mt-14 lg:mt-16 pt-2">
+          {/* Tres Iconos Inferiores en fila equilibrada centrada */}
+          <div className="mt-12 sm:mt-14 lg:mt-16 pt-8 border-t border-slate-100">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-6 lg:gap-12 max-w-4xl mx-auto text-center items-start">
               
               {/* Icono 1: Auriculares · Equipo especializado */}
@@ -3533,10 +3356,10 @@ export default function PublicWeb({
               <span className="text-[9px] font-black uppercase text-[#1F82D2] tracking-widest pt-4 block border-t border-slate-200 group-hover:text-[#52A72B] transition-colors">Acceso Seguro &rarr;</span>
             </div>
 
-            {/* Action 2 */}
-            <a 
-              href="#ofertas"
-              className="bg-[#F8FAFC] hover:bg-slate-100/70 border-t-2 border-t-[#52A72B] border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-xs hover:shadow-md hover:-translate-y-0.5 no-underline"
+            {/* Action 2: Biblioteca Digital / Catálogos B2B */}
+            <div 
+              onClick={() => setIsLoginModalOpen(true)}
+              className="bg-[#F8FAFC] hover:bg-slate-100/70 border-t-2 border-t-[#52A72B] border-x border-b border-slate-200/80 p-6 rounded-lg transition-all duration-300 group cursor-pointer text-left flex flex-col justify-between min-h-[180px] shadow-xs hover:shadow-md hover:-translate-y-0.5"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -3551,7 +3374,7 @@ export default function PublicWeb({
                 </p>
               </div>
               <span className="text-[9px] font-black uppercase text-[#52A72B] tracking-widest pt-4 block border-t border-slate-200 group-hover:text-[#1F82D2] transition-colors">Biblioteca Digital &rarr;</span>
-            </a>
+            </div>
 
             {/* Action 3: Teléfono Guardia 24/7 */}
             <div 

@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import B2BLoginModal from "./B2BLoginModal";
 import { assetUrl } from "../utils/assets";
 import { 
   ArrowLeft, 
@@ -25,6 +28,7 @@ interface MaravillasDetailProps {
 }
 
 export default function MaravillasDetail({ onBack, onEnterB2B }: MaravillasDetailProps) {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("itinerary");
   const [expandedDay, setExpandedDay] = useState<number | null>(1);
   const [selectedExcursions, setSelectedExcursions] = useState<string[]>([]);
@@ -205,8 +209,29 @@ export default function MaravillasDetail({ onBack, onEnterB2B }: MaravillasDetai
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-16">
+      {/* CABECERA CORPORATIVA OFICIAL */}
+      <Header 
+        activeNav="ofertas"
+        onNavigateHome={onBack}
+        onNavigateDestinos={() => {
+          window.location.hash = "destinos";
+        }}
+        onNavigateOfertas={onBack}
+        onNavigateGrupos={() => {
+          window.location.hash = "viajes-a-medida-grupos";
+        }}
+        onNavigateNosotros={() => {
+          onBack();
+          setTimeout(() => {
+            const el = document.getElementById("nosotros");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }}
+        onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+      />
+
       {/* Top Premium Floating Bar */}
-      <div className="sticky top-0 z-50 bg-slate-50/85 backdrop-blur-md border-b border-[#1F82D2]/15 px-4 sm:px-8 py-4 flex items-center justify-between">
+      <div className="sticky top-16 z-40 bg-slate-50/85 backdrop-blur-md border-b border-[#1F82D2]/15 px-4 sm:px-8 py-4 flex items-center justify-between">
         <button 
           onClick={onBack}
           className="group flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0A0F1D] hover:text-[#1F82D2] transition-all bg-white border border-slate-200/80 rounded-full px-4.5 py-2 shadow-sm cursor-pointer"
@@ -641,6 +666,21 @@ export default function MaravillasDetail({ onBack, onEnterB2B }: MaravillasDetai
           </div>
         </div>
       )}
+
+      {/* Pie de página corporativo */}
+      <Footer 
+        onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+        onNavigateDestinos={() => {
+          window.location.hash = "destinos";
+        }}
+      />
+
+      {/* Modal B2B */}
+      <B2BLoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onEnterB2B={onEnterB2B} 
+      />
 
     </div>
   );

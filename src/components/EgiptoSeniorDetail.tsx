@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import B2BLoginModal from "./B2BLoginModal";
 import { assetUrl } from "../utils/assets";
 import { 
   ArrowLeft, 
@@ -81,6 +84,7 @@ export default function EgiptoSeniorDetail({
   agentName: propAgentName, 
   onAddBooking 
 }: EgiptoSeniorDetailProps) {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   // Navigation tabs with hash support
   const [activeTab, setActiveTab] = useState<"itinerary" | "inclusions" | "visits" | "hotels" | "flights" | "quote">(() => {
     const hash = window.location.hash.toLowerCase();
@@ -481,8 +485,29 @@ export default function EgiptoSeniorDetail({
         </div>
       )}
 
+      {/* CABECERA CORPORATIVA OFICIAL */}
+      <Header 
+        activeNav="ofertas"
+        onNavigateHome={onBack}
+        onNavigateDestinos={() => {
+          window.location.hash = "destinos";
+        }}
+        onNavigateOfertas={onBack}
+        onNavigateGrupos={() => {
+          window.location.hash = "viajes-a-medida-grupos";
+        }}
+        onNavigateNosotros={() => {
+          onBack();
+          setTimeout(() => {
+            const el = document.getElementById("nosotros");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }}
+        onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+      />
+
       {/* TOP HEADER: Breadcrumbs & Agency Controls */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-2xs">
+      <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
           
           {/* Back & Breadcrumb */}
@@ -560,7 +585,7 @@ export default function EgiptoSeniorDetail({
           </div>
 
         </div>
-      </header>
+      </div>
 
       {/* HERO SECTION: Portada inmersiva con pareja senior en Karnak */}
       <div className="relative w-full h-[360px] sm:h-[440px] md:h-[490px] overflow-hidden bg-[#0A0F1D]">
@@ -2069,6 +2094,21 @@ export default function EgiptoSeniorDetail({
           </div>
         </div>
       )}
+
+      {/* Pie de página corporativo */}
+      <Footer 
+        onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+        onNavigateDestinos={() => {
+          window.location.hash = "destinos";
+        }}
+      />
+
+      {/* Modal B2B */}
+      <B2BLoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onEnterB2B={onEnterB2B} 
+      />
 
     </div>
   );

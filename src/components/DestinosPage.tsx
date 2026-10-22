@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import Logo from "./Logo";
+import Header from "./Header";
 import Footer from "./Footer";
 import SeamlessHeroVideo from "./SeamlessHeroVideo";
 import { assetUrl } from "../utils/assets";
@@ -339,112 +340,33 @@ export default function DestinosPage({
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-[#1F82D2] selection:text-white pb-24">
       
-      {/* 1. CABECERA REAL DEL PROYECTO */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-2xs">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 h-20 flex items-center justify-between gap-4">
-          
-          {/* Logo y Slogan */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-            <button 
-              type="button" 
-              onClick={onBackToHome}
-              className="flex items-center gap-2 transition-opacity hover:opacity-90 cursor-pointer"
-              title="Ir al inicio de Dynamic Tours"
-            >
-              <Logo className="h-8 sm:h-9 w-auto" />
-            </button>
-            <div className="hidden sm:block h-4.5 w-px bg-slate-300" />
-            <div className="hidden sm:flex items-center gap-1 font-bold text-[10px] sm:text-[10.5px] tracking-wide uppercase whitespace-nowrap">
-              <span className="text-[#1F82D2]">AGENCIA MAYORISTA</span>
-              <span className="text-[#52A72B]">DE VIAJES</span>
-            </div>
-          </div>
-
-          {/* Menú Central */}
-          <nav className="hidden lg:flex items-center gap-2.5 xl:gap-5 text-[11px] xl:text-xs font-bold text-slate-800 whitespace-nowrap">
-            {/* DESTINOS (Página actual activa) */}
-            <div className="flex items-center gap-1.5 uppercase tracking-wider py-1.5 px-3 rounded-lg font-bold text-xs bg-white border border-[#1F82D2] text-[#0A0F1D] shadow-2xs">
-              <span>Destinos</span>
-            </div>
-
-            <span className="text-slate-300">·</span>
-            
-            <button 
-              type="button"
-              onClick={() => {
-                onBackToHome();
-                setTimeout(() => {
-                  const el = document.getElementById("ofertas");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }, 100);
-              }}
-              className="hover:text-[#1F82D2] transition-colors font-bold cursor-pointer"
-            >
-              Ofertas
-            </button>
-
-            <span className="text-slate-300">·</span>
-
-            <button 
-              type="button"
-              onClick={() => {
-                if (onSelectGrupos) {
-                  onSelectGrupos();
-                } else {
-                  window.location.hash = "viajes-a-medida-grupos";
-                }
-              }}
-              className="hover:text-[#1F82D2] transition-colors font-bold cursor-pointer"
-            >
-              Grupos
-            </button>
-
-            <span className="text-slate-300">·</span>
-
-            <button 
-              type="button"
-              onClick={() => {
-                onBackToHome();
-                setTimeout(() => {
-                  const el = document.getElementById("nosotros");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }, 100);
-              }}
-              className="hover:text-[#1F82D2] transition-colors font-bold cursor-pointer"
-            >
-              Sobre Dynamic
-            </button>
-          </nav>
-
-          {/* Botones Derecha: Buscador + ACCESO AGENCIAS */}
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-            <button
-              type="button"
-              onClick={() => {
-                onBackToHome();
-                setTimeout(() => {
-                  const el = document.getElementById("hero-finder");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }, 100);
-              }}
-              className="hidden sm:flex items-center gap-1.5 bg-[#f1f5f9] hover:bg-[#e2e8f0] text-slate-700 font-bold text-xs py-1.5 px-3 rounded-full border border-slate-200/80 transition-all cursor-pointer shadow-2xs"
-            >
-              <Search className="w-3.5 h-3.5 text-slate-500" />
-              <span>Buscador</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsLoginModalOpen(true)}
-              className="bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:opacity-95 text-white font-extrabold text-[10.5px] sm:text-[11px] uppercase tracking-wider py-1.5 px-2.5 sm:px-3 rounded-lg flex items-center gap-1.5 shadow-xs hover:shadow transition-all cursor-pointer whitespace-nowrap shrink-0"
-            >
-              <Lock className="w-3.5 h-3.5 shrink-0" />
-              <span>ACCESO AGENCIAS</span>
-            </button>
-          </div>
-
-        </div>
-      </header>
+      {/* 1. CABECERA CORPORATIVA OFICIAL */}
+      <Header 
+        activeNav="destinos"
+        onNavigateHome={onBackToHome}
+        onNavigateDestinos={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+        onNavigateGrupos={() => {
+          if (onSelectGrupos) onSelectGrupos();
+          else window.location.hash = "viajes-a-medida-grupos";
+        }}
+        onNavigateOfertas={() => {
+          onBackToHome();
+          setTimeout(() => {
+            const el = document.getElementById("ofertas");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }}
+        onNavigateNosotros={() => {
+          onBackToHome();
+          setTimeout(() => {
+            const el = document.getElementById("nosotros");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }}
+        onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+      />
 
       {/* 1. PORTADA PANORÁMICA CON VÍDEO DE LA TIERRA */}
       <section className="relative w-full h-[320px] sm:h-[400px] lg:h-[450px] overflow-hidden bg-slate-950">
