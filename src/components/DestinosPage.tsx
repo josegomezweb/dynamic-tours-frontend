@@ -1,9 +1,14 @@
-import React, { useState, useMemo } from "react";
-import Logo from "./Logo";
+import React, { useState, useMemo, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import SeamlessHeroVideo from "./SeamlessHeroVideo";
 import { assetUrl } from "../utils/assets";
+import { 
+  ZONES, 
+  CATALOG_PROGRAMS, 
+  findZoneForCountry, 
+  TourProgram 
+} from "../data/destinosCatalog";
 import { 
   Search, 
   ChevronDown, 
@@ -12,7 +17,6 @@ import {
   X, 
   MapPin, 
   Calendar, 
-  Clock, 
   Sparkles,
   Building2,
   CheckCircle2,
@@ -28,218 +32,48 @@ export interface DestinosPageProps {
   onSelectSenior?: () => void;
   onSelectLeyendas?: () => void;
   onSelectGrupos?: () => void;
+  initialCountry?: string;
+  initialZoneId?: string;
 }
-
-interface TourProgram {
-  id: string;
-  country: string;
-  region: string;
-  title: string;
-  titleLine1?: string;
-  titleLine2?: string | null;
-  subtitle?: string | null;
-  tag: string;
-  duration: string;
-  description: string;
-  price?: string | null; // e.g. "1.285 €" or null for "Consultar precio"
-  image: string;
-  imagePos?: string;
-  bottomImagePos?: string;
-  departureCities?: string[];
-  isSenior?: boolean;
-  isLeyendas?: boolean;
-}
-
-// 5 ZONES as specified: Oriente Medio, Asia, África, Europa, América
-interface ZoneDefinition {
-  id: string;
-  name: string;
-  countries: string[];
-}
-
-const ZONES: ZoneDefinition[] = [
-  {
-    id: "oriente-medio",
-    name: "Oriente Medio",
-    countries: ["Egipto", "Jordania", "Dubái", "Irán", "Israel"]
-  },
-  {
-    id: "asia",
-    name: "Asia",
-    countries: ["Armenia", "Camboya", "China", "India", "Japón", "Maldivas", "Nepal", "Sri Lanka", "Tailandia", "Uzbekistán", "Vietnam"]
-  },
-  {
-    id: "europa",
-    name: "Europa",
-    countries: ["Turquía", "Portugal", "Alemania", "Austria", "Bélgica", "Croacia", "España", "Grecia", "Italia", "Reino Unido"]
-  },
-  {
-    id: "america",
-    name: "América",
-    countries: ["Argentina", "Canadá", "Costa Rica", "Estados Unidos", "México"]
-  },
-  {
-    id: "africa",
-    name: "África",
-    countries: ["Kenia", "Marruecos", "Tanzania", "Túnez"]
-  }
-];
-
-// Available programs catalog
-const CATALOG_PROGRAMS: TourProgram[] = [
-  // --- EGIPTO (4 programs matching mockup) ---
-  {
-    id: "egipto-selecto-senior",
-    country: "Egipto",
-    region: "Oriente Medio",
-    title: "Egipto Selecto Senior",
-    titleLine1: "Egipto Selecto Senior",
-    subtitle: "Especial mayores de 55 años",
-    tag: "ESPECIAL +55",
-    duration: "8 DÍAS / 7 NOCHES",
-    description: "Crucero de 4 noches por el Nilo y 3 noches en El Cairo con visitas exclusivas, traslados y régimen todo incluido.",
-    price: "1.285 €",
-    image: "/senior dynamic ok.png",
-    imagePos: "object-[center_36%]",
-    bottomImagePos: "object-[center_70%]",
-    departureCities: ["Madrid", "Barcelona"],
-    isSenior: true
-  },
-  {
-    id: "egipto-leyendas",
-    country: "Egipto",
-    region: "Oriente Medio",
-    title: "Leyendas de Egipto",
-    titleLine1: "Leyendas de Egipto",
-    subtitle: null,
-    tag: "SIN ABU SIMBEL",
-    duration: "8 DÍAS / 7 NOCHES",
-    description: "Crucero por el Nilo en pensión completa y estancia en El Cairo con entrada por Asuán y salidas en viernes.",
-    price: "764 €",
-    image: "/dia_5_guiza.jpg",
-    imagePos: "object-[center_28%]",
-    bottomImagePos: "object-[center_60%]",
-    departureCities: ["Madrid", "Barcelona", "Valencia"],
-    isLeyendas: true
-  },
-  {
-    id: "egipto-descubre",
-    country: "Egipto",
-    region: "Oriente Medio",
-    title: "Descubre Egipto · Crucero por el Nilo + El Cairo",
-    titleLine1: "Descubre Egipto ·",
-    titleLine2: "Crucero por el Nilo + El Cairo",
-    subtitle: null,
-    tag: "BAJADA DE PRECIOS",
-    duration: "8 DÍAS / 7 NOCHES",
-    description: "Crucero por el Nilo en pensión completa y estancia en El Cairo con visitas guiadas a templos y pirámides.",
-    price: "499 €",
-    image: "/egipto_feluca.png",
-    imagePos: "object-[20%_74%]",
-    bottomImagePos: "object-[20%_90%]",
-    departureCities: ["Madrid", "Barcelona", "Bilbao"]
-  },
-  {
-    id: "egipto-fin-de-ano",
-    country: "Egipto",
-    region: "Oriente Medio",
-    title: "Descubre Egipto · Especial Fin de Año",
-    titleLine1: "Descubre Egipto ·",
-    titleLine2: "Especial Fin de Año",
-    subtitle: null,
-    tag: "SALIDAS DESDE PROVINCIAS",
-    duration: "8 DÍAS / 7 NOCHES",
-    description: "Crucero por el Nilo y estancia en El Cairo con cupos garantizados y vuelos directos desde múltiples aeropuertos.",
-    price: "Consultar precio", // Fallback test: no "Desde" preceding it
-    image: "/egipto_fin_de_ano.jpg",
-    imagePos: "object-center",
-    bottomImagePos: "object-[center_70%]",
-    departureCities: ["Madrid", "Barcelona", "Valencia", "Zaragoza", "Bilbao", "Santiago"]
-  },
-
-  // --- TURQUÍA ---
-  {
-    id: "turquia-suenos",
-    country: "Turquía",
-    region: "Europa",
-    title: "Sueños de Estambul y Capadocia",
-    titleLine1: "Sueños",
-    titleLine2: "de Estambul y Capadocia",
-    subtitle: null,
-    tag: "VUELO DOMÉSTICO INCLUIDO",
-    duration: "8 DÍAS / 7 NOCHES",
-    description: "4 noches en Estambul con desayuno y 3 noches en Capadocia en pensión completa. Incluye vuelo doméstico, visitas guiadas y traslados.",
-    price: "1.509 €",
-    image: "/turquia_dynamic.png",
-    imagePos: "object-[center_32%]",
-    bottomImagePos: "object-[center_60%]",
-    departureCities: ["Madrid", "Barcelona", "Málaga"]
-  },
-  {
-    id: "turquia-ruta-confort",
-    country: "Turquía",
-    region: "Europa",
-    title: "Ruta turca completa - Confort",
-    titleLine1: "Ruta turca completa",
-    titleLine2: "Confort",
-    subtitle: null,
-    tag: "CIRCUITO CON VUELOS",
-    duration: "8 DÍAS / 7 NOCHES",
-    description: "4 noches en Estambul con desayuno, 2 noches en Capadocia y 1 noche en Pamukkale en pensión completa. Vuelos y traslados incluidos.",
-    price: "1.599 €",
-    image: "/pamukkale_ruta_turca.jpg",
-    imagePos: "object-[center_42%]",
-    bottomImagePos: "object-[center_60%]",
-    departureCities: ["Madrid", "Barcelona"]
-  },
-
-  // --- JORDANIA ---
-  {
-    id: "jordania-maravillas",
-    country: "Jordania",
-    region: "Oriente Medio",
-    title: "Maravillas del Hachemita y Wadi Rum",
-    titleLine1: "Maravillas de Jordania",
-    subtitle: null,
-    tag: "PETRA & DESIERTO",
-    duration: "8 DÍAS / 7 NOCHES",
-    description: "4N Ammán + 2N Petra + 1N en campamento beduino en Wadi Rum en MP. Safari 4x4 por el desierto, entrada a Petra y Mar Muerto.",
-    price: "1.425 €",
-    image: "/jordania_petra.jpg",
-    imagePos: "object-center",
-    bottomImagePos: "object-center",
-    departureCities: ["Madrid", "Barcelona"]
-  },
-
-  // --- PORTUGAL ---
-  {
-    id: "portugal-oporto",
-    country: "Portugal",
-    region: "Europa",
-    title: "Escapada Porto & Crucero Seis Puentes",
-    titleLine1: "Escapada Porto & Seis Puentes",
-    subtitle: null,
-    tag: "ESCAPADA CULTURAL",
-    duration: "3 DÍAS / 2 NOCHES",
-    description: "Escapada cultural en Oporto. Alojamiento y desayuno, crucero rabelo por el río Duero y cata en bodegas tradicionales.",
-    price: "199 €",
-    image: "/portugal_porto.jpg",
-    imagePos: "object-center",
-    bottomImagePos: "object-center",
-    departureCities: ["Madrid", "Barcelona", "Bilbao", "Valencia"]
-  }
-];
 
 export default function DestinosPage({
   onBackToHome,
   onEnterB2B,
   onSelectSenior,
   onSelectLeyendas,
-  onSelectGrupos
+  onSelectGrupos,
+  initialCountry,
+  initialZoneId
 }: DestinosPageProps) {
-  // Navigation & filter states
-  const [selectedZoneId, setSelectedZoneId] = useState<string>("oriente-medio");
-  const [selectedCountry, setSelectedCountry] = useState<string>("Egipto");
+  // Navigation states
+  const [selectedZoneId, setSelectedZoneId] = useState<string>(() => {
+    if (initialCountry) {
+      const z = findZoneForCountry(initialCountry);
+      if (z) return z.id;
+    }
+    if (initialZoneId) return initialZoneId.replace("_", "-");
+    if (typeof window !== "undefined" && window.location.hash.includes("?")) {
+      const p = new URLSearchParams(window.location.hash.split("?")[1]);
+      const pais = p.get("pais");
+      if (pais) {
+        const z = findZoneForCountry(pais);
+        if (z) return z.id;
+      }
+      const zona = p.get("zona");
+      if (zona) return zona.replace("_", "-");
+    }
+    return "oriente-medio";
+  });
+
+  const [selectedCountry, setSelectedCountry] = useState<string>(() => {
+    if (initialCountry) return initialCountry;
+    if (typeof window !== "undefined" && window.location.hash.includes("?")) {
+      const p = new URLSearchParams(window.location.hash.split("?")[1]);
+      const pais = p.get("pais");
+      if (pais) return pais;
+    }
+    return "Egipto";
+  });
 
   // Filter bar states
   const [cityFilter, setCityFilter] = useState<string>("all");
@@ -253,18 +87,64 @@ export default function DestinosPage({
   const [agentUser, setAgentUser] = useState<string>("");
   const [agencyAgency, setAgencyAgency] = useState<string>("");
 
+  // Sync props or hash navigation changes
+  useEffect(() => {
+    const handleSync = () => {
+      const hash = window.location.hash;
+      if (hash.includes("?")) {
+        const params = new URLSearchParams(hash.split("?")[1]);
+        const pais = params.get("pais");
+        const zona = params.get("zona");
+        if (pais) {
+          setSelectedCountry(pais);
+          const z = findZoneForCountry(pais);
+          if (z) setSelectedZoneId(z.id);
+        } else if (zona) {
+          const cleanZone = zona.replace("_", "-");
+          setSelectedZoneId(cleanZone);
+          const zObj = ZONES.find((z) => z.id === cleanZone);
+          if (zObj && zObj.countries.length > 0) setSelectedCountry(zObj.countries[0]);
+        }
+      }
+    };
+
+    if (initialCountry) {
+      setSelectedCountry(initialCountry);
+      const z = findZoneForCountry(initialCountry);
+      if (z) setSelectedZoneId(z.id);
+    } else if (initialZoneId) {
+      const cleanZone = initialZoneId.replace("_", "-");
+      setSelectedZoneId(cleanZone);
+      const zObj = ZONES.find((z) => z.id === cleanZone);
+      if (zObj && zObj.countries.length > 0) setSelectedCountry(zObj.countries[0]);
+    } else {
+      handleSync();
+    }
+
+    window.addEventListener("hashchange", handleSync);
+    return () => window.removeEventListener("hashchange", handleSync);
+  }, [initialCountry, initialZoneId]);
+
   // Active zone definition
   const activeZone = useMemo(() => {
     return ZONES.find((z) => z.id === selectedZoneId) || ZONES[0];
   }, [selectedZoneId]);
 
-  // When changing zone, select first country in that zone if current not present
+  // When changing zone
   const handleSelectZone = (zoneId: string) => {
     setSelectedZoneId(zoneId);
     const zone = ZONES.find((z) => z.id === zoneId);
-    if (zone && !zone.countries.includes(selectedCountry)) {
-      setSelectedCountry(zone.countries[0]);
+    if (zone) {
+      const nextCountry = zone.countries.includes(selectedCountry) ? selectedCountry : zone.countries[0];
+      setSelectedCountry(nextCountry);
+      window.location.hash = `#destinos?pais=${encodeURIComponent(nextCountry)}&zona=${encodeURIComponent(zoneId)}`;
     }
+  };
+
+  // When changing country
+  const handleSelectCountry = (country: string) => {
+    setSelectedCountry(country);
+    window.location.hash = `#destinos?pais=${encodeURIComponent(country)}&zona=${encodeURIComponent(selectedZoneId)}`;
   };
 
   // Reset filters
@@ -288,7 +168,9 @@ export default function DestinosPage({
       if (durationFilter === "8d") {
         result = result.filter((p) => p.duration.includes("8 DÍAS") || p.duration.includes("8 Días"));
       } else if (durationFilter === "short") {
-        result = result.filter((p) => p.duration.includes("3 DÍAS") || p.duration.includes("4 DÍAS"));
+        result = result.filter((p) => p.duration.includes("3 DÍAS") || p.duration.includes("4 DÍAS") || p.duration.includes("5 DÍAS"));
+      } else if (durationFilter === "long") {
+        result = result.filter((p) => p.duration.includes("10 DÍAS") || p.duration.includes("11 DÍAS") || p.duration.includes("12 DÍAS"));
       }
     }
 
@@ -366,6 +248,37 @@ export default function DestinosPage({
           }, 100);
         }}
         onOpenB2BLogin={() => setIsLoginModalOpen(true)}
+        onOpenRegister={() => {
+          onBackToHome();
+          setTimeout(() => {
+            const el = document.getElementById("alta-agencia");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }, 120);
+        }}
+        onSearch={(query) => {
+          setSearchQuery(query);
+          const el = document.getElementById("catalogo-programas");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }}
+        onSelectDestination={(destKey, countryName, regionId) => {
+          const dest = countryName || destKey;
+          if (dest) {
+            setSelectedCountry(dest);
+            const found = findZoneForCountry(dest);
+            if (found) {
+              setSelectedZoneId(found.id);
+            } else if (regionId) {
+              setSelectedZoneId(regionId.replace("_", "-"));
+            }
+            window.location.hash = `#destinos?pais=${encodeURIComponent(dest)}`;
+            setSearchQuery("");
+            const el = document.getElementById("catalogo-programas");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          } else if (regionId) {
+            const clean = regionId.replace("_", "-");
+            handleSelectZone(clean);
+          }
+        }}
       />
 
       {/* 1. PORTADA PANORÁMICA CON VÍDEO DE LA TIERRA */}
@@ -380,15 +293,20 @@ export default function DestinosPage({
         {/* Degradado para máxima legibilidad del texto en el lado oscuro izquierdo */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-transparent pointer-events-none z-20" />
 
-        {/* Textos superpuestos alineados a la izquierda */}
+        {/* Textos superpuestos alineados a la izquierda dinámicos por país */}
         <div className="absolute inset-0 flex items-center z-30 pointer-events-none">
           <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-12">
             <div className="max-w-2xl sm:max-w-3xl text-left pointer-events-auto">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] xl:text-[76px] font-bold text-white tracking-tight leading-[1.04] font-sans drop-shadow-md">
-                Destinos
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider mb-2.5">
+                <span>{activeZone.name}</span>
+                <span className="text-white/60">·</span>
+                <span className="text-white font-bold">{selectedCountry}</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[62px] font-bold text-white tracking-tight leading-[1.06] font-sans drop-shadow-md">
+                Viajes a {selectedCountry}
               </h1>
-              <p className="text-base sm:text-lg md:text-xl lg:text-[23px] xl:text-[25px] text-slate-100 mt-3 sm:mt-4 font-medium drop-shadow-sm leading-snug">
-                Encuentra la próxima propuesta para tus clientes.
+              <p className="text-sm sm:text-base md:text-lg lg:text-[20px] text-slate-100 mt-2 sm:mt-3 font-medium drop-shadow-sm leading-snug">
+                Descubre todos los programas, circuitos y viajes organizados en {selectedCountry}.
               </p>
             </div>
           </div>
@@ -398,9 +316,9 @@ export default function DestinosPage({
       {/* CONTENEDOR PRINCIPAL */}
       <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
         
-        {/* Breadcrumb: Inicio / Destinos */}
+        {/* Breadcrumb: Inicio / Destinos / Zona / País */}
         <nav aria-label="Breadcrumb" className="pt-5 pb-3">
-          <ol className="flex items-center text-xs text-slate-500 font-medium">
+          <ol className="flex items-center text-xs text-slate-500 font-medium flex-wrap gap-y-1">
             <li>
               <button 
                 type="button" 
@@ -411,8 +329,27 @@ export default function DestinosPage({
               </button>
             </li>
             <li className="mx-2 text-slate-300">/</li>
-            <li className="text-slate-700 font-semibold" aria-current="page">
-              Destinos
+            <li>
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.hash = "destinos";
+                  window.scrollTo({ top: 320, behavior: "smooth" });
+                }}
+                className="hover:text-[#1F82D2] transition-colors cursor-pointer"
+              >
+                Destinos
+              </button>
+            </li>
+            <li className="mx-2 text-slate-300">/</li>
+            <li>
+              <span className="text-slate-500 font-medium">
+                {activeZone.name}
+              </span>
+            </li>
+            <li className="mx-2 text-slate-300">/</li>
+            <li className="text-slate-800 font-bold" aria-current="page">
+              {selectedCountry}
             </li>
           </ol>
         </nav>
@@ -435,7 +372,6 @@ export default function DestinosPage({
                     }`}
                   >
                     <span>{zone.name}</span>
-                    {/* Línea inferior de color para zona activa */}
                     {isSelected && (
                       <span className="absolute bottom-0 inset-x-0 h-[3px] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] rounded-t-full" />
                     )}
@@ -459,11 +395,12 @@ export default function DestinosPage({
                 <button
                   key={country}
                   type="button"
-                  onClick={() => setSelectedCountry(country)}
+                  onClick={() => handleSelectCountry(country)}
                   className="group relative flex flex-col items-center px-2 py-1 text-xs sm:text-sm font-medium text-slate-800 hover:text-[#1F82D2] transition-colors cursor-pointer select-none"
                 >
-                  <span className="leading-tight">{country}</span>
-                  {/* Contenedor de indicador reservado (3px) para evitar saltos de línea/posición */}
+                  <span className={`leading-tight ${isSelected ? "font-bold text-[#0A1931]" : ""}`}>
+                    {country}
+                  </span>
                   <div className="w-full h-[3px] mt-1.5 flex items-center justify-center">
                     <span 
                       className={`w-full transition-all duration-200 ${
@@ -480,8 +417,8 @@ export default function DestinosPage({
         </section>
 
         {/* 4. BARRA DE FILTROS */}
-        <section aria-label="Filtros del catálogo" className="mt-2 mb-8">
-          <div className="bg-[#EDF4FA] rounded-2xl p-3 sm:p-4 border border-slate-200/60 shadow-2xs">
+        <section id="catalogo-programas" aria-label="Filtros del catálogo" className="pt-2 pb-6 sm:pb-8 scroll-mt-24">
+          <div className="bg-[#F8FAFC] border border-slate-200/80 rounded-2xl p-3 sm:p-4 shadow-xs">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 sm:gap-3 items-center">
               
               {/* Ciudad de salida */}
@@ -489,9 +426,9 @@ export default function DestinosPage({
                 <select
                   value={cityFilter}
                   onChange={(e) => setCityFilter(e.target.value)}
-                  className="w-full h-10 px-3.5 pr-8 bg-white rounded-lg border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20 appearance-none cursor-pointer"
+                  className="w-full h-10 pl-3.5 pr-8 bg-white rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-700 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20 appearance-none cursor-pointer"
                 >
-                  <option value="all">Ciudad de salida</option>
+                  <option value="all">Ciudad de salida: Todas</option>
                   <option value="Madrid">Madrid</option>
                   <option value="Barcelona">Barcelona</option>
                   <option value="Valencia">Valencia</option>
@@ -503,18 +440,19 @@ export default function DestinosPage({
                 <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
 
-              {/* Fecha de salida */}
+              {/* Fecha de viaje */}
               <div className="lg:col-span-3 relative">
                 <select
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value)}
-                  className="w-full h-10 px-3.5 pr-8 bg-white rounded-lg border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20 appearance-none cursor-pointer"
+                  className="w-full h-10 pl-3.5 pr-8 bg-white rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-700 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20 appearance-none cursor-pointer"
                 >
-                  <option value="all">Fecha de salida</option>
-                  <option value="prox">Próximas salidas</option>
-                  <option value="nov">Noviembre 2026</option>
-                  <option value="dic">Diciembre 2026 / Fin de Año</option>
-                  <option value="ene">Enero 2027</option>
+                  <option value="all">Fecha de viaje: Todas las fechas</option>
+                  <option value="2026-11">Noviembre 2026</option>
+                  <option value="2026-12">Diciembre 2026</option>
+                  <option value="2026-fin-ano">Fin de Año 2026</option>
+                  <option value="2027-primavera">Primavera 2027</option>
+                  <option value="2027-verano">Verano 2027</option>
                 </select>
                 <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
@@ -524,11 +462,12 @@ export default function DestinosPage({
                 <select
                   value={durationFilter}
                   onChange={(e) => setDurationFilter(e.target.value)}
-                  className="w-full h-10 px-3.5 pr-8 bg-white rounded-lg border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20 appearance-none cursor-pointer"
+                  className="w-full h-10 pl-3.5 pr-8 bg-white rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-700 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20 appearance-none cursor-pointer"
                 >
-                  <option value="all">Duración</option>
-                  <option value="8d">8 Días / 7 Noches</option>
-                  <option value="short">Escapadas (3-4 Días)</option>
+                  <option value="all">Duración: Cualquier</option>
+                  <option value="short">Escapadas (3-5 días)</option>
+                  <option value="8d">Circuitos (8 días / 7 noches)</option>
+                  <option value="long">Grandes viajes (10+ días)</option>
                 </select>
                 <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
@@ -573,7 +512,7 @@ export default function DestinosPage({
           {/* Subcabecera de resultados: Título dinámico + Ordenar por */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-6 sm:mt-8">
             <h2 className="text-2xl sm:text-[26px] font-bold text-[#0A1931] tracking-tight font-sans">
-              Programas de {selectedCountry}
+              Programas de {selectedCountry} ({displayedPrograms.length})
             </h2>
 
             <div className="flex items-center gap-2 self-end sm:self-auto">
@@ -602,7 +541,6 @@ export default function DestinosPage({
                 (program.isLeyendas && onSelectLeyendas)
               );
 
-              // Check if price is present or missing/fallback
               const hasPrice = program.price && program.price.trim() !== "" && program.price !== "Consultar precio";
 
               return (
@@ -624,22 +562,19 @@ export default function DestinosPage({
 
                     {/* Etiquetas superiores sobre la fotografía */}
                     <div className="absolute top-0 inset-x-0 p-3 sm:p-4.5 flex items-start justify-between gap-1.5 z-10 pointer-events-none">
-                      {/* Etiqueta superior izquierda: Blanca esmerilada */}
                       <span className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-[7px] sm:rounded-[9px] bg-white/85 backdrop-blur-md border border-white/80 text-[#24766F] font-semibold text-[9.5px] sm:text-[11px] uppercase tracking-wider shadow-xs whitespace-nowrap">
                         {program.tag}
                       </span>
 
-                      {/* Duración superior derecha */}
                       <span className="text-white font-medium text-[10.5px] sm:text-[11.5px] tracking-wider uppercase drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] pt-0.5 whitespace-nowrap shrink-0">
                         {program.duration}
                       </span>
                     </div>
                   </div>
 
-                  {/* Panel inferior esmerilado con acabado idéntico a Destacadas */}
+                  {/* Panel inferior esmerilado */}
                   <div className="relative z-10 w-full h-[174px] sm:h-[176px] lg:h-[178px] xl:h-[182px] rounded-t-[16px] sm:rounded-t-[18px] overflow-hidden border-t border-white/90 border-x border-white/60 shadow-[0_-2px_14px_rgba(0,0,0,0.03)] shrink-0">
                     
-                    {/* Capa de fondo con desenfoque de la imagen */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
                       <img
                         src={assetUrl(program.image)}
@@ -658,9 +593,7 @@ export default function DestinosPage({
                       />
                     </div>
 
-                    {/* Contenido del panel inferior */}
                     <div className="relative z-10 w-full h-full px-4 sm:px-4.5 xl:px-5 pt-2.5 sm:pt-3 xl:pt-3 pb-2.5 sm:pb-3 xl:pb-3 flex flex-col justify-between">
-                      {/* Título, subtítulo y descripción */}
                       <div className="space-y-0.5 text-left">
                         <h3 className="text-[17px] sm:text-[18px] lg:text-[18px] xl:text-[20px] font-semibold text-[#0A1931] leading-[1.14] tracking-tight">
                           <span className="block">{program.titleLine1 || program.title}</span>
@@ -678,7 +611,6 @@ export default function DestinosPage({
                         </p>
                       </div>
 
-                      {/* Fila inferior: Precio («Desde» o «Consultar precio») y Botón con borde degradado */}
                       <div className="flex items-end justify-between gap-3 mt-2 pt-0.5 shrink-0">
                         <div className="text-left">
                           {hasPrice ? (
@@ -697,7 +629,6 @@ export default function DestinosPage({
                           )}
                         </div>
 
-                        {/* 6. BOTÓN «Ver detalles»: SOLO BORDE FINO DEGRADADO, SIN RELLENO */}
                         <div className="p-[1.5px] rounded-[10px] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] inline-flex shrink-0">
                           <button
                             type="button"
@@ -721,7 +652,6 @@ export default function DestinosPage({
             })}
           </div>
         ) : (
-          /* Estado vacío para países sin programas cargados todavía */
           <div className="text-center py-16 px-4 bg-slate-50/80 rounded-2xl border border-slate-200/60 my-8">
             <MapPin className="w-10 h-10 text-slate-300 mx-auto mb-3" />
             <h3 className="text-lg font-bold text-slate-800 mb-1">
@@ -781,53 +711,65 @@ export default function DestinosPage({
 
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Nombre de la Agencia
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Agente (Nombre o Email)
                 </label>
                 <div className="relative">
-                  <Building2 className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    required
-                    value={agencyAgency}
-                    onChange={(e) => setAgencyAgency(e.target.value)}
-                    placeholder="Ej. Viajes Halcón - Centro"
-                    className="w-full h-10 pl-9 pr-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20 focus:bg-white"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Nombre del Agente
-                </label>
-                <div className="relative">
-                  <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                   <input
                     type="text"
                     required
                     value={agentUser}
                     onChange={(e) => setAgentUser(e.target.value)}
                     placeholder="Ej. Laura Martínez"
-                    className="w-full h-10 pl-9 pr-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20 focus:bg-white"
+                    className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20"
                   />
                 </div>
               </div>
 
-              <div className="p-3 bg-blue-50/60 rounded-lg border border-blue-100 flex items-start gap-2 text-left">
-                <ShieldCheck className="w-4 h-4 text-[#1F82D2] shrink-0 mt-0.5" />
-                <p className="text-[11px] text-slate-600 leading-tight">
-                  Acceso directo a tarifas netas de mayorista, cupos de plazas en tiempo real y descarga de itinerarios.
-                </p>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Nombre de la Agencia / Sucursal
+                </label>
+                <div className="relative">
+                  <Building2 className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <input
+                    type="text"
+                    required
+                    value={agencyAgency}
+                    onChange={(e) => setAgencyAgency(e.target.value)}
+                    placeholder="Ej. Halcón Viajes - Gran Vía"
+                    className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-[#1F82D2]/20"
+                  />
+                </div>
               </div>
 
-              <button
-                type="submit"
-                className="w-full h-11 bg-gradient-to-r from-[#1F82D2] to-[#52A72B] hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
-              >
-                <span>Acceder al Portal B2B</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full py-2.5 rounded-xl bg-[#1F82D2] hover:bg-[#1868A7] text-white font-semibold text-sm transition-colors shadow-sm"
+                >
+                  Acceder a disponibilidad y tarifas B2B
+                </button>
+              </div>
+
+              <p className="text-[11px] text-slate-400 text-center">
+                ¿No tienes clave de agencia?{" "}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsLoginModalOpen(false);
+                    onBackToHome();
+                    setTimeout(() => {
+                      const el = document.getElementById("alta-agencia");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }, 120);
+                  }}
+                  className="text-[#1F82D2] hover:underline font-semibold"
+                >
+                  Solicitar alta de agencia minorista
+                </button>
+              </p>
             </form>
           </div>
         </div>

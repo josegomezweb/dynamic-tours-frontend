@@ -33,6 +33,8 @@ import {
 export default function App() {
   const [viewMode, setViewMode] = useState<"public" | "b2b" | "leyendas-detail" | "maravillas-detail" | "viajes-a-medida-grupos" | "egipto-senior-detail" | "destinos">("public");
   const [scrollToGruposForm, setScrollToGruposForm] = useState<boolean>(false);
+  const [selectedCountryForDestinos, setSelectedCountryForDestinos] = useState<string>("Egipto");
+  const [selectedZoneForDestinos, setSelectedZoneForDestinos] = useState<string>("oriente-medio");
   const [activeTab, setActiveTab] = useState<string>("home");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -206,6 +208,14 @@ export default function App() {
         setViewMode("egipto-senior-detail");
       } else if (hash === "#destinos" || hash.startsWith("#destinos")) {
         setViewMode("destinos");
+        if (hash.includes("?")) {
+          const queryString = hash.split("?")[1] || "";
+          const params = new URLSearchParams(queryString);
+          const pais = params.get("pais");
+          const zona = params.get("zona");
+          if (pais) setSelectedCountryForDestinos(pais);
+          if (zona) setSelectedZoneForDestinos(zona.replace("_", "-"));
+        }
       } else if (hash === "#b2b") {
         setViewMode("b2b");
       } else if (hash === "" || hash === "#" || hash === "#inicio" || hash === "#ofertas" || hash === "#nosotros") {
@@ -291,6 +301,8 @@ export default function App() {
     if (viewMode === "destinos") {
       return (
         <DestinosPage 
+          initialCountry={selectedCountryForDestinos}
+          initialZoneId={selectedZoneForDestinos}
           onBackToHome={() => {
             window.location.hash = "";
             setViewMode("public");
@@ -344,8 +356,19 @@ export default function App() {
             setScrollToGruposForm(true);
             setViewMode("viajes-a-medida-grupos");
           }}
-          onSelectDestinos={() => {
-            window.location.hash = "destinos";
+          onSelectDestinos={(countryName?: string, regionId?: string) => {
+            if (countryName) {
+              setSelectedCountryForDestinos(countryName);
+              const mappedZone = regionId ? regionId.replace("_", "-") : undefined;
+              if (mappedZone) setSelectedZoneForDestinos(mappedZone);
+              window.location.hash = `#destinos?pais=${encodeURIComponent(countryName)}${mappedZone ? `&zona=${encodeURIComponent(mappedZone)}` : ""}`;
+            } else if (regionId) {
+              const mappedZone = regionId.replace("_", "-");
+              setSelectedZoneForDestinos(mappedZone);
+              window.location.hash = `#destinos?zona=${encodeURIComponent(mappedZone)}`;
+            } else {
+              window.location.hash = "destinos";
+            }
             setViewMode("destinos");
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}

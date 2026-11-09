@@ -45,7 +45,7 @@ interface PublicWebProps {
   onSelectSenior?: () => void;
   onSelectGrupos?: () => void;
   onSelectGruposForm?: () => void;
-  onSelectDestinos?: () => void;
+  onSelectDestinos?: (countryName?: string, regionId?: string) => void;
 }
 
 interface DestinationItem {
@@ -733,7 +733,7 @@ const DYNAMIC_CATALOG_TOURS: DynamicCatalogTour[] = [
     duration: "8 Días / 7 Noches",
     price: "1.450 €",
     description: "Edimburgo, Tierras Altas, Lago Ness, Isla de Skye y Castillo de Stirling con Media Pensión en ruta, destilería de whisky y vuelos.",
-    image: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=800&q=80",
+    image: "/escocia_highlands.jpg",
     tag: "TIERRAS ALTAS",
     officialUrl: "https://www.dynamic-tours.com/destinos/escocia/",
     highlights: ["Crucero por el Lago Ness", "Visita a destilería tradicional de whisky", "Castillos de Stirling y Urquhart", "Guía oficial en español"]
@@ -855,6 +855,7 @@ export default function PublicWeb({
   const [calendarMonth, setCalendarMonth] = useState<number>(10); // Noviembre 2026 (0-indexed: 10)
   
   const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const [headerSearchQuery, setHeaderSearchQuery] = useState<string>("");
   const [resultTypeTab, setResultTypeTab] = useState<string>("todos");
   const finderBarRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -1000,13 +1001,32 @@ export default function PublicWeb({
 
   // Filtered actual trips from dynamic-tours.com
   const filteredCatalogTrips = React.useMemo(() => {
+    const normalize = (str: string) =>
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
     return DYNAMIC_CATALOG_TOURS.filter((tour) => {
-      // 1. Destino
+      // 0. Búsqueda libre desde cabecera (destinos, nombres de viajes, tipos, etc.)
+      if (headerSearchQuery.trim()) {
+        const queryNorm = normalize(headerSearchQuery);
+        const matchesQuery = 
+          normalize(tour.title).includes(queryNorm) ||
+          normalize(tour.country).includes(queryNorm) ||
+          normalize(tour.region).includes(queryNorm) ||
+          normalize(tour.description).includes(queryNorm) ||
+          normalize(tour.type).includes(queryNorm) ||
+          (tour.highlights && tour.highlights.some(h => normalize(h).includes(queryNorm)));
+        
+        if (!matchesQuery) return false;
+      }
+
+      // 1. Destino seleccionado
       if (selectedDest !== "todos") {
-        const destLower = selectedDest.toLowerCase();
-        const countryMatch = tour.country.toLowerCase() === destLower ||
-                             tour.region.toLowerCase() === destLower ||
-                             tour.title.toLowerCase().includes(destLower);
+        const destNorm = normalize(selectedDest);
+        const countryMatch = 
+          normalize(tour.country) === destNorm ||
+          normalize(tour.region) === destNorm ||
+          normalize(tour.title).includes(destNorm) ||
+          normalize(tour.country).includes(destNorm);
         if (!countryMatch) return false;
       }
 
@@ -1018,9 +1038,16 @@ export default function PublicWeb({
 
       return true;
     });
-  }, [selectedDest, selectedType, selectedDate, resultTypeTab]);
+  }, [headerSearchQuery, selectedDest, selectedType, selectedDate, resultTypeTab]);
 
   const handleSearch = () => {
+    if (selectedDest && selectedDest !== "todos" && onSelectDestinos) {
+      setIsDestPickerOpen(false);
+      setIsDatePickerOpen(false);
+      setIsTypePickerOpen(false);
+      onSelectDestinos(selectedDest);
+      return;
+    }
     setHasSearched(true);
     setIsDestPickerOpen(false);
     setIsDatePickerOpen(false);
@@ -1768,7 +1795,7 @@ export default function PublicWeb({
     {
       title: "Tesoros y Castillos de Escocia",
       category: "europa",
-      image: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=800&q=80",
+      image: "/escocia_highlands.jpg",
       description: "Edimburgo, Aberdeen, Tierras Altas, Lago Ness y Castillo de Stirling con Media Pensión en ruta, destilería de whisky y entradas históricas.",
       duration: "8 Días / 7 Noches",
       flights: "Vuelos directos a Edimburgo",
@@ -1841,15 +1868,35 @@ export default function PublicWeb({
           else window.location.hash = "nosotros";
         }}
         onOpenB2BLogin={() => setIsLoginModalOpen(true)}
-        onSelectDestination={(destKey) => {
-          setSelectedDest(destKey);
-          const el = document.getElementById("ofertas");
+        onOpenRegister={() => {
+          const el = document.getElementById("alta-agencia");
           if (el) el.scrollIntoView({ behavior: "smooth" });
+          else window.location.hash = "alta-agencia";
+        }}
+        onSearch={(query) => {
+          setHeaderSearchQuery(query);
+          setSelectedDest("todos");
+          setHasSearched(true);
+          setTimeout(() => {
+            const el = document.getElementById("resultados-busqueda");
+            if (el) {
+              el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }, 70);
+        }}
+        onSelectDestination={(destKey, countryName, regionId) => {
+          setHeaderSearchQuery("");
+          const dest = countryName || destKey;
+          if (onSelectDestinos) {
+            onSelectDestinos(dest, regionId);
+          } else {
+            window.location.hash = `#destinos?pais=${encodeURIComponent(dest)}${regionId ? `&zona=${encodeURIComponent(regionId.replace("_", "-"))}` : ""}`;
+          }
         }}
       />
 
       {/* HERO SECTION MATCHING REFERENCE DESIGN */}
-      <section className="relative z-20 text-white overflow-visible min-h-[640px] md:h-[calc(100vh-4rem)] md:max-h-[665px] md:min-h-[560px] flex flex-col justify-between">
+      <section className="relative z-20 text-white overflow-visible min-h-0 h-auto md:h-[530px] lg:h-[530px] md:max-h-[540px] flex flex-col justify-between">
         
         {/* Hero Video Background Layer with seamless crossfade looping */}
         <SeamlessHeroVideo 
@@ -1859,11 +1906,11 @@ export default function PublicWeb({
         />
 
         {/* Hero Main Content Area */}
-        <div className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-4 sm:pb-6 relative z-20 flex-1 flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-8 pb-3 sm:pb-4 relative z-20 flex-1 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
           
-          {/* Left Column: Big Headline & Explorar destinos Button */}
-          <div className="max-w-xl lg:max-w-2xl text-left space-y-6 sm:space-y-7">
-            <h1 className="text-[27px] sm:text-4xl lg:text-[50px] xl:text-[56px] leading-[1.15] text-white tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)] font-sans">
+          {/* Left Column: Big Headline & Ofertas destacadas Button */}
+          <div className="max-w-xl lg:max-w-2xl text-left space-y-4 sm:space-y-5">
+            <h1 className="text-[26px] sm:text-4xl lg:text-[46px] xl:text-[50px] leading-[1.14] text-white tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)] font-sans">
               <span className="font-normal">Más </span>
               <span className="font-bold">mundo</span>
               <span className="font-normal"> para tus</span><br />
@@ -1877,9 +1924,9 @@ export default function PublicWeb({
             <div>
               <a
                 href="#ofertas"
-                className="inline-flex items-center justify-center bg-white/[0.14] hover:bg-white/[0.22] backdrop-blur-md border border-white/25 text-white font-medium text-sm px-6 py-3 rounded-xl shadow-xs transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                className="inline-flex items-center justify-center bg-white/[0.14] hover:bg-white/[0.22] backdrop-blur-md border border-white/25 text-white font-medium text-sm px-6 py-2.5 sm:py-3 rounded-xl shadow-xs transition-all duration-300 hover:scale-[1.02] cursor-pointer"
               >
-                Explorar destinos
+                Ofertas destacadas
               </a>
             </div>
           </div>
@@ -1912,14 +1959,14 @@ export default function PublicWeb({
 
               {/* Card Body - Frosted Translucent Glass matching the search bar */}
               <div 
-                className="p-4 sm:p-5 text-left space-y-2.5 rounded-b-[20px]"
+                className="p-3.5 sm:p-4 text-left space-y-2 rounded-b-[20px]"
                 style={{
                   background: "rgba(255, 255, 255, 0.16)",
                   backdropFilter: "blur(18px)",
                   WebkitBackdropFilter: "blur(18px)",
                 }}
               >
-                <div className={`space-y-2.5 transition-opacity duration-300 ease-in-out ${isCardFading ? "opacity-30" : "opacity-100"}`}>
+                <div className={`space-y-2 transition-opacity duration-300 ease-in-out ${isCardFading ? "opacity-30" : "opacity-100"}`}>
                   {/* Title & Duration */}
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="text-white text-xs sm:text-[13px] font-bold tracking-widest uppercase leading-snug">
@@ -1931,7 +1978,7 @@ export default function PublicWeb({
                   </div>
 
                   {/* Title & Subtitle (Mockup style for Sri Lanka & Egypt cards) */}
-                  <div className="space-y-1.5 min-h-[64px]">
+                  <div className="space-y-1 min-h-[52px]">
                     <h4 className="text-white text-[14px] sm:text-[15px] font-medium leading-snug">
                       {featuredCards[featuredCardIndex].title}
                     </h4>
@@ -1949,7 +1996,7 @@ export default function PublicWeb({
                 </div>
 
                 {/* Bottom Row */}
-                <div className="pt-2.5 flex items-center justify-between border-t border-white/15">
+                <div className="pt-2 flex items-center justify-between border-t border-white/15">
                   {/* Small button with transparent background and thin gradient border */}
                   <button
                     onClick={() => {
@@ -2006,7 +2053,7 @@ export default function PublicWeb({
         </div>
 
         {/* Bottom Horizontal Search Bar (Buscador B2B Translúcido con cajas limpias) */}
-        <div id="hero-finder" className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 mb-4 sm:mb-5 lg:mb-6 relative z-30">
+        <div id="hero-finder" className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 mb-3 sm:mb-4 lg:mb-4 relative z-30">
           <div 
             ref={finderBarRef}
             className="rounded-[18px] p-2 sm:p-2.5 shadow-[0_15px_35px_rgba(0,0,0,0.3)] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 md:gap-3 transition-all relative"
@@ -2473,30 +2520,21 @@ export default function PublicWeb({
 
       </section>
 
-      {/* Nuevo Bloque Introductorio B2B */}
-      <section className="bg-white py-12 sm:py-16 lg:py-20 xl:py-24 overflow-hidden relative z-10">
+      {/* CLAIM ENTRE PORTADA Y OFERTAS DESTACADAS */}
+      <section className="bg-white py-4 sm:py-5 border-b border-slate-100/90 relative z-10 overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div 
             ref={introRef}
-            className={`max-w-4xl mx-auto text-center space-y-3 sm:space-y-4 transition-all duration-[600ms] ease-out motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
-              introInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[10px]"
+            className={`transition-all duration-500 ease-out text-center ${
+              introInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 motion-reduce:opacity-100 motion-reduce:translate-y-0"
             }`}
           >
-            {/* Antetítulo */}
-            <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
-              DYNAMIC TOURS · MAYORISTA DE VIAJES
-            </span>
-
-            {/* Título: igual tipografía y tamaño que 'Cada cliente, una forma de viajar...' */}
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
-              Conocemos el destino.<br className="hidden sm:inline" />{" "}
-              Entendemos tu negocio.
+            <h2 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-[#0A0F1D] font-sans tracking-tight whitespace-nowrap overflow-x-auto scrollbar-none py-1">
+              <span>Conocemos el destino.</span>{" "}
+              <span className="bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent">
+                Entendemos tu negocio.
+              </span>
             </h2>
-
-            {/* Párrafo debajo del título */}
-            <p className="pt-2 sm:pt-3 text-[#475569] text-base sm:text-lg lg:text-[17px] xl:text-[18px] font-normal leading-relaxed sm:leading-[1.65] max-w-3xl mx-auto">
-              Trabajamos junto a las agencias de viajes para dar forma a lo que sus clientes buscan. Ampliamos de forma continua y &ldquo;Dynamica&rdquo; nuestra programación con nuevos destinos y experiencias, combinando circuitos, cruceros y viajes a medida, ofreciendo respaldo desde la elección del itinerario hasta la gestión de la reserva.
-            </p>
           </div>
         </div>
       </section>
@@ -2525,7 +2563,7 @@ export default function PublicWeb({
 
               {/* Botón para cerrar o resetear búsqueda */}
               <div className="flex items-center gap-2 shrink-0">
-                {(selectedDest !== "todos" || selectedDate || selectedType !== "todos") && (
+                {(selectedDest !== "todos" || selectedDate || selectedType !== "todos" || headerSearchQuery) && (
                   <button
                     type="button"
                     onClick={() => {
@@ -2533,6 +2571,7 @@ export default function PublicWeb({
                       setSelectedDate("");
                       setSelectedType("todos");
                       setResultTypeTab("todos");
+                      setHeaderSearchQuery("");
                     }}
                     className="text-xs font-semibold text-[#1F82D2] hover:text-[#1868A8] bg-white hover:bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg shadow-2xs transition-all cursor-pointer"
                   >
@@ -2551,9 +2590,23 @@ export default function PublicWeb({
             </div>
 
             {/* Badges de filtros activos */}
-            {(selectedDest !== "todos" || selectedDate || selectedType !== "todos") && (
+            {(selectedDest !== "todos" || selectedDate || selectedType !== "todos" || headerSearchQuery) && (
               <div className="flex flex-wrap items-center gap-2 mb-5">
                 <span className="text-xs font-semibold text-slate-400 mr-1">Filtros activos:</span>
+                {headerSearchQuery && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-2xs">
+                    <Search className="w-3 h-3 text-[#1F82D2]" />
+                    <span>Búsqueda: <strong>«{headerSearchQuery}»</strong></span>
+                    <button 
+                      type="button"
+                      onClick={() => setHeaderSearchQuery("")}
+                      className="text-slate-400 hover:text-slate-700 p-0.5 rounded-full hover:bg-slate-100 cursor-pointer"
+                      title="Quitar búsqueda"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
                 {selectedDest !== "todos" && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-2xs">
                     <MapPin className="w-3 h-3 text-[#1F82D2]" />
@@ -2748,10 +2801,14 @@ export default function PublicWeb({
                 </div>
                 <div>
                   <h3 className="text-base sm:text-lg font-bold text-slate-800">
-                    No se encontraron viajes con estos filtros
+                    {headerSearchQuery
+                      ? `No se encontraron viajes para «${headerSearchQuery}»`
+                      : "No se encontraron viajes con estos filtros"}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md mx-auto">
-                    Dynamic Tours opera circuitos, escapadas y grupos a medida en más de 42 países. Restablece la búsqueda o contacta con reservas.
+                    {headerSearchQuery
+                      ? "Prueba a buscar por país (ej. Egipto, Turquía, Tailandia, Jordania), o busca por tipo de programa."
+                      : "Dynamic Tours opera circuitos, escapadas y grupos a medida en más de 42 países. Restablece la búsqueda o contacta con reservas."}
                   </p>
                 </div>
                 <button
@@ -2761,6 +2818,7 @@ export default function PublicWeb({
                     setSelectedDate("");
                     setSelectedType("todos");
                     setResultTypeTab("todos");
+                    setHeaderSearchQuery("");
                   }}
                   className="bg-gradient-to-r from-[#1F82D2] to-[#52A72B] text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-xs hover:brightness-110 transition-all cursor-pointer"
                 >
@@ -3037,38 +3095,22 @@ export default function PublicWeb({
 
                       {/* Botón Ver programas esmerilado sin color */}
                       <div className="mt-3.5 sm:mt-4">
-                        {region.id === "oriente_medio" ? (
-                          <a
-                            href="#destinos"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              if (onSelectDestinos) {
-                                onSelectDestinos();
-                              } else {
-                                window.location.hash = "destinos";
-                              }
-                            }}
-                            className="inline-flex items-center gap-1.5 px-4.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-md border border-white/35 text-white text-[11px] sm:text-xs font-semibold tracking-wide shadow-[0_4px_16px_rgba(0,0,0,0.25)] hover:shadow-[0_6px_22px_rgba(0,0,0,0.35)] transition-all cursor-pointer whitespace-nowrap"
-                          >
-                            <span>Ver programas</span>
-                            <ChevronRight className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-                          </a>
-                        ) : (
-                          <a
-                            href={region.categoryUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedRegionId(region.id);
-                            }}
-                            className="inline-flex items-center gap-1.5 px-4.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-md border border-white/35 text-white text-[11px] sm:text-xs font-semibold tracking-wide shadow-[0_4px_16px_rgba(0,0,0,0.25)] hover:shadow-[0_6px_22px_rgba(0,0,0,0.35)] transition-all cursor-pointer whitespace-nowrap"
-                          >
-                            <span>Ver programas</span>
-                            <ChevronRight className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-                          </a>
-                        )}
+                        <a
+                          href={`#destinos?zona=${region.id.replace("_", "-")}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (onSelectDestinos) {
+                              onSelectDestinos(undefined, region.id);
+                            } else {
+                              window.location.hash = `#destinos?zona=${region.id.replace("_", "-")}`;
+                            }
+                          }}
+                          className="inline-flex items-center gap-1.5 px-4.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-md border border-white/35 text-white text-[11px] sm:text-xs font-semibold tracking-wide shadow-[0_4px_16px_rgba(0,0,0,0.25)] hover:shadow-[0_6px_22px_rgba(0,0,0,0.35)] transition-all cursor-pointer whitespace-nowrap"
+                        >
+                          <span>Ver programas</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-white stroke-[2.5]" />
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -3080,22 +3122,11 @@ export default function PublicWeb({
       </section>
 
       {/* 1. GRUPOS A MEDIDA: Cada grupo, un viaje a medida */}
-      <section id="grupos-a-medida" className="py-16 sm:py-20 lg:py-24 bg-[#F8FAFC] border-t border-slate-200/80 relative">
+      <section id="grupos-a-medida" className="py-14 sm:py-16 lg:py-20 bg-[#F8FAFC] border-t border-slate-200/80 relative">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Header centrado estilo Conocemos el destino */}
-          <div className="text-center max-w-4xl mx-auto space-y-2.5 sm:space-y-3 mb-10 sm:mb-14">
-            <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] bg-clip-text text-transparent select-none">
-              VIAJES A MEDIDA Y GRUPOS
-            </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[42px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
-              De lo que tus clientes imaginan<br className="hidden sm:inline" />{" "}
-              al viaje que les propones.
-            </h2>
-          </div>
-
           {/* Bloque: Imagen a la izquierda, texto a la derecha */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
+          <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 xl:p-12 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-14 items-center">
               
               {/* Imagen a la izquierda (ligeramente más pequeña y con recorte superior) */}
@@ -3109,18 +3140,30 @@ export default function PublicWeb({
                 </div>
               </div>
 
-              {/* Texto a la derecha */}
-              <div className="lg:col-span-7 xl:col-span-7 space-y-6 text-left flex flex-col justify-center">
-                <div className="space-y-4">
-                  <p className="text-slate-600 text-sm sm:text-base lg:text-[16.5px] leading-relaxed">
+              {/* Texto a la derecha: Título y rótulo situados encima de los párrafos */}
+              <div className="lg:col-span-7 xl:col-span-7 space-y-5 sm:space-y-6 text-left flex flex-col justify-center">
+                
+                {/* Título y rótulo del apartado */}
+                <div className="space-y-2 sm:space-y-2.5">
+                  <span className="block text-[11.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] text-[#52A72B] select-none">
+                    VIAJES A MEDIDA PARA GRUPOS
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl lg:text-[34px] xl:text-[36px] font-normal text-[#0A0F1D] font-sans tracking-tight leading-[1.25] sm:leading-[1.2]">
+                    De lo que tus clientes imaginan<br className="hidden sm:inline" />{" "}
+                    al viaje que les propones.
+                  </h2>
+                </div>
+
+                <div className="space-y-3.5 sm:space-y-4">
+                  <p className="text-slate-600 text-sm sm:text-base lg:text-[16px] leading-relaxed">
                     Nuestro equipo de especialistas trabaja junto a tu agencia para convertir las ideas de tus clientes en una propuesta adaptada a sus preferencias, necesidades y presupuesto.
                   </p>
-                  <p className="text-slate-600 text-sm sm:text-base lg:text-[16.5px] leading-relaxed">
+                  <p className="text-slate-600 text-sm sm:text-base lg:text-[16px] leading-relaxed">
                     Te ayudamos a definir fechas, alojamientos, traslados, excursiones y servicios adicionales. Tú aportas el conocimiento de tus viajeros; nosotros, el asesoramiento y la logística para dar forma al viaje.
                   </p>
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-1">
                   <div className="p-[1.5px] rounded-[10px] bg-gradient-to-r from-[#1F82D2] to-[#52A72B] inline-flex shrink-0 shadow-sm">
                     <a 
                       href="#formulario-grupos"
@@ -3179,14 +3222,14 @@ export default function PublicWeb({
 
             {/* Columna Derecha: Párrafos y Botón */}
             <div className="lg:col-span-7 space-y-3.5 sm:space-y-4">
-              {/* Párrafo 1 con únicamente "Dynamic Tours" en negrita (sin S.A.) */}
+              {/* Párrafo trasladado de la intro */}
               <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed">
-                Fundada en Madrid en el año 2000, <strong className="font-bold text-[#0A1931]">Dynamic Tours</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia.
+                Trabajamos junto a las agencias de viajes para dar forma a lo que sus clientes buscan. Ampliamos de forma continua y &ldquo;Dynamica&rdquo; nuestra programación con nuevos destinos y experiencias, combinando circuitos, cruceros y viajes a medida, ofreciendo respaldo desde la elección del itinerario hasta la gestión de la reserva.
               </p>
 
-              {/* Párrafo 2 de refuerzo de servicio a la agencia */}
+              {/* Párrafo institucional Dynamic Tours */}
               <p className="text-slate-600 text-sm sm:text-base lg:text-[15.5px] leading-relaxed">
-                Ponemos esa experiencia al servicio de tu agencia, con asesoramiento, apoyo en las cotizaciones y atención a la operativa diaria. Un equipo experto al que acudir en cada paso.
+                Fundada en Madrid en el año 2000, <strong className="font-bold text-[#0A1931]">Dynamic Tours</strong> es una de las instituciones mayoristas de referencia en la península ibérica para destinos de Oriente Medio y grandes viajes de larga distancia.
               </p>
 
               {/* Botón "Saber más →": borde fino degradado, interior blanco/transparente, texto azul oscuro */}
