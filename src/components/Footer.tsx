@@ -69,10 +69,23 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
   };
 
   return (
-    <footer className="bg-[#E8ECEF] text-[#465568] border-t border-slate-300/80 font-sans relative overflow-hidden">
-      {/* Sutiles matices azul y verde difuminados sobre el gris perla claro */}
-      <div className="absolute top-0 right-1/4 w-[550px] h-[450px] bg-[#1F82D2]/[0.05] rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 left-10 w-[500px] h-[400px] bg-[#52A72B]/[0.04] rounded-full blur-3xl pointer-events-none" />
+    <footer 
+      className="text-[#465568] border-t border-slate-300/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] font-sans relative overflow-hidden"
+      style={{
+        background: "linear-gradient(180deg, #F5F8FA 0%, #EBF0F4 32%, #E5EBF0 68%, #DFE5EB 100%)"
+      }}
+    >
+      {/* Luces ambientales multicapa con efecto cristal nacarado y matices azul / verde */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            radial-gradient(ellipse 60% 50% at 80% 12%, rgba(31, 130, 210, 0.08) 0%, transparent 70%),
+            radial-gradient(ellipse 50% 45% at 15% 85%, rgba(82, 167, 43, 0.06) 0%, transparent 70%),
+            radial-gradient(ellipse 75% 55% at 50% 45%, rgba(255, 255, 255, 0.5) 0%, transparent 80%)
+          `
+        }}
+      />
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 py-12 lg:py-16 relative z-10 space-y-12 sm:space-y-14">
         
@@ -103,7 +116,7 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
                   href="https://www.instagram.com/dynamictours/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white/80 border border-slate-300/80 hover:border-[#1F82D2] text-[#1F82D2] hover:bg-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow-sm"
+                  className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/90 to-white/70 hover:from-white hover:to-white/95 backdrop-blur-md border border-white/90 hover:border-[#1F82D2]/60 text-[#1F82D2] flex items-center justify-center transition-all duration-300 shadow-[0_2px_8px_rgba(20,36,59,0.04),inset_0_1px_0_rgba(255,255,255,0.95)] hover:-translate-y-0.5 hover:shadow-[0_4px_14px_rgba(31,130,210,0.15)]"
                   title="Síguenos en Instagram (@dynamictours)"
                   aria-label="Instagram de Dynamic Tours"
                 >
@@ -115,7 +128,7 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
                   href="https://www.facebook.com/DynamicToursMayorista" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white/80 border border-slate-300/80 hover:border-[#1F82D2] text-[#1F82D2] hover:bg-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow-sm"
+                  className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/90 to-white/70 hover:from-white hover:to-white/95 backdrop-blur-md border border-white/90 hover:border-[#1F82D2]/60 text-[#1F82D2] flex items-center justify-center transition-all duration-300 shadow-[0_2px_8px_rgba(20,36,59,0.04),inset_0_1px_0_rgba(255,255,255,0.95)] hover:-translate-y-0.5 hover:shadow-[0_4px_14px_rgba(31,130,210,0.15)]"
                   title="Síguenos en Facebook"
                   aria-label="Facebook de Dynamic Tours"
                 >
@@ -127,7 +140,7 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
                   href="https://wa.me/34690125031" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white/80 border border-slate-300/80 hover:border-[#1F82D2] text-[#1F82D2] hover:bg-white flex items-center justify-center transition-all duration-200 shadow-xs hover:shadow-sm"
+                  className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/90 to-white/70 hover:from-white hover:to-white/95 backdrop-blur-md border border-white/90 hover:border-[#1F82D2]/60 text-[#1F82D2] flex items-center justify-center transition-all duration-300 shadow-[0_2px_8px_rgba(20,36,59,0.04),inset_0_1px_0_rgba(255,255,255,0.95)] hover:-translate-y-0.5 hover:shadow-[0_4px_14px_rgba(31,130,210,0.15)]"
                   title="WhatsApp de Guardia y Urgencias 24h (+34 690 125 031)"
                   aria-label="WhatsApp de Atención de Urgencias 24h"
                 >
@@ -139,7 +152,7 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
 
           {/* COLUMNA 2 (lg:col-span-3): Sede Central y Datos de Oficina Madrid */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-xs sm:text-[13px] font-bold text-[#14243B] uppercase tracking-wider flex items-center gap-2 border-b border-slate-300/70 pb-2.5">
+            <h4 className="text-xs sm:text-[13px] font-bold text-[#14243B] uppercase tracking-wider flex items-center gap-2 border-b border-slate-300/60 shadow-[0_1px_0_rgba(255,255,255,0.8)] pb-2.5">
               <span className="w-2 h-2 rounded-full bg-[#1F82D2]" />
               <span>Sede Central Madrid</span>
             </h4>
@@ -179,22 +192,22 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
 
               {/* Teléfono Urgencias / Guardia */}
               <li className="flex items-start gap-2.5">
-                <Phone className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
+                <Phone className="w-4 h-4 text-[#0E6245] shrink-0 mt-0.5" />
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-[#465568] text-[11px] uppercase tracking-wider font-bold">Guardia 24/7</span>
-                    <span className="px-2 py-0.5 rounded-md bg-[#BFE9DD]/80 text-[#0F766E] font-bold text-[9px] uppercase tracking-wider border border-[#99D9C7]">
+                    <span className="px-2 py-0.5 rounded-md bg-[#BFE9DD]/90 text-[#0E6245] font-bold text-[9px] uppercase tracking-wider border border-[#A5DEC9]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
                       Urgencias
                     </span>
                   </div>
-                  <a href="tel:690125031" className="text-[#0F766E] hover:text-[#0D645E] transition-colors font-bold text-sm tracking-wide">
+                  <a href="tel:690125031" className="text-[#0E6245] hover:text-[#0A4833] transition-colors font-bold text-sm tracking-wide">
                     690 125 031
                   </a>
                 </div>
               </li>
 
               {/* Horario */}
-              <li className="flex items-start gap-2.5 pt-1 border-t border-slate-300/70">
+              <li className="flex items-start gap-2.5 pt-2 border-t border-slate-300/60 shadow-[0_1px_0_rgba(255,255,255,0.8)]">
                 <Clock className="w-4 h-4 text-[#465568] shrink-0 mt-0.5" />
                 <div className="text-[#465568] text-[11.5px] leading-relaxed">
                   <span className="text-[#14243B] font-bold block">Horario de Atención:</span>
@@ -207,7 +220,7 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
 
           {/* COLUMNA 3 (lg:col-span-2): Información de Interés */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-xs sm:text-[13px] font-bold text-[#14243B] uppercase tracking-wider flex items-center gap-2 border-b border-slate-300/70 pb-2.5">
+            <h4 className="text-xs sm:text-[13px] font-bold text-[#14243B] uppercase tracking-wider flex items-center gap-2 border-b border-slate-300/60 shadow-[0_1px_0_rgba(255,255,255,0.8)] pb-2.5">
               <span className="w-2 h-2 rounded-full bg-[#52A72B]" />
               <span>Información de Interés</span>
             </h4>
@@ -254,15 +267,15 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
 
           {/* COLUMNA 4 (lg:col-span-3): Canal Profesional B2B & Garantías */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-xs sm:text-[13px] font-bold text-[#14243B] uppercase tracking-wider flex items-center gap-2 border-b border-slate-300/70 pb-2.5">
+            <h4 className="text-xs sm:text-[13px] font-bold text-[#14243B] uppercase tracking-wider flex items-center gap-2 border-b border-slate-300/60 shadow-[0_1px_0_rgba(255,255,255,0.8)] pb-2.5">
               <span className="w-2 h-2 rounded-full bg-[#1F82D2]" />
               <span>Garantías y Canal B2B</span>
             </h4>
 
             {/* Tarjeta de Garantía Legal */}
-            <div className="bg-white/75 backdrop-blur-xs border border-slate-300/75 rounded-xl p-4 sm:p-4.5 space-y-2.5 text-xs shadow-xs">
-              <div className="flex items-center gap-2 text-[#0F766E] font-bold text-xs uppercase tracking-wider">
-                <ShieldCheck className="w-4 h-4 text-[#0F766E] shrink-0" />
+            <div className="bg-gradient-to-b from-white/90 to-white/65 backdrop-blur-md border border-white/90 rounded-2xl p-4 sm:p-5 space-y-2.5 text-xs shadow-[0_6px_24px_rgba(20,36,59,0.04),inset_0_1px_0_rgba(255,255,255,0.95)]">
+              <div className="flex items-center gap-2 text-[#0E6245] font-bold text-xs uppercase tracking-wider">
+                <ShieldCheck className="w-4 h-4 text-[#0E6245] shrink-0" />
                 <span>Garantía de Solvencia Mayorista</span>
               </div>
               <p className="text-[11.5px] text-[#465568] leading-relaxed">
@@ -278,7 +291,7 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
                   if (onOpenB2BLogin) onOpenB2BLogin();
                   else window.location.hash = "b2b";
                 }}
-                className="w-full bg-white/75 hover:bg-white border border-slate-300/75 hover:border-[#1F82D2]/60 text-[#14243B] py-2.5 px-4 rounded-xl text-xs font-semibold flex items-center justify-between transition-all cursor-pointer shadow-xs group"
+                className="w-full bg-gradient-to-b from-white/90 to-white/70 hover:from-white hover:to-white/95 backdrop-blur-md border border-white/90 hover:border-[#1F82D2]/50 text-[#14243B] py-2.5 px-4 rounded-xl text-xs font-semibold flex items-center justify-between transition-all duration-300 cursor-pointer shadow-[0_2px_10px_rgba(20,36,59,0.04),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_4px_16px_rgba(31,130,210,0.12)] group"
               >
                 <span className="flex items-center gap-2">
                   <Lock className="w-3.5 h-3.5 text-[#1F82D2]" />
@@ -296,7 +309,7 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
         {/* ==================================================================== */}
         <section 
           aria-label="Directorio oficial de grandes viajes de Dynamic Tours"
-          className="pt-8 border-t border-slate-300/70 space-y-5 text-left"
+          className="pt-8 border-t border-slate-300/60 shadow-[0_1px_0_rgba(255,255,255,0.8)] space-y-5 text-left"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
@@ -312,7 +325,7 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
             <button
               type="button"
               onClick={() => setIsDestinosExpanded(!isDestinosExpanded)}
-              className="px-3.5 py-1.5 rounded-lg bg-white/75 hover:bg-white border border-slate-300/75 hover:border-[#1F82D2]/60 text-xs text-[#1F82D2] font-semibold flex items-center gap-1.5 self-start sm:self-auto cursor-pointer transition-all shadow-2xs"
+              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-b from-white/90 to-white/70 hover:from-white hover:to-white/95 backdrop-blur-md border border-white/90 hover:border-[#1F82D2]/50 text-xs text-[#1F82D2] font-semibold flex items-center gap-1.5 self-start sm:self-auto cursor-pointer transition-all duration-300 shadow-[0_2px_8px_rgba(20,36,59,0.04),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_4px_14px_rgba(31,130,210,0.12)]"
             >
               <span>{isDestinosExpanded ? "Contraer directorio" : "Ver todos los destinos (44)"}</span>
               <ChevronRight className={`w-3.5 h-3.5 text-[#1F82D2] transition-transform duration-200 ${isDestinosExpanded ? "rotate-90" : ""}`} />
@@ -341,7 +354,7 @@ export default function Footer({ onOpenB2BLogin, onNavigateDestinos }: FooterPro
         {/* ==================================================================== */}
         {/* 3. SUBFOOTER INFERIOR (LEGAL, CICMA, DERECHOS) */}
         {/* ==================================================================== */}
-        <div className="pt-8 border-t border-slate-300/70 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-[#465568] text-center md:text-left">
+        <div className="pt-8 border-t border-slate-300/60 shadow-[0_1px_0_rgba(255,255,255,0.8)] flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-[#465568] text-center md:text-left">
           <div className="space-y-0.5">
             <p>© {new Date().getFullYear()} <strong className="text-[#14243B] font-bold">Dynamic Tours S.A.</strong> Todos los derechos reservados.</p>
             <p className="text-[#64748B] text-[10.5px]">Agencia Mayorista de Viajes · Licencia C.I.C.M.A. 1266 · Sede Central: Av. Menéndez Pelayo, 83, Madrid.</p>
